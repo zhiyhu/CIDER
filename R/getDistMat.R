@@ -14,15 +14,75 @@
 #' 
 #' @export
 #' 
-getDistMat <- function(matrix, metadata, 
+#' @importClassesFrom Seurat
+#' 
+getDistMat <- function(seu_list, 
                        verbose = TRUE, 
-                       method = "voom",
-                       model = "one"){
-  if(model == "one") {
-    dist_list <- calculateDistMatOneModel(matrix = matrix, metadata = metadata, 
-                                          verbose = verbose, method = method)
+                       method = "trend",
+                       model = "one",
+                       additional.variate = "donor",
+                       downsampling.size = 35,
+                       downsampling.include = TRUE,
+                       downsampling.replace = TRUE){
+
+  dist_p <- list()
+  dist_t <- list()
+  dist_coef <- list()
+  
+  # create progress bar
+  if(verbose == TRUE) {
+    pb <- txtProgressBar(min = 0, max = length(seu_list), style = 3)
+    k <- 1
   }
-  return(dist_list)
+  
+  for(seu_itor in 1:length(seu_list)){
+    
+    df_info <- data.frame(label = seu_list[[seu_itor]]$seurat_clusters,
+                          batch = seu_list[[seu_itor]]$Batch,
+                          donor = seu_list[[seu_itor]]$Tissue)
+    
+    idx <- downsampling(metadata = df_info, n.size = downsampling.size, 
+                        include = downsampling.include, replace = ownsampling.replace)
+    idx <- sort(idx)
+    
+    to_add <-  idx[duplicated(idx)]
+    idx <- idx[!duplicated(idx)] 
+    matrix <- as.matrix(seu_list[[seu_itor]]@assays$RNA@counts[,idx])
+    
+    if(length(to_add) > 0) {
+      
+      matrix2 <- data.frame(seu_list[[seu_itor]]@assays$RNA@counts[,to_add])
+      colnames(matrix2) <- paste0(colnames(matrix2), 1:ncol(matrix2))
+      matrix2 <- as.matrix(matrix2)
+      matrix <- cbind(matrix, matrix2)
+      rm(matrix2)
+      
+    }
+    
+    if(model == "one") {
+      
+      if(length(unique(df_info$label[idx])) > 2)
+        dist_list <- calculateDistMatOneModel(matrix = matrix, metadata = df_info[c(idx, to_add),], 
+                                              verbose = verbose, method = method,
+                                              additional.variate = additional.variate)
+    }
+    
+    dist_coef[[seu_itor]] <- dist_list[[1]]
+    dist_t[[seu_itor]] <- dist_list[[2]]
+    dist_p[[seu_itor]] <- dist_list[[3]]
+    
+    if(verbose == TRUE) {
+      setTxtProgressBar(pb, k) # progress bar
+      k <- k+1
+    }
+    
+  }
+  
+  if(verbose == TRUE) {
+    close(pb) # close progress bar
+  }
+  
+  return(list(dist_coef,dist_t, dist_p))
 }
 
 
@@ -46,7 +106,8 @@ getDistMat <- function(matrix, metadata,
 #' 
 calculateDistMatOneModel <- function(matrix, metadata, 
                                      verbose = TRUE, 
-                                     method = "voom"){
+                                     method = "voom",
+                                     additional.variate = "donor"){
   
   keep <- rowSums(matrix > 0.5) > 5 
   dge <- DGEList(counts = matrix[keep,,drop=F]) # make a edgeR object
@@ -81,11 +142,14 @@ calculateDistMatOneModel <- function(matrix, metadata,
   colnames(dist_t) <- rownames(dist_t) <- sort(unique(df$g))
   colnames(dist_coef) <- rownames(dist_coef) <- sort(unique(df$g))
   
-  if("donor" %in% colnames(metadata)){
-    df$subb = metadata$donor
+  
+  if(!is.null(additional.variate) & additional.variate %in% colnames(metadata)){
+    df$subb <- metadata[,colnames(metadata) == additional.variate]
     design <- model.matrix(~  0 + g + subb + detrate, data = df)
+    message("model used: ~  0 + g + subb + detrate")
   } else {
     design <- model.matrix(~  0 + g + detrate, data = df)
+    message("model used: ~  0 + g + detrate")
   }
   
   groups <- sort(unique(paste0("g", df$g)))
@@ -102,7 +166,7 @@ calculateDistMatOneModel <- function(matrix, metadata,
   
   if (method == "voom") {
     v <- voom(dge, design, plot = FALSE)
-    fit <- lmFit(v, design)
+    suppressMessages(fit <- lmFit(v, design))
     group_fit <- contrasts.fit(fit, contrast_m) 
     group_fit <- eBayes(group_fit)
     
