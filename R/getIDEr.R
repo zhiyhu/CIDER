@@ -14,13 +14,25 @@
 #' 
 #' @import limma edgeR stats
 #' 
-getIDEr <- function(seu, verbose = TRUE, downsampling.factor = 1, 
-                    methods = "voom"){
-  select <- seu$select
-  metadata <- seu@metadata
+getIDEr <- function(seu, 
+                    downsampling.size = 40,
+                    downsampling.include = TRUE,
+                    downsampling.replace = TRUE,
+                    verbose = TRUE, 
+                    bg.downsampling.factor = 1, 
+                    method = "voom"){
+  
+  
+  ## merge seurat list
+  metadata <- data.frame(label = seu$initial_cluster,
+                         batch = seu$Batch,
+                         ground_truth = seu$Group, stringsAsFactors = FALSE)
+  
+  select <- downsampling(metadata = metadata, n.size = downsampling.size, 
+                         include = downsampling.include, replace = downsampling.replace)
   
   matrix <- as.matrix(seu@assays$RNA@counts[,select])
-  colnames(matrix) <- paste0(colnames(matrix),1:ncol(matrix))
+  colnames(matrix) <- paste0(colnames(matrix),1:ncol(matrix)) # avoid duplication
   keep <- rowSums(matrix > 0.5) > 5 
   dge <- edgeR::DGEList(counts = matrix[keep,,drop=F]) # make a edgeR object
   dge <- dge[!grepl("ERCC-", rownames(dge)),] # remove ERCC
@@ -30,10 +42,11 @@ getIDEr <- function(seu, verbose = TRUE, downsampling.factor = 1,
                    b = metadata$batch[select], ## batch
                    ground_truth = metadata$ground_truth[select],
                    stringsAsFactors = F) ## label
-  df$detrate <- colSums(matrix > 0.5)
+  
+  df$detrate <- scale(colMeans(matrix > 0))[,1]
   rownames(df) <- colnames(matrix)
   
-  N <- length(unique(df$g))
+  N <- length(unique(df$g)) # number of groups
   
   combinations <- data.frame(g1 = rep(unique(df$g), each = N), g2 = rep(unique(df$g), N), stringsAsFactors = FALSE)
   combinations <- combinations[combinations$g1 != combinations$g2, ]
@@ -82,9 +95,10 @@ getIDEr <- function(seu, verbose = TRUE, downsampling.factor = 1,
     ## downsampling the bg
     n_bg <- sum(df2$tmp == "bg")
     
-    if(downsampling.factor > 1){
+    if(bg.downsampling.factor > 1){
       set.seed(12345)
-      random.idx <- sample(x = which(df2$tmp == "bg"), size = max(n_bg/downsampling.factor , 50), replace = FALSE)
+      random.idx <- sample(x = which(df2$tmp == "bg"), 
+                           size = max(n_bg/bg.downsampling.factor , 50), replace = FALSE)
       select2 <- c(random.idx, which(df2$tmp %in% c("g1", "g2")) )
       select2 <- sort(select2)
     } else {
@@ -108,11 +122,12 @@ getIDEr <- function(seu, verbose = TRUE, downsampling.factor = 1,
       fit <- lmFit(v, design)
       group_fit <- contrasts.fit(fit, contrast_m) 
       group_fit <- eBayes(group_fit)
+      
     } else if (method == "trend") {
       logCPM <- cpm(dge2[,select2], log = TRUE, prior.count = 3)
       fit <- lmFit(logCPM, design)
       group_fit <- contrasts.fit(fit, contrast_m)
-      group_fit <- eBayes(group_fit, trend=TRUE, robust = TRUE)
+      group_fit <- eBayes(group_fit, trend = TRUE, robust = TRUE)
     }
  
     group_fit$p.value[,1] <- group_fit$p.value[,1] + 0.00000001
