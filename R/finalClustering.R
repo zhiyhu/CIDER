@@ -1,28 +1,39 @@
-
 #' @title Final clustering
 #' 
-#' @description description
+#' @description Merge initial clusters into final clusters based on the matrix of IDEr.
 #' 
-#' @author Zhiyuan Hu
-#'   
-#' @param seu Seurat S4 object
-#' @param dist dist matrix
-#' @param cutree.by cutree.by
-#' @param cutree.h cutree.h
-#' @param cutree.k cutree.k
-#' @param hc.method hc.method
+#' @param seu Seurat S4 object after the step of `getIDEr`. Required.
+#' @param dist A list. Output of `getIDEr`. Required.
+#' @param use Character. The type of dist matrix to use. Can be one of "coef", "t" and "p". (Default: coef)
+#' @param cutree.by Character. Cut the tree by which parameter, height ("h") or number of clusters ("k"). (Default: h)
+#' @param cutree.h Numeric between 0 and 1. The height used to cut the tree. Ignored if `cutree.by = 'k`. (Default: 0.45)
+#' @param cutree.k Numeric/integer. Used to cut the tree. Ignored if `cutree.by = 'h`. (Default: 3)
+#' @param hc.method Character. Used to choose the hirarchical clustering method. 
 #' 
-#' @return a list
+#' @return Seurat S4 object with final clustering results in `cider_final_cluster` of meta.data.
+#' 
+#' @seealso \code{\link{getIDEr}} \code{\link[stats]{hclust}}
 #' 
 #' @export
 #' 
 #' @import stats
 #' 
-finalClustering <- function(seu, dist, cutree.by = "h", 
-                            cutree.h = 0.35, cutree.k = 3,
+finalClustering <- function(seu, dist, use = "coef", 
+                            cutree.by = "h", cutree.h = 0.45, cutree.k = 3,
                             hc.method = "complete"){
   
-  hc <- hclust(as.dist(1-(dist + t(dist)))/2, method = hc.method)
+  
+  if(use == "coef"){
+    tmp <- dist[[1]] + t(dist[[1]])
+  } else if(use == "t"){
+    tmp <- dist[[2]] + t(dist[[2]])
+  } else if(use == "p"){
+    tmp <- dist[[3]] + t(dist[[3]])
+  } else {
+    warning("'use' is incorrect. Please use one of coef, t or p.")
+  }
+  
+  hc <- hclust(as.dist(1-tmp)/2, method = hc.method)
   
   if(cutree.by == "h"){
     hcluster <- cutree(hc, h = cutree.h)

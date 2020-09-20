@@ -13,7 +13,7 @@
 #' 
 #' @return An igraph object
 #' 
-#' @seealso \code{\link{getIDEr}}, \code{\link[igraph]{graph_from_data_frame}}
+#' @seealso \code{\link{getIDEr}} \code{\link[igraph]{graph_from_data_frame}}
 #' 
 #' @import Seurat igraph
 #' 

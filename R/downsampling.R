@@ -1,21 +1,19 @@
-#' @title Downsampling
-#' @description description
+#' @title Downsampling cells
 #' 
-#' @author Zhiyuan Hu
+#' @description Downsampling cells from each group 
 #' 
-#' @param metadata metadata
-#' @param n.size n.size (default: 50)
-#' @param seed seed (default: 12345)
-#' @param replace using replace = TRUE if the cluster is smaller than required size
-#' @param include using include = TRUE if including the cluster smaller than required size
-#' @param lower.cutoff lower cutoff
+#' @param metadata Data frame. It includes at least 2 columns, label and batch. Each row corresponds to one cell. Required.
+#' @param n.size Numeric. The number of cells used in each group. (Default: 35)
+#' @param seed Numeric. Seed used to sample. (Default: 12345)
+#' @param include Boolean. Using `include = TRUE` to include the group smaller than required size. (Default: FALSE)
+#' #' @param replace Boolean. Using `replace = TRUE` if the group is smaller than required size and some cells will be repeatedly used. (Default: FALSE)
+#' @param lower.cutoff Numeric. The minimum size of groups to keep. (Default: 3)
 #' 
-#' @return return obj
+#' @return A numeric list of which cells will be kept for downstream computation.
 #' 
 #' @export
 #' 
-#' 
-downsampling <- function(metadata, n.size = 50, seed = 12345, include = FALSE, replace = FALSE, lower.cutoff = 3) {
+downsampling <- function(metadata, n.size = 35, seed = 12345, include = FALSE, replace = FALSE, lower.cutoff = 3) {
   cluster <- unique(metadata$label)
   tech <- unique(metadata$batch)
   select <- c()
