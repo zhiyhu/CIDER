@@ -7,6 +7,10 @@
 #'   
 #' @param seu Seurat S4 object
 #' @param dist dist matrix
+#' @param cutree.by cutree.by
+#' @param cutree.h cutree.h
+#' @param cutree.k cutree.k
+#' @param hc.method hc.method
 #' 
 #' @return a list
 #' 
@@ -14,13 +18,13 @@
 #' 
 #' @import stats
 #' 
-finalClustering <- function(seu, dist, cutree_by = "h", 
+finalClustering <- function(seu, dist, cutree.by = "h", 
                             cutree.h = 0.35, cutree.k = 3,
                             hc.method = "complete"){
   
   hc <- hclust(as.dist(1-(dist + t(dist)))/2, method = hc.method)
   
-  if(cutree_by == "h"){
+  if(cutree.by == "h"){
     hcluster <- cutree(hc, h = cutree.h)
   } else {
     hcluster <- cutree(hc, k = cutree.k)
