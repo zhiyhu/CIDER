@@ -14,9 +14,11 @@
 #' 
 #' @import stats
 #' 
-finalClustering <- function(seu, dist, cutree_by = "h", cutree.h = 0.35, cutree.k = 3){
+finalClustering <- function(seu, dist, cutree_by = "h", 
+                            cutree.h = 0.35, cutree.k = 3,
+                            hc.method = "complete"){
   
-  hc <- hclust(as.dist(1-(dist + t(dist)))/2)
+  hc <- hclust(as.dist(1-(dist + t(dist)))/2, method = hc.method)
   
   if(cutree_by == "h"){
     hcluster <- cutree(hc, h = cutree.h)
@@ -26,9 +28,10 @@ finalClustering <- function(seu, dist, cutree_by = "h", cutree.h = 0.35, cutree.
   
   df_merge <-  data.frame(initial_clusters = names(hcluster),
                           final_clusters = hcluster)
-
-  seu$cider.final_cluster <- df_merge$final_cluster[match(seu$cider.inicluster,df_merge$initial_clusters)]
-  seu$cider.final_cluster[is.na(seu$cider.final_cluster)] <- seu$inicluster[is.na(seu$cider.final_cluster)]
+  
+  seu$cider_final_cluster <- df_merge$final_cluster[match(seu$initial_cluster,
+                                                          df_merge$initial_clusters)]
+  seu$cider_final_cluster[is.na(seu$cider_final_cluster)] <- seu$initial_cluster[is.na(seu$cider_final_cluster)]
   
   return(seu)
   
