@@ -1,9 +1,25 @@
 #' @title Merge Initial Clusters
 #' 
+#' @param seu_list seu_list
+#' @param dist_list dist_list
+#' @param use use
+#' @param method method
+#' @param hc.method hc.method
+#' @param cutree.by cutree.by
+#' @param cutree.h cutree.h
+#' @param cutree.k cutree.k 
+#' 
+#' @return a list of seurat objects
+#' 
 #' @export
+#' 
 #' @importFrom stats cutree hclust
-#' @importClassesFrom Seurat
-mergeInitialClusters <- function(seu_list, dist_list, use = "coef", method = "hc", hc.method = "average" ,cutree.by = "h", cutree.h = 0.6, cutree.k = 3){
+#' @import Seurat
+#' 
+#' 
+#' 
+mergeInitialClusters <- function(seu_list, dist_list, use = "coef", method = "hc", 
+                                 hc.method = "average", cutree.by = "h", cutree.h = 0.6, cutree.k = 3){
   
   if(use == "coef"){
     dist_coef <- dist_list[[1]]
@@ -32,6 +48,13 @@ mergeInitialClusters <- function(seu_list, dist_list, use = "coef", method = "hc
 }
 
 #' @title Gather initial cluster names
+#' 
+#' @param seu_list seu_lisst
+#' @param seu seu
+#' 
+#' @return a seurat object
+#' 
+#' @import Seurat 
 #' @export
 gatherInitialClusters <- function(seu_list, seu){
   

@@ -1,13 +1,13 @@
 Package: CIDEr
 Type: Package
-Title: What the Package Does in One 'Title Case' Line
+Title: Meta-Clustering based on Inter-group Differential Expression
 Version: 1.0
 Date: 2020-09-19
 Author: Zhiyuan Hu
 Maintainer: Zhiyuan Hu <zhiyuan.hu@wrh.ox.ac.uk>
-Description: One paragraph description of what the package does as one or more full sentences.
+Description: Using meta-clustering to integration populations from single-cell RNA-seq
 License: GPL (>= 2)
-Imports: Rcpp (>= 1.0.4),limma (>= 3.42.0),edgeR (>= 3.28.0),stats (>= 3.6.2)
+Imports: Rcpp (>= 1.0.4),limma (>= 3.42.0),edgeR (>= 3.28.0),stats (>= 3.6.2),foreach (>= 1.5.0),Seurat (>= 3.1.0),utils (>= 3.6.2),pheatmap (>= 1.0.0),doParallel,igraph 
 LinkingTo: Rcpp
 RoxygenNote: 7.1.1
 Encoding: UTF-8

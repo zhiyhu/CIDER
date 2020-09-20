@@ -1,20 +1,22 @@
-#' @title Get IDEr matrix
+#' @title Compute IDEr
 #' 
-#' @description description
-#' 
-#' @author Zhiyuan Hu
+#' @description Calculate the similarity matrix based on the metrics of inter-group differential expression (IDEr)
 #'   
-#' @param seu Seurat S4 object
-#' @param method voom or trend
-#' @param verbose print the message and progress bar (default: TRUE)
-#' @param use.parallel use.parallel
-#' @param n.cores n.cores
-#' @param downsampling.size downsampling.size
-#' @param downsampling.include downsampling.include
-#' @param downsampling.replace downsampling.replace
-#' @param bg.downsampling.factor bg.downsampling.factor
+#' @param seu Seurat S4 object with the column of `initial_cluster` in its meta.data. Required. 
+#' @param method Character. It can be voom (default) or trend. 
+#' @param verbose Boolean. Print the message and progress bar. (Default: TRUE)
+#' @param use.parallel Boolean. Use parallel. (Default: FALSE)
+#' @param n.cores Numeric. Number of cores used for parallel computing. If no value is given (default), it will use the output of `detectCores(logical = FALSE)`.
+#' @param downsampling.size Numeric. The number of cells representing each group. (Default: 40)
+#' @param downsampling.include Boolean. Using `include = TRUE` to include the group smaller than required size. (Default: FALSE)
+#' @param downsampling.replace Boolean. Using `replace = TRUE` if the group is smaller than required size and some cells will be repeatedly used. (Default: FALSE)
+#' @param bg.downsampling.factor Numeric. The factor used to downsampling background cells. Using a number over 1 can decrease the computing time. The minimum number of background cells used is 50. (Default: 1)
 #' 
-#' @return a list
+#' @details Details
+#' 
+#' @return A list of four values: three similarity matrices and one list of indeces.
+#' 
+#' @seealso \code{\link{plotNetwork}} \code{\link{finalClustering}}
 #' 
 #' @export
 #' 

@@ -4,18 +4,33 @@
 \alias{getDistMat}
 \title{Calculate Distance Matrix}
 \usage{
-getDistMat(matrix, metadata, verbose = TRUE, method = "voom", model = "one")
+getDistMat(
+  seu_list,
+  verbose = TRUE,
+  method = "trend",
+  model = "one",
+  additional.variate = "donor",
+  downsampling.size = 35,
+  downsampling.include = TRUE,
+  downsampling.replace = TRUE
+)
 }
 \arguments{
-\item{matrix}{matrix}
-
-\item{metadata}{metadata}
+\item{seu_list}{seu list}
 
 \item{verbose}{print the message and progress bar (default: TRUE)}
 
 \item{method}{voom or trend}
 
 \item{model}{one model}
+
+\item{additional.variate}{additional.variate}
+
+\item{downsampling.size}{downsampling.size}
+
+\item{downsampling.include}{downsampling.include}
+
+\item{downsampling.replace}{downsampling.replace}
 }
 \value{
 A list containing

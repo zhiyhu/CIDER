@@ -4,7 +4,13 @@
 \alias{calculateDistMatOneModel}
 \title{Calculate distance matrix with in one model}
 \usage{
-calculateDistMatOneModel(matrix, metadata, verbose = TRUE, method = "voom")
+calculateDistMatOneModel(
+  matrix,
+  metadata,
+  verbose = TRUE,
+  method = "voom",
+  additional.variate = "donor"
+)
 }
 \arguments{
 \item{matrix}{matrix}
@@ -14,6 +20,8 @@ calculateDistMatOneModel(matrix, metadata, verbose = TRUE, method = "voom")
 \item{verbose}{print the message and progress bar (default: TRUE)}
 
 \item{method}{voom or trend}
+
+\item{additional.variate}{additional.variate}
 }
 \value{
 a list

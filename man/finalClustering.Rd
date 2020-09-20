@@ -4,19 +4,37 @@
 \alias{finalClustering}
 \title{Final clustering}
 \usage{
-finalClustering(seu, dist, cutree_by = "h", cutree.h = 0.35, cutree.k = 3)
+finalClustering(
+  seu,
+  dist,
+  use = "coef",
+  cutree.by = "h",
+  cutree.h = 0.45,
+  cutree.k = 3,
+  hc.method = "complete"
+)
 }
 \arguments{
-\item{seu}{Seurat S4 object}
+\item{seu}{Seurat S4 object after the step of `getIDEr`. Required.}
 
-\item{dist}{dist matrix}
+\item{dist}{A list. Output of `getIDEr`. Required.}
+
+\item{use}{Character. The type of dist matrix to use. Can be one of "coef", "t" and "p". (Default: coef)}
+
+\item{cutree.by}{Character. Cut the tree by which parameter, height ("h") or number of clusters ("k"). (Default: h)}
+
+\item{cutree.h}{Numeric between 0 and 1. The height used to cut the tree. Ignored if `cutree.by = 'k`. (Default: 0.45)}
+
+\item{cutree.k}{Numeric/integer. Used to cut the tree. Ignored if `cutree.by = 'h`. (Default: 3)}
+
+\item{hc.method}{Character. Used to choose the hirarchical clustering method.}
 }
 \value{
-a list
+Seurat S4 object with final clustering results in `cider_final_cluster` of meta.data.
 }
 \description{
-description
+Merge initial clusters into final clusters based on the matrix of IDEr.
 }
-\author{
-Zhiyuan Hu
+\seealso{
+\code{\link{getIDEr}} \code{\link[stats]{hclust}}
 }

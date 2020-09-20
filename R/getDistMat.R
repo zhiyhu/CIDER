@@ -4,17 +4,20 @@
 #' 
 #' @author Zhiyuan Hu
 #'   
-#' @param matrix matrix
-#' @param metadata metadata
+#' @param seu_list seu list
 #' @param verbose print the message and progress bar (default: TRUE)
 #' @param method voom or trend
 #' @param model one model
+#' @param additional.variate additional.variate
+#' @param downsampling.size downsampling.size
+#' @param downsampling.include downsampling.include
+#' @param downsampling.replace downsampling.replace
 #' 
 #' @return A list containing
 #' 
 #' @export
 #' 
-#' @importClassesFrom Seurat
+#' @import Seurat utils
 #' 
 getDistMat <- function(seu_list, 
                        verbose = TRUE, 
@@ -42,7 +45,7 @@ getDistMat <- function(seu_list,
                           donor = seu_list[[seu_itor]]$Tissue)
     
     idx <- downsampling(metadata = df_info, n.size = downsampling.size, 
-                        include = downsampling.include, replace = ownsampling.replace)
+                        include = downsampling.include, replace = downsampling.replace)
     idx <- sort(idx)
     
     to_add <-  idx[duplicated(idx)]
@@ -97,6 +100,7 @@ getDistMat <- function(seu_list,
 #' @param metadata metadata
 #' @param verbose print the message and progress bar (default: TRUE)
 #' @param method voom or trend
+#' @param additional.variate additional.variate
 #' 
 #' @return a list
 #' 

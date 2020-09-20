@@ -1,19 +1,25 @@
-#' @title Plot distance matrix
+#' @title Plot Similarity Matrix
 #' 
+#' @description 
 #' 
+#' @param dist.list List of list of similarity matrix. Output of function `getDistMat()`. Required.
+#' @param use Choose from "coef", "t" and "p". (Default: coef)
 #' 
 #' @export
+#' 
 #' @import pheatmap
-plotDistMat <- function(dist_list, use = "coef"){
+#' 
+#' @seealso \code{\link{getDistMat}}
+#' 
+plotDistMat <- function(dist.list, use = "coef"){
   
   if(use == "coef"){
-    dist_coef <- dist_list[[1]]
+    dist_coef <- dist.list[[1]]
   } else if(use == "t"){
-    dist_coef <- dist_list[[2]]
+    dist_coef <- dist.list[[2]]
   } else if(use == "p"){
-    dist_coef <- dist_list[[3]]
+    dist_coef <- dist.list[[3]]
   }
-  
   
   hm <- list()
   for(i in which(sapply(dist_coef, function(x) return(!is.null(x))))){

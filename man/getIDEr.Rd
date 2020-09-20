@@ -2,23 +2,48 @@
 % Please edit documentation in R/getIDEr.R
 \name{getIDEr}
 \alias{getIDEr}
-\title{Get IDEr matrix}
+\title{Compute IDEr}
 \usage{
-getIDEr(seu, verbose = TRUE, downsampling.factor = 1, methods = "voom")
+getIDEr(
+  seu,
+  method = "voom",
+  verbose = TRUE,
+  use.parallel = FALSE,
+  n.cores = NULL,
+  downsampling.size = 40,
+  downsampling.include = TRUE,
+  downsampling.replace = TRUE,
+  bg.downsampling.factor = 1
+)
 }
 \arguments{
-\item{seu}{Seurat S4 object}
+\item{seu}{Seurat S4 object with the column of `initial_cluster` in its meta.data. Required.}
 
-\item{verbose}{print the message and progress bar (default: TRUE)}
+\item{method}{Character. It can be voom (default) or trend.}
 
-\item{method}{voom or trend}
+\item{verbose}{Boolean. Print the message and progress bar. (Default: TRUE)}
+
+\item{use.parallel}{Boolean. Use parallel. (Default: FALSE)}
+
+\item{n.cores}{Numeric. Number of cores used for parallel computing. If no value is given (default), it will use the output of `detectCores(logical = FALSE)`.}
+
+\item{downsampling.size}{Numeric. The number of cells representing each group. (Default: 40)}
+
+\item{downsampling.include}{Boolean. Using `include = TRUE` to include the group smaller than required size. (Default: FALSE)}
+
+\item{downsampling.replace}{Boolean. Using `replace = TRUE` if the group is smaller than required size and some cells will be repeatedly used. (Default: FALSE)}
+
+\item{bg.downsampling.factor}{Numeric. The factor used to downsampling background cells. Using a number over 1 can decrease the computing time. The minimum number of background cells used is 50. (Default: 1)}
 }
 \value{
-a list
+A list of four values: three similarity matrices and one list of indeces.
 }
 \description{
-description
+Calculate the similarity matrix based on the metrics of inter-group differential expression (IDEr)
 }
-\author{
-Zhiyuan Hu
+\details{
+Details
+}
+\seealso{
+\code{\link{plotNetwork}} \code{\link{finalClustering}}
 }

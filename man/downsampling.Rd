@@ -2,11 +2,11 @@
 % Please edit documentation in R/downsampling.R
 \name{downsampling}
 \alias{downsampling}
-\title{Downsampling}
+\title{Downsampling cells}
 \usage{
 downsampling(
   metadata,
-  n.size = 50,
+  n.size = 35,
   seed = 12345,
   include = FALSE,
   replace = FALSE,
@@ -14,24 +14,20 @@ downsampling(
 )
 }
 \arguments{
-\item{metadata}{metadata}
+\item{metadata}{Data frame. It includes at least 2 columns, label and batch. Each row corresponds to one cell. Required.}
 
-\item{n.size}{n.size (default: 50)}
+\item{n.size}{Numeric. The number of cells used in each group. (Default: 35)}
 
-\item{seed}{seed (default: 12345)}
+\item{seed}{Numeric. Seed used to sample. (Default: 12345)}
 
-\item{include}{using include = TRUE if including the cluster smaller than required size}
+\item{include}{Boolean. Using `include = TRUE` to include the group smaller than required size. (Default: FALSE)
+#' @param replace Boolean. Using `replace = TRUE` if the group is smaller than required size and some cells will be repeatedly used. (Default: FALSE)}
 
-\item{replace}{using replace = TRUE if the cluster is smaller than required size}
-
-\item{lower.cutoff}{lower cutoff}
+\item{lower.cutoff}{Numeric. The minimum size of groups to keep. (Default: 3)}
 }
 \value{
-return obj
+A numeric list of which cells will be kept for downstream computation.
 }
 \description{
-description
-}
-\author{
-Zhiyuan Hu
+Downsampling cells from each group
 }
