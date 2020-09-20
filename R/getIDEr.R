@@ -5,25 +5,31 @@
 #' @author Zhiyuan Hu
 #'   
 #' @param seu Seurat S4 object
-#' @param verbose print the message and progress bar (default: TRUE)
 #' @param method voom or trend
+#' @param verbose print the message and progress bar (default: TRUE)
+#' @param use.parallel use.parallel
+#' @param n.cores n.cores
+#' @param downsampling.size downsampling.size
+#' @param downsampling.include downsampling.include
+#' @param downsampling.replace downsampling.replace
+#' @param bg.downsampling.factor bg.downsampling.factor
 #' 
 #' @return a list
 #' 
 #' @export
 #' 
-#' @import limma edgeR stats foreach
-#' @importFrom parallel detectCore
+#' @import limma edgeR stats foreach utils doParallel
+#' @importFrom parallel detectCores
 #' 
 getIDEr <- function(seu, 
+                    method = "voom",
+                    verbose = TRUE, 
+                    use.parallel = FALSE,
+                    n.cores = NULL,
                     downsampling.size = 40,
                     downsampling.include = TRUE,
                     downsampling.replace = TRUE,
-                    verbose = TRUE, 
-                    bg.downsampling.factor = 1, 
-                    method = "voom",
-                    use.parallel = FALSE,
-                    n.cores = NULL){
+                    bg.downsampling.factor = 1){
   
   
   ## merge seurat list
@@ -51,20 +57,18 @@ getIDEr <- function(seu,
   
   N <- length(unique(df$g)) # number of groups
   
+  # get the dataframe of combinations/pairs for comparison
   combinations <- data.frame(g1 = rep(unique(df$g), each = N), g2 = rep(unique(df$g), N), stringsAsFactors = FALSE)
   combinations <- combinations[combinations$g1 != combinations$g2, ]
-  
   combinations$b1 <- df$b[match(combinations$g1, df$g)]
   combinations$b2 <- df$b[match(combinations$g2, df$g)]
   combinations <- combinations[combinations$b1!=combinations$b2,]
-  
   idx <- c()
   for(i in 2:nrow(combinations)){
     if(!combinations$g2[i] %in% combinations$g1[1:(i-1)]) {
       idx <- c(idx, i)
     }
   }
-  
   combinations <- combinations[c(1,idx),]
   rownames(combinations) <- 1:nrow(combinations)
 
@@ -111,7 +115,14 @@ getIDEr <- function(seu,
       }
       
       design <- model.matrix(~  0 + tmp + b + detrate, data = df2[select2,])
-      contrast_m <- makeContrasts(contrasts = c("tmpg1-tmpbg", "tmpg2-tmpbg"), levels = design)
+      groups <- paste0("tmp", unique(df2$tmp))
+      groups <-  groups[groups != "tmpbg"]
+      perm_groups <- data.frame(g1 = groups,
+                                g2 = "tmpbg", stringsAsFactors = F)
+      perm_groups <- perm_groups[perm_groups$g1 != perm_groups$g2,]
+      perm_groups$pair <- paste0(perm_groups$g1, "-", perm_groups$g2)
+      contrast_m <- makeContrasts(contrasts = perm_groups$pair,
+                                  levels = design)
       group_fit <- getGroupFit(dge2[,select2], design, contrast_m, method)
       
       idx1 <- rownames(dist_coef) == combinations$g1[i]
@@ -136,11 +147,10 @@ getIDEr <- function(seu,
     registerDoParallel(n.cores) 
     n.iter <- nrow(combinations)
 
-    df_dist <- foreach(i=combinations$g1, j=combinations$g2, 
-                       df=rep(list(df),n.iter), dge=rep(list(dge),n.iter), 
-                       bg.downsampling.factor = rep(bg.downsampling.factor, n.iter),
-                       method = rep(method, n.iter),
-                       .combine='rbind') %dopar% {
+    i <- NULL
+    j <- NULL
+    
+    df_dist <- foreach(i=combinations$g1, j=combinations$g2, df=rep(list(df),n.iter), dge=rep(list(dge),n.iter), bg.downsampling.factor = rep(bg.downsampling.factor, n.iter),method = rep(method, n.iter), .combine='rbind') %dopar% {
                          
                          
                          df$tmp <- NA
@@ -193,6 +203,18 @@ getIDEr <- function(seu,
 }
 
 
+#' @title Calculate Fit
+#' 
+#' @param dge dge
+#' @param design design
+#' @param contrast_m contrast_m
+#' @param method method
+#' 
+#' @import limma edgeR
+#' @export
+#' 
+#' @seealso \code{\link{getIDEr}}
+#' 
 getGroupFit <- function(dge, design, contrast_m, method){
   
   if(method == "voom"){
