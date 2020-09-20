@@ -3,7 +3,7 @@
 #' @export
 #' @importFrom stats cutree hclust
 #' @importClassesFrom Seurat
-mergeInitialClusters <- function(seu_list, dist_list, use = "coef", method = "hc", hc.method = "average" ,cutree_by = "h", cutree.h = 0.6, cutree.k = 3){
+mergeInitialClusters <- function(seu_list, dist_list, use = "coef", method = "hc", hc.method = "average" ,cutree.by = "h", cutree.h = 0.6, cutree.k = 3){
   
   if(use == "coef"){
     dist_coef <- dist_list[[1]]
@@ -17,7 +17,7 @@ mergeInitialClusters <- function(seu_list, dist_list, use = "coef", method = "hc
     
     hc <- hclust(1-as.dist(dist_coef[[seu_itor]] + t(dist_coef[[seu_itor]])), method = hc.method)
     
-    if(cutree_by == "h"){
+    if(cutree.by == "h"){
       hres <- cutree(hc, h = cutree.h)
     } else {
       hres <- cutree(hc, k = cutree.k)
