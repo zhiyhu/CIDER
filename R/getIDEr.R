@@ -12,7 +12,8 @@
 #' 
 #' @export
 #' 
-#' @import limma edgeR stats
+#' @import limma edgeR stats foreach
+#' @importFrom parallel detectCore
 #' 
 getIDEr <- function(seu, 
                     downsampling.size = 40,
@@ -20,7 +21,9 @@ getIDEr <- function(seu,
                     downsampling.replace = TRUE,
                     verbose = TRUE, 
                     bg.downsampling.factor = 1, 
-                    method = "voom"){
+                    method = "voom",
+                    use.parallel = FALSE,
+                    n.cores = NULL){
   
   
   ## merge seurat list
@@ -69,85 +72,145 @@ getIDEr <- function(seu,
   colnames(dist_p) <- rownames(dist_p) <- unique(df$g)
   colnames(dist_t) <- rownames(dist_t) <- unique(df$g)
   colnames(dist_coef) <- rownames(dist_coef) <- unique(df$g)
-  
-  # create progress bar
-  if(verbose == TRUE) {
+
+  if(use.parallel == FALSE) {
     
-    message("Generating distance matrix...")
-    pb <- txtProgressBar(min = 0, max = nrow(combinations), style = 3)
-    k <- 1
-  }
-  
-  for(i in 1:nrow(combinations)){
-    
+    # create progress bar
     if(verbose == TRUE) {
-      setTxtProgressBar(pb, k) # progress bar
-      k <- k+1
-    }
-    
-    df$tmp <- NA
-    df$tmp <- "bg"
-    df$tmp[df$g == combinations$g1[i]] <- "g1"
-    df$tmp[df$g == combinations$g2[i]] <- "g2"
-    df2 <- df[!is.na(df$tmp),]
-    dge2 <- dge[,!is.na(df$tmp)]
-    
-    ## downsampling the bg
-    n_bg <- sum(df2$tmp == "bg")
-    
-    if(bg.downsampling.factor > 1){
-      set.seed(12345)
-      random.idx <- sample(x = which(df2$tmp == "bg"), 
-                           size = max(n_bg/bg.downsampling.factor , 50), replace = FALSE)
-      select2 <- c(random.idx, which(df2$tmp %in% c("g1", "g2")) )
-      select2 <- sort(select2)
-    } else {
-      select2 <- 1:n_bg
-    }
-    
-    ## by group
-    design <- model.matrix(~  0 + tmp + b + detrate, data = df2[select2,]) 
-    groups <- paste0("tmp", unique(df2$tmp))
-    groups <-  groups[groups != "tmpbg"]
-    perm_groups <- data.frame(g1 = groups,
-                              g2 = "tmpbg", stringsAsFactors = F)
-    perm_groups <- perm_groups[perm_groups$g1 != perm_groups$g2,]
-    perm_groups$pair <- paste0(perm_groups$g1, "-", perm_groups$g2)
-    contrast_m <- makeContrasts(contrasts = perm_groups$pair,
-                                levels = design)
-    
-    
-    if(method == "voom"){
-      v <- voom(dge2[,select2], design, plot = FALSE)
-      fit <- lmFit(v, design)
-      group_fit <- contrasts.fit(fit, contrast_m) 
-      group_fit <- eBayes(group_fit)
       
-    } else if (method == "trend") {
-      logCPM <- cpm(dge2[,select2], log = TRUE, prior.count = 3)
-      fit <- lmFit(logCPM, design)
-      group_fit <- contrasts.fit(fit, contrast_m)
-      group_fit <- eBayes(group_fit, trend = TRUE, robust = TRUE)
+      message("Generating distance matrix...")
+      pb <- txtProgressBar(min = 0, max = nrow(combinations), style = 3)
+      k <- 1
     }
- 
-    group_fit$p.value[,1] <- group_fit$p.value[,1] + 0.00000001
-    group_fit$p.value[,2] <- group_fit$p.value[,2] + 0.00000001
     
-    idx1 <- rownames(dist_coef) == combinations$g1[i]
-    idx2 <- colnames(dist_coef) == combinations$g2[i]
-    dist_coef[idx1, idx2] <- cor(coef(group_fit)[,1], coef(group_fit)[,2])
-    dist_t   [idx1, idx2] <- cor(group_fit$t[,1], group_fit$t[,2])
-    dist_p   [idx1, idx2] <- cor(-log10(group_fit$p.value)[,1]*sign(coef(group_fit)[,1]), 
-                                 -log10(group_fit$p.value)[,2]*sign(coef(group_fit)[,2]))
+    for(i in 1:nrow(combinations)){
+      
+      if(verbose == TRUE) {
+        setTxtProgressBar(pb, k) # progress bar
+        k <- k+1
+      }
+      
+      df$tmp <- NA
+      df$tmp <- "bg"
+      df$tmp[df$g == combinations$g1[i]] <- "g1"
+      df$tmp[df$g == combinations$g2[i]] <- "g2"
+      df2 <- df[!is.na(df$tmp),]
+      dge2 <- dge[,!is.na(df$tmp)]
+      
+      ## downsampling the bg
+      n_bg <- sum(df2$tmp == "bg")
+      
+      if(bg.downsampling.factor > 1){
+        set.seed(12345)
+        random.idx <- sample(x = which(df2$tmp == "bg"), 
+                             size = max(n_bg/bg.downsampling.factor , 50), replace = FALSE)
+        select2 <- c(random.idx, which(df2$tmp %in% c("g1", "g2")) )
+        select2 <- sort(select2)
+      } else {
+        select2 <- 1:n_bg
+      }
+      
+      design <- model.matrix(~  0 + tmp + b + detrate, data = df2[select2,])
+      contrast_m <- makeContrasts(contrasts = c("tmpg1-tmpbg", "tmpg2-tmpbg"), levels = design)
+      group_fit <- getGroupFit(dge2[,select2], design, contrast_m, method)
+      
+      idx1 <- rownames(dist_coef) == combinations$g1[i]
+      idx2 <- colnames(dist_coef) == combinations$g2[i]
+      dist_coef[idx1, idx2] <- cor(coef(group_fit)[,1], coef(group_fit)[,2])
+      dist_t   [idx1, idx2] <- cor(group_fit$t[,1], group_fit$t[,2])
+      dist_p   [idx1, idx2] <- cor(-log10(group_fit$p.value)[,1]*sign(coef(group_fit)[,1]), 
+                                   -log10(group_fit$p.value)[,2]*sign(coef(group_fit)[,2]))
+      
+    }
+    if(verbose == TRUE) {
+      close(pb) # close progress bar
+    }
     
+  } else if(use.parallel == TRUE) { # use parallel
+
+    if(is.null(n.cores)) {
+      n.cores <- detectCores(logical = FALSE)
+    } else {
+      n.cores <- min(n.cores, detectCores(logical = FALSE))
+    }
+    registerDoParallel(n.cores) 
+    n.iter <- nrow(combinations)
+
+    df_dist <- foreach(i=combinations$g1, j=combinations$g2, 
+                       df=rep(list(df),n.iter), dge=rep(list(dge),n.iter), 
+                       bg.downsampling.factor = rep(bg.downsampling.factor, n.iter),
+                       method = rep(method, n.iter),
+                       .combine='rbind') %dopar% {
+                         
+                         
+                         df$tmp <- NA
+                         df$tmp <- "bg"
+                         df$tmp[df$g == i] <- "g1"
+                         df$tmp[df$g == j] <- "g2"
+                         df2 <- df[!is.na(df$tmp),]
+                         dge2 <- dge[,!is.na(df$tmp)]
+                         
+                         n_bg <- sum(df2$tmp == "bg")
+                         if(bg.downsampling.factor > 1){
+                           set.seed(12345)
+                           random.idx <- sample(x = which(df2$tmp == "bg"), 
+                                                size = max(n_bg/bg.downsampling.factor , 50), replace = FALSE)
+                           select2 <- c(random.idx, which(df2$tmp %in% c("g1", "g2")) )
+                           select2 <- sort(select2)
+                         } else {
+                           select2 <- 1:n_bg
+                         }
+                         
+                         ## by group
+                         design <- model.matrix(~  0 + tmp + b + detrate, data = df2[select2,]) 
+                         contrast_m <- makeContrasts(contrasts = c("tmpg1-tmpbg", "tmpg2-tmpbg"), 
+                                                     levels = design)
+                         group_fit <- getGroupFit(dge2[,select2], design, contrast_m, method)
+                         
+                         dist_coef <- cor(coef(group_fit)[,1], coef(group_fit)[,2])
+                         dist_t <- cor(group_fit$t[,1], group_fit$t[,2])
+                         dist_p <- cor(-log10(group_fit$p.value)[,1]*sign(coef(group_fit)[,1]), 
+                                       -log10(group_fit$p.value)[,2]*sign(coef(group_fit)[,2]))
+                         
+                         print(c(dist_coef, dist_t, dist_p))
+                         
+                       }
+    
+    
+    for(i in 1:nrow(combinations)){
+      idx1 <- rownames(dist_coef) == combinations$g1[i]
+      idx2 <- colnames(dist_coef) == combinations$g2[i]
+      dist_coef[idx1, idx2] <- df_dist[i,1]
+      dist_t   [idx1, idx2] <- df_dist[i,2]
+      dist_p   [idx1, idx2] <- df_dist[i,3]
+    }
+      
+
   }
   
-  if(verbose == TRUE) {
-    close(pb) # close progress bar
-  }
-  
-  return(list(dist_coef, dist_t, dist_p))
+  return(list(dist_coef, dist_t, dist_p, select))
   
 }
 
+
+getGroupFit <- function(dge, design, contrast_m, method){
+  
+  if(method == "voom"){
+    v <- voom(dge, design, plot = FALSE)
+    fit <- lmFit(v, design)
+    group_fit <- contrasts.fit(fit, contrast_m) 
+    group_fit <- eBayes(group_fit)
+    
+  } else if (method == "trend") {
+    logCPM <- cpm(dge, log = TRUE, prior.count = 3)
+    fit <- lmFit(logCPM, design)
+    group_fit <- contrasts.fit(fit, contrast_m)
+    group_fit <- eBayes(group_fit, trend = TRUE, robust = TRUE)
+  }
+  
+  group_fit$p.value[,1] <- group_fit$p.value[,1] + 0.00000001
+  group_fit$p.value[,2] <- group_fit$p.value[,2] + 0.00000001
+  
+  return(group_fit)
+}
 
