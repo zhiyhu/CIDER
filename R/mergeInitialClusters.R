@@ -13,7 +13,7 @@
 #' 
 #' @export
 #' 
-#' @importFrom stats cutree hclust
+#' @importFrom stats cutree hclust as.dist
 #' @import Seurat
 #' 
 #' 

@@ -6,7 +6,7 @@
 #' @param n.size Numeric. The number of cells used in each group. (Default: 35)
 #' @param seed Numeric. Seed used to sample. (Default: 12345)
 #' @param include Boolean. Using `include = TRUE` to include the group smaller than required size. (Default: FALSE)
-#' #' @param replace Boolean. Using `replace = TRUE` if the group is smaller than required size and some cells will be repeatedly used. (Default: FALSE)
+#' @param replace Boolean. Using `replace = TRUE` if the group is smaller than required size and some cells will be repeatedly used. (Default: FALSE)
 #' @param lower.cutoff Numeric. The minimum size of groups to keep. (Default: 3)
 #' 
 #' @return A numeric list of which cells will be kept for downstream computation.

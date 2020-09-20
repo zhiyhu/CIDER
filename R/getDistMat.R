@@ -106,7 +106,8 @@ getDistMat <- function(seu_list,
 #' 
 #' @export
 #' 
-#' @import limma edgeR stats
+#' @import limma edgeR 
+#' @importFrom stats model.matrix cor coef
 #' 
 calculateDistMatOneModel <- function(matrix, metadata, 
                                      verbose = TRUE, 

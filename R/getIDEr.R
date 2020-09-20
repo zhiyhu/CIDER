@@ -20,8 +20,9 @@
 #' 
 #' @export
 #' 
-#' @import limma edgeR stats foreach utils doParallel
+#' @import limma edgeR foreach utils doParallel
 #' @importFrom parallel detectCores
+#' @importFrom stats model.matrix cor
 #' 
 getIDEr <- function(seu, 
                     method = "voom",

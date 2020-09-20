@@ -16,7 +16,7 @@
 #' 
 #' @export
 #' 
-#' @import stats
+#' @importFrom stats hclust cutree as.dist
 #' 
 finalClustering <- function(seu, dist, use = "coef", 
                             cutree.by = "h", cutree.h = 0.45, cutree.k = 3,

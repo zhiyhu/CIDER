@@ -12,7 +12,7 @@ plotDistMat(dist.list, use = "coef")
 \item{use}{Choose from "coef", "t" and "p". (Default: coef)}
 }
 \description{
-
+description
 }
 \seealso{
 \code{\link{getDistMat}}

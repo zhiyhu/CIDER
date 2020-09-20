@@ -16,10 +16,8 @@
 #' @seealso \code{\link{getIDEr}} \code{\link[igraph]{graph_from_data_frame}}
 #' 
 #' @import Seurat igraph
+#' @importFrom graphics plot legend
 #' 
-#' @example 
-#' `dist <- getIDEr(seu)`
-#' `net <- plotNetwork(seu, dist)`
 #' 
 #' @export
 #' 

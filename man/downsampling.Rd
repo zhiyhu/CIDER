@@ -20,8 +20,9 @@ downsampling(
 
 \item{seed}{Numeric. Seed used to sample. (Default: 12345)}
 
-\item{include}{Boolean. Using `include = TRUE` to include the group smaller than required size. (Default: FALSE)
-#' @param replace Boolean. Using `replace = TRUE` if the group is smaller than required size and some cells will be repeatedly used. (Default: FALSE)}
+\item{include}{Boolean. Using `include = TRUE` to include the group smaller than required size. (Default: FALSE)}
+
+\item{replace}{Boolean. Using `replace = TRUE` if the group is smaller than required size and some cells will be repeatedly used. (Default: FALSE)}
 
 \item{lower.cutoff}{Numeric. The minimum size of groups to keep. (Default: 3)}
 }

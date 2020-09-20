@@ -1,6 +1,6 @@
 #' @title Plot Similarity Matrix
 #' 
-#' @description 
+#' @description description
 #' 
 #' @param dist.list List of list of similarity matrix. Output of function `getDistMat()`. Required.
 #' @param use Choose from "coef", "t" and "p". (Default: coef)
