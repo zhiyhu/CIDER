@@ -201,7 +201,7 @@ getIDEr <- function(seu,
 
   }
   
-  return(list(dist_coef, dist_t, dist_p, select))
+  return(list(dist_coef, dist_t, dist_p, select, combinations))
   
 }
 

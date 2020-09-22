@@ -7,7 +7,7 @@ using namespace Rcpp;
 
 // rcpp_hello_world
 List rcpp_hello_world();
-RcppExport SEXP _CIDEr_rcpp_hello_world() {
+RcppExport SEXP _Cider_rcpp_hello_world() {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -17,11 +17,11 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_CIDEr_rcpp_hello_world", (DL_FUNC) &_CIDEr_rcpp_hello_world, 0},
+    {"_Cider_rcpp_hello_world", (DL_FUNC) &_Cider_rcpp_hello_world, 0},
     {NULL, NULL, 0}
 };
 
-RcppExport void R_init_CIDEr(DllInfo *dll) {
+RcppExport void R_init_Cider(DllInfo *dll) {
     R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
     R_useDynamicSymbols(dll, FALSE);
 }

@@ -43,19 +43,7 @@ plotNetwork <- function(seu, dist, col.vector = NULL, use = "coef",
   N <- length(unique(df$g)) # number of groups
   
   # get the dataframe of combinations/pairs for comparison
-  combinations <- data.frame(g1 = rep(unique(df$g), each = N), g2 = rep(unique(df$g), N), stringsAsFactors = FALSE)
-  combinations <- combinations[combinations$g1 != combinations$g2, ]
-  combinations$b1 <- df$b[match(combinations$g1, df$g)]
-  combinations$b2 <- df$b[match(combinations$g2, df$g)]
-  combinations <- combinations[combinations$b1!=combinations$b2,]
-  idx <- c()
-  for(i in 2:nrow(combinations)){
-    if(!combinations$g2[i] %in% combinations$g1[1:(i-1)]) {
-      idx <- c(idx, i)
-    }
-  }
-  combinations <- combinations[c(1,idx),]
-  rownames(combinations) <- 1:nrow(combinations)
+  combinations <- dist[[5]]
   
   df_plot <- data.frame(g = seu$Group[select], # colour.by
                         b = seu$Batch[select], # batch
