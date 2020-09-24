@@ -1,4 +1,4 @@
-# CIDEr: meta-Clustering based on Inter-group Differential Expression
+# CIDER: meta-Clustering based on Inter-group Differential Expression
 
 Introduction xxxx
 
@@ -16,9 +16,6 @@ Introduction xxxx
 dist_list <- getDistMat(seu_list)
 plotDistMat(dist_list)
 ```
-
-
-
 
 ```
 seu_list <- mergeInitialClusters(seu_list, dist_list)
