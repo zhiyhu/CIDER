@@ -5,6 +5,9 @@ Introduction xxxx
 ## Installation
 
 
+* A [potential issue](https://thecoatlessprofessor.com/programming/cpp/rcpp-rcpparmadillo-and-os-x-mavericks-lgfortran-and-lquadmath-error/) about gfortran: `ld: warning: directory not found for option '-L/usr/local/lib/gcc/i686-apple-darwin8/4.2.3/x86_64'`
+
+* gfortran can be installed from [here](https://cran.r-project.org/bin/macosx/tools/)
 
 ## Tutorial - clustering
 
