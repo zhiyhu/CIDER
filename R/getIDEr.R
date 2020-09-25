@@ -3,10 +3,12 @@
 #' @description Calculate the similarity matrix based on the metrics of inter-group differential expression (IDEr)
 #'
 #' @param seu Seurat S4 object with the column of `initial_cluster` in its meta.data. Required.
-#' @param group.by.var Character. Default: "initial_cluster".
-#' @param method Character. It can be voom (default) or trend.
+#' @param group.by.var Group/initial clusters variable. Needs to be one of the `colnames(seu@meta.data)`. Default: "initial_cluster".
+#' @param batch.by.var Batch variable. Needs to be one of the `colnames(seu@meta.data)`. Default: "Batch"
+#' @param de.method Character. Methods for the DE analysis. It can be either "voom" (default) or "trend". limma trend is about 3 times faster than voom.
+#' @param similarity.measure Similarity measures. (Default: "pearson")
 #' @param verbose Boolean. Print the message and progress bar. (Default: TRUE)
-#' @param use.parallel Boolean. Use parallel. (Default: FALSE)
+#' @param use.parallel Boolean. Use parallel computation, which requires doParallel; no progress bar will be printed out. Run time will be 1/n.cores compared to the situation when no parallelisation is used. (Default: FALSE)
 #' @param n.cores Numeric. Number of cores used for parallel computing. If no value is given (default), it will use the output of `detectCores(logical = FALSE)`.
 #' @param downsampling.size Numeric. The number of cells representing each group. (Default: 40)
 #' @param downsampling.include Boolean. Using `include = TRUE` to include the group smaller than required size. (Default: FALSE)
@@ -28,7 +30,8 @@
 getIDEr <- function(seu,
                     group.by.var = "initial_cluster",
                     batch.by.var = "Batch",
-                    method = "voom",
+                    de.method = "voom",
+                    similarity.measure = "pearson",
                     verbose = TRUE,
                     use.parallel = FALSE,
                     n.cores = NULL,
@@ -86,7 +89,8 @@ getIDEr <- function(seu,
   N <- length(unique(df$g)) # number of groups
 
   # get the dataframe of combinations/pairs for comparison
-  combinations <- data.frame(g1 = rep(unique(df$g), each = N), g2 = rep(unique(df$g), N), stringsAsFactors = FALSE)
+  combinations <- data.frame(g1 = rep(unique(df$g), each = N), 
+                             g2 = rep(unique(df$g), N), stringsAsFactors = FALSE)
   combinations <- combinations[combinations$g1 != combinations$g2, ]
   combinations$b1 <- df$b[match(combinations$g1, df$g)]
   combinations$b2 <- df$b[match(combinations$g2, df$g)]
@@ -155,16 +159,29 @@ getIDEr <- function(seu,
         contrasts = perm_groups$pair,
         levels = design
       )
-      group_fit <- getGroupFit(dge2[, select2], design, contrast_m, method)
+      group_fit <- getGroupFit(dge2[, select2], design, contrast_m, de.method)
 
       idx1 <- rownames(dist_coef) == combinations$g1[i]
       idx2 <- colnames(dist_coef) == combinations$g2[i]
-      dist_coef[idx1, idx2] <- cor(coef(group_fit)[, 1], coef(group_fit)[, 2])
-      dist_t   [idx1, idx2] <- cor(group_fit$t[, 1], group_fit$t[, 2])
-      dist_p   [idx1, idx2] <- cor(
-        -log10(group_fit$p.value)[, 1] * sign(coef(group_fit)[, 1]),
-        -log10(group_fit$p.value)[, 2] * sign(coef(group_fit)[, 2])
-      )
+      
+      if (similarity.measure == "pearson") {
+        dist_coef[idx1, idx2] <- cor(coef(group_fit)[, 1], coef(group_fit)[, 2])
+        dist_t   [idx1, idx2] <- cor(group_fit$t[, 1], group_fit$t[, 2])
+        dist_p   [idx1, idx2] <- cor(
+          -log10(group_fit$p.value)[, 1] * sign(coef(group_fit)[, 1]),
+          -log10(group_fit$p.value)[, 2] * sign(coef(group_fit)[, 2])
+        )
+      } else {
+        dist_coef[idx1, idx2] <- measureSimilarity(coef(group_fit)[, 1], coef(group_fit)[, 2], 
+                                                   method = similarity.measure)
+        dist_t   [idx1, idx2] <- measureSimilarity(group_fit$t[, 1], group_fit$t[, 2], 
+                                                   method = similarity.measure)
+        dist_p   [idx1, idx2] <- measureSimilarity(
+          -log10(group_fit$p.value)[, 1] * sign(coef(group_fit)[, 1]),
+          -log10(group_fit$p.value)[, 2] * sign(coef(group_fit)[, 2]), 
+          method = similarity.measure)
+      }
+      
     }
     if (verbose == TRUE) {
       close(pb) # close progress bar
@@ -182,7 +199,7 @@ getIDEr <- function(seu,
     i <- NULL
     j <- NULL
 
-    df_dist <- foreach(i = combinations$g1, j = combinations$g2, df = rep(list(df), n.iter), dge = rep(list(dge), n.iter), bg.downsampling.factor = rep(bg.downsampling.factor, n.iter), method = rep(method, n.iter), .combine = "rbind") %dopar% {
+    df_dist <- foreach(i = combinations$g1, j = combinations$g2, df = rep(list(df), n.iter), dge = rep(list(dge), n.iter), bg.downsampling.factor = rep(bg.downsampling.factor, n.iter), method = rep(de.method, n.iter), .combine = "rbind") %dopar% {
       df$tmp <- NA
       df$tmp <- "bg"
       df$tmp[df$g == i] <- "g1"
@@ -209,18 +226,27 @@ getIDEr <- function(seu,
         contrasts = c("tmpg1-tmpbg", "tmpg2-tmpbg"),
         levels = design
       )
-      group_fit <- getGroupFit(dge2[, select2], design, contrast_m, method)
+      group_fit <- getGroupFit(dge2[, select2], design, contrast_m, de.method)
 
-      dist_coef <- cor(coef(group_fit)[, 1], coef(group_fit)[, 2])
-      dist_t <- cor(group_fit$t[, 1], group_fit$t[, 2])
-      dist_p <- cor(
-        -log10(group_fit$p.value)[, 1] * sign(coef(group_fit)[, 1]),
-        -log10(group_fit$p.value)[, 2] * sign(coef(group_fit)[, 2])
-      )
-
+      if (similarity.measure == "pearson") {
+        dist_coef <- cor(coef(group_fit)[, 1], coef(group_fit)[, 2])
+        dist_t <- cor(group_fit$t[, 1], group_fit$t[, 2])
+        dist_p <- cor(
+          -log10(group_fit$p.value)[, 1] * sign(coef(group_fit)[, 1]),
+          -log10(group_fit$p.value)[, 2] * sign(coef(group_fit)[, 2])
+        ) 
+      } else {
+        dist_coef[idx1, idx2] <- measureSimilarity(coef(group_fit)[, 1], coef(group_fit)[, 2], 
+                                                   method = similarity.measure)
+        dist_t   [idx1, idx2] <- measureSimilarity(group_fit$t[, 1], group_fit$t[, 2], 
+                                                   method = similarity.measure)
+        dist_p   [idx1, idx2] <- measureSimilarity(
+          -log10(group_fit$p.value)[, 1] * sign(coef(group_fit)[, 1]),
+          -log10(group_fit$p.value)[, 2] * sign(coef(group_fit)[, 2]), 
+          method = similarity.measure)
+      }
       print(c(dist_coef, dist_t, dist_p))
     }
-
 
     for (i in 1:nrow(combinations)) {
       idx1 <- rownames(dist_coef) == combinations$g1[i]
@@ -235,12 +261,13 @@ getIDEr <- function(seu,
 }
 
 
-#' @title Calculate Fit
+
+#' @title Calculate linear regression Fit
 #'
 #' @param dge dge
 #' @param design design
-#' @param contrast_m contrast_m
-#' @param method method
+#' @param contrast_m contrast matrix
+#' @param method DE.method
 #'
 #' @import limma edgeR
 #' @export
