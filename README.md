@@ -6,7 +6,7 @@ Introduction xxxx
 
 
 * A [potential issue](https://thecoatlessprofessor.com/programming/cpp/rcpp-rcpparmadillo-and-os-x-mavericks-lgfortran-and-lquadmath-error/) about gfortran: `ld: warning: directory not found for option '-L/usr/local/lib/gcc/i686-apple-darwin8/4.2.3/x86_64'`
-
+* An error called `Symbol not found: ___addtf3`: [solution](https://thecoatlessprofessor.com/programming/cpp/r-compiler-tools-for-rcpp-on-macos-before-r-3.6.0/)
 * gfortran can be installed from [here](https://cran.r-project.org/bin/macosx/tools/)
 
 ## Tutorial - clustering
