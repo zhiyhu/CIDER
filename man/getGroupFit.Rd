@@ -2,7 +2,7 @@
 % Please edit documentation in R/getIDEr.R
 \name{getGroupFit}
 \alias{getGroupFit}
-\title{Calculate Fit}
+\title{Calculate linear regression Fit}
 \usage{
 getGroupFit(dge, design, contrast_m, method)
 }
@@ -11,12 +11,12 @@ getGroupFit(dge, design, contrast_m, method)
 
 \item{design}{design}
 
-\item{contrast_m}{contrast_m}
+\item{contrast_m}{contrast matrix}
 
-\item{method}{method}
+\item{method}{DE.method}
 }
 \description{
-Calculate Fit
+Calculate linear regression Fit
 }
 \seealso{
 \code{\link{getIDEr}}

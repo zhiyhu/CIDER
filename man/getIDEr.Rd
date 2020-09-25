@@ -6,7 +6,10 @@
 \usage{
 getIDEr(
   seu,
-  method = "voom",
+  group.by.var = "initial_cluster",
+  batch.by.var = "Batch",
+  de.method = "voom",
+  similarity.measure = "pearson",
   verbose = TRUE,
   use.parallel = FALSE,
   n.cores = NULL,
@@ -19,11 +22,17 @@ getIDEr(
 \arguments{
 \item{seu}{Seurat S4 object with the column of `initial_cluster` in its meta.data. Required.}
 
-\item{method}{Character. It can be voom (default) or trend.}
+\item{group.by.var}{Group/initial clusters variable. Needs to be one of the `colnames(seu@meta.data)`. Default: "initial_cluster".}
+
+\item{batch.by.var}{Batch variable. Needs to be one of the `colnames(seu@meta.data)`. Default: "Batch"}
+
+\item{de.method}{Character. Methods for the DE analysis. It can be either "voom" (default) or "trend". limma trend is about 3 times faster than voom.}
+
+\item{similarity.measure}{Similarity measures. (Default: "pearson")}
 
 \item{verbose}{Boolean. Print the message and progress bar. (Default: TRUE)}
 
-\item{use.parallel}{Boolean. Use parallel. (Default: FALSE)}
+\item{use.parallel}{Boolean. Use parallel computation, which requires doParallel; no progress bar will be printed out. Run time will be 1/n.cores compared to the situation when no parallelisation is used. (Default: FALSE)}
 
 \item{n.cores}{Numeric. Number of cores used for parallel computing. If no value is given (default), it will use the output of `detectCores(logical = FALSE)`.}
 
