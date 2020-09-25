@@ -1,3 +1,5 @@
+#' @title Measure similarity between two vectors
+#' @description Measure similarity between two vectors
 #' @param x1 x1
 #' @param x2 x2
 #' @param method method
