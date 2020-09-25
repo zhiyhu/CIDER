@@ -3,6 +3,7 @@
 #' @description Calculate the similarity matrix based on the metrics of inter-group differential expression (IDEr)
 #'
 #' @param seu Seurat S4 object with the column of `initial_cluster` in its meta.data. Required.
+#' @param group.by.var Character. Default: "initial_cluster".
 #' @param method Character. It can be voom (default) or trend.
 #' @param verbose Boolean. Print the message and progress bar. (Default: TRUE)
 #' @param use.parallel Boolean. Use parallel. (Default: FALSE)
@@ -25,6 +26,8 @@
 #' @importFrom stats model.matrix cor
 #'
 getIDEr <- function(seu,
+                    group.by.var = "initial_cluster",
+                    batch.by.var = "Batch",
                     method = "voom",
                     verbose = TRUE,
                     use.parallel = FALSE,
@@ -34,12 +37,28 @@ getIDEr <- function(seu,
                     downsampling.replace = TRUE,
                     bg.downsampling.factor = 1) {
 
-
+  if(!group.by.var %in% colnames(seu@meta.data)) {
+    warning("group.by.var is not in the colnames of seu@meta.data.")
+    return(NULL)
+  } 
+  
+  if(!batch.by.var %in% colnames(seu@meta.data)) {
+    warning("batch.by.var is not in the colnames of seu@meta.data.")
+    return(NULL)
+  }
+  
+  tmp <- seu@meta.data[,colnames(seu@meta.data) == group.by.var]
+  
+  if(batch.by.var != "Batch") {
+    seu$Batch <- seu@meta.data[,colnames(seu@meta.data) == batch.by.var]
+  }
+  
   ## merge seurat list
   metadata <- data.frame(
-    label = seu$initial_cluster,
+    label = tmp,
     batch = seu$Batch,
-    ground_truth = seu$Group, stringsAsFactors = FALSE
+    # ground_truth = seu$Group, 
+    stringsAsFactors = FALSE
   )
 
   select <- downsampling(
@@ -57,7 +76,7 @@ getIDEr <- function(seu,
   df <- data.frame(
     g = metadata$label[select],
     b = metadata$batch[select], ## batch
-    ground_truth = metadata$ground_truth[select],
+    # ground_truth = metadata$ground_truth[select],
     stringsAsFactors = F
   ) ## label
 
@@ -120,7 +139,7 @@ getIDEr <- function(seu,
         select2 <- c(random.idx, which(df2$tmp %in% c("g1", "g2")))
         select2 <- sort(select2)
       } else {
-        select2 <- 1:n_bg
+        select2 <- 1:nrow(df2)
       }
 
       design <- model.matrix(~ 0 + tmp + b + detrate, data = df2[select2, ])
