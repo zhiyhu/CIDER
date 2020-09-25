@@ -200,7 +200,7 @@ getIDEr <- function(seu,
         select2 <- c(random.idx, which(df2$tmp %in% c("g1", "g2")))
         select2 <- sort(select2)
       } else {
-        select2 <- 1:n_bg
+        select2 <- 1:nrow(df2)
       }
 
       ## by group
