@@ -3,3 +3,4 @@
 .Rproj.user
 Read-and-delete-me
 *.Rproj
+src/*.so
