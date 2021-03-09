@@ -7,34 +7,23 @@
 using namespace Rcpp;
 
 // cosine_similarity
-NumericMatrix cosine_similarity(NumericMatrix Xr);
-RcppExport SEXP _CIDER_cosine_similarity(SEXP XrSEXP) {
+arma::mat cosine_similarity(Rcpp::NumericMatrix Xr);
+RcppExport SEXP _harmony_cosine_similarity(SEXP XrSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericMatrix >::type Xr(XrSEXP);
+    Rcpp::traits::input_parameter< Rcpp::NumericMatrix >::type Xr(XrSEXP);
     rcpp_result_gen = Rcpp::wrap(cosine_similarity(Xr));
-    return rcpp_result_gen;
-END_RCPP
-}
-// rcpp_hello_world
-List rcpp_hello_world();
-RcppExport SEXP _CIDER_rcpp_hello_world() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(rcpp_hello_world());
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_CIDER_cosine_similarity", (DL_FUNC) &_CIDER_cosine_similarity, 1},
-    {"_CIDER_rcpp_hello_world", (DL_FUNC) &_CIDER_rcpp_hello_world, 0},
+    {"_harmony_cosine_similarity", (DL_FUNC) &_harmony_cosine_similarity, 1},
     {NULL, NULL, 0}
 };
 
-RcppExport void R_init_CIDER(DllInfo *dll) {
+RcppExport void R_init_harmony(DllInfo *dll) {
     R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
     R_useDynamicSymbols(dll, FALSE);
 }
