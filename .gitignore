@@ -5,3 +5,6 @@ Read-and-delete-me
 *.Rproj
 src/*.so
 docs
+man/.DS_Store
+R/.DS_Store
+.DS_Store
