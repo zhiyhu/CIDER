@@ -12,6 +12,7 @@
 #' @param downsampling.size downsampling.size
 #' @param downsampling.include downsampling.include
 #' @param downsampling.replace downsampling.replace
+#' @param subset.row subset.row
 #'
 #' @return A list containing
 #'
@@ -26,7 +27,8 @@ getDistMat <- function(seu_list,
                        additional.variate = "donor",
                        downsampling.size = 35,
                        downsampling.include = TRUE,
-                       downsampling.replace = TRUE) {
+                       downsampling.replace = TRUE,
+                       subset.row = NULL) {
   dist_p <- list()
   dist_t <- list()
   dist_coef <- list()
@@ -67,7 +69,8 @@ getDistMat <- function(seu_list,
         dist_list <- calculateDistMatOneModel(
           matrix = matrix, metadata = df_info[c(idx, to_add), ],
           verbose = verbose, method = method,
-          additional.variate = additional.variate
+          additional.variate = additional.variate,
+          subset.row = subset.row
         )
       }
     }
@@ -102,6 +105,7 @@ getDistMat <- function(seu_list,
 #' @param verbose print the message and progress bar (default: TRUE)
 #' @param method voom or trend
 #' @param additional.variate additional.variate
+#' @param subset.row subset.row
 #'
 #' @return a list
 #'
@@ -113,17 +117,18 @@ getDistMat <- function(seu_list,
 calculateDistMatOneModel <- function(matrix, metadata,
                                      verbose = TRUE,
                                      method = "voom",
+                                     subset.row = NULL,
                                      additional.variate = "donor") {
   keep <- rowSums(matrix > 0.5) > 5
-  dge <- DGEList(counts = matrix[keep, , drop = F]) # make a edgeR object
+  dge <- DGEList(counts = matrix[keep, , drop = FALSE]) # make a edgeR object
   dge <- dge[!grepl("ERCC-", rownames(dge)), ] # remove ERCC
   dge <- dge[!grepl("MT-", rownames(dge)), ]
 
   df <- data.frame(
     g = paste(metadata$label, metadata$batch, sep = "_"),
     b = metadata$batch, ## batch
-    c = metadata$label, stringsAsFactors = F
-  ) ## label
+    c = metadata$label, stringsAsFactors = FALSE ## label
+  ) 
 
   df$detrate <- scale(colMeans(matrix > 0))[, 1]
   rownames(df) <- colnames(matrix)
@@ -186,8 +191,12 @@ calculateDistMatOneModel <- function(matrix, metadata,
   for (i in 1:ncol(group_fit$p.value)) {
     group_fit$p.value[, i] <- group_fit$p.value[, i] + 0.00000001
   }
+  
+  if(!is.null(subset.row)) {
+    group_fit <- group_fit[subset.row,]
+  }
 
-  # pairwise comparison
+  # pairwise comparison; modify this into matrix array computation
   for (i in 1:nrow(combinations)) {
     idx1 <- rownames(dist_coef) == combinations$g1[i]
     idx2 <- colnames(dist_coef) == combinations$g2[i]

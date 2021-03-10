@@ -1,15 +1,16 @@
-#' @title Compute IDEr
+#' @title Compute IDER-based similarity
 #'
-#' @description Calculate the similarity matrix based on the metrics of inter-group differential expression (IDEr)
+#' @description Calculate the similarity matrix based on the metrics of Inter-group Differential ExpRession (IDER)
 #'
 #' @param seu Seurat S4 object with the column of `initial_cluster` in its meta.data. Required.
 #' @param group.by.var Group/initial clusters variable. Needs to be one of the `colnames(seu@meta.data)`. Default: "initial_cluster".
 #' @param batch.by.var Batch variable. Needs to be one of the `colnames(seu@meta.data)`. Default: "Batch"
+#' @param subset.row subset.row
 #' @param de.method Character. Methods for the DE analysis. It can be either "voom" (default) or "trend". limma trend is about 3 times faster than voom.
 #' @param similarity.measure Similarity measures. (Default: "pearson")
 #' @param verbose Boolean. Print the message and progress bar. (Default: TRUE)
 #' @param use.parallel Boolean. Use parallel computation, which requires doParallel; no progress bar will be printed out. Run time will be 1/n.cores compared to the situation when no parallelisation is used. (Default: FALSE)
-#' @param n.cores Numeric. Number of cores used for parallel computing. If no value is given (default), it will use the output of `detectCores(logical = FALSE)`.
+#' @param n.cores Numeric. Number of cores used for parallel computing. If no value is given (default), it will use the output of `detectCores(logical = FALSE) - 1`.
 #' @param downsampling.size Numeric. The number of cells representing each group. (Default: 40)
 #' @param downsampling.include Boolean. Using `include = TRUE` to include the group smaller than required size. (Default: FALSE)
 #' @param downsampling.replace Boolean. Using `replace = TRUE` if the group is smaller than required size and some cells will be repeatedly used. (Default: FALSE)
@@ -25,11 +26,13 @@
 #'
 #' @import limma edgeR foreach utils doParallel
 #' @importFrom parallel detectCores
+#' @importFrom parallel stopCluster
 #' @importFrom stats model.matrix cor
 #'
 getIDEr <- function(seu,
                     group.by.var = "initial_cluster",
                     batch.by.var = "Batch",
+                    subset.row = NULL,
                     de.method = "voom",
                     similarity.measure = "pearson",
                     verbose = TRUE,
@@ -193,7 +196,7 @@ getIDEr <- function(seu,
     } else {
       n.cores <- min(n.cores, detectCores(logical = FALSE))
     }
-    registerDoParallel(n.cores)
+    cl <- registerDoParallel(n.cores)
     n.iter <- nrow(combinations)
 
     i <- NULL
@@ -235,7 +238,7 @@ getIDEr <- function(seu,
           -log10(group_fit$p.value)[, 1] * sign(coef(group_fit)[, 1]),
           -log10(group_fit$p.value)[, 2] * sign(coef(group_fit)[, 2])
         ) 
-      } else {
+      } else { ## remove idx1 idx2 ?????!!!!!
         dist_coef[idx1, idx2] <- measureSimilarity(coef(group_fit)[, 1], coef(group_fit)[, 2], 
                                                    method = similarity.measure)
         dist_t   [idx1, idx2] <- measureSimilarity(group_fit$t[, 1], group_fit$t[, 2], 
@@ -247,7 +250,7 @@ getIDEr <- function(seu,
       }
       print(c(dist_coef, dist_t, dist_p))
     }
-
+    stopCluster(cl)
     for (i in 1:nrow(combinations)) {
       idx1 <- rownames(dist_coef) == combinations$g1[i]
       idx2 <- colnames(dist_coef) == combinations$g2[i]

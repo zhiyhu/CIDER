@@ -1,8 +1,8 @@
 #' @title Plot Network Graph
 #' @description Plot network for the initial clusters based on IDEr. The width of edges denotes the similarity between two initial clusters.
 #'
-#' @param seu Seurat S4 object after the step of `getIDEr`. Required.
-#' @param dist A list. Output of `getIDEr`. Required.
+#' @param seu Seurat S4 object after the step of `getIDER`. Required.
+#' @param dist A list. Output of `getIDER`. Required.
 #' @param col.vector A vector of Hex colour codes. If no value is given, a vector of 74 colours will be used. (Default: NULL)
 #' @param use Character. The type of dist matrix to use. Can be one of "coef", "t" and "p". (Default: coef)
 #' @param colour.by Character. It should be one of the colnames of Seurat object meta.data. It is used to colour the vertex of the networkgraph. (Default: NULL)
@@ -61,7 +61,7 @@ plotNetwork <- function(seu, dist, col.vector = NULL, use = "coef",
 
   edges <- data.frame(from = combinations$g1, to = combinations$g2, weight = NA) # edges
 
-  if (use == "coef") {
+  if (use == "coef") { # type of dist matrix to use
     tmp <- dist[[1]] + t(dist[[1]])
   } else if (use == "t") {
     tmp <- dist[[2]] + t(dist[[2]])

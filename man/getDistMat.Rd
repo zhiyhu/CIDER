@@ -12,7 +12,8 @@ getDistMat(
   additional.variate = "donor",
   downsampling.size = 35,
   downsampling.include = TRUE,
-  downsampling.replace = TRUE
+  downsampling.replace = TRUE,
+  subset.row = NULL
 )
 }
 \arguments{
@@ -31,6 +32,8 @@ getDistMat(
 \item{downsampling.include}{downsampling.include}
 
 \item{downsampling.replace}{downsampling.replace}
+
+\item{subset.row}{subset.row}
 }
 \value{
 A list containing

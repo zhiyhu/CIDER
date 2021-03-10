@@ -56,6 +56,9 @@ seu <- finalClustering(seu, dist)
 ## Compatability
 
 
+## Technical notes
+
+This package was developed using R version 3.6.3 (2020-02-29), platform: x86_64-apple-darwin15.6.0 (64-bit).
 
 
 

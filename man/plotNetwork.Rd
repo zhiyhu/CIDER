@@ -15,9 +15,9 @@ plotNetwork(
 )
 }
 \arguments{
-\item{seu}{Seurat S4 object after the step of `getIDEr`. Required.}
+\item{seu}{Seurat S4 object after the step of `getIDER`. Required.}
 
-\item{dist}{A list. Output of `getIDEr`. Required.}
+\item{dist}{A list. Output of `getIDER`. Required.}
 
 \item{col.vector}{A vector of Hex colour codes. If no value is given, a vector of 74 colours will be used. (Default: NULL)}
 

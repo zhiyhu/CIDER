@@ -9,6 +9,7 @@ calculateDistMatOneModel(
   metadata,
   verbose = TRUE,
   method = "voom",
+  subset.row = NULL,
   additional.variate = "donor"
 )
 }
@@ -20,6 +21,8 @@ calculateDistMatOneModel(
 \item{verbose}{print the message and progress bar (default: TRUE)}
 
 \item{method}{voom or trend}
+
+\item{subset.row}{subset.row}
 
 \item{additional.variate}{additional.variate}
 }

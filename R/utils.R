@@ -14,10 +14,18 @@ measureSimilarity <- function(x1, x2, method = "pearson"){
       return(cor(x1, x2, method = method))
     } else if (method == "cosine") {
       x <- matrix(cbind(x1, x2))
-      return(1-cosine_similarity(x)[1,2])
+      return(1-cosineSimilarityR(x)[1,2])
     }
   } else {
     warning("x1 or x2 are not valid for similarity measures")
     return(NA)
   }
+}
+
+#' cosine similarity in R
+#' @param x a matrix
+cosineSimilarityR <- function(x) {
+    y <- t(x) %*% x
+    res <- y / (sqrt(diag(y)) %*% t(sqrt(diag(y))))
+    return(res)
 }
