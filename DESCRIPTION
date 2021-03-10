@@ -1,15 +1,16 @@
 Package: CIDER
 Type: Package
 Title: Meta-Clustering based on Inter-group Differential Expression
-Version: 1.0
-Date: 2020-09-19
+biocViews: BatchEffect, GeneExpression, RNASeq, SingleCell, Transcriptomics
+Version: 0.99.0
+Date:
 Author: Zhiyuan Hu
-Maintainer: Zhiyuan Hu <zhiyuan.hu@wrh.ox.ac.uk>
+Maintainer: Zhiyuan Hu <zhiyuan.cheryl.hu@gmail.com>
 Description: Using meta-clustering to integration populations from single-cell RNA-seq. Using meta-clustering to integration populations from single-cell RNA-seq.
+URL: https://github.com/zhiyhu/CIDER
+BugReports: https://github.com/zhiyhu/CIDER/issues
 License: MIT + file LICENSE
 Imports: 
-    Rcpp (>= 1.0.4),
-    RcppArmadillo, 
     limma (>= 3.42.0),
     edgeR (>= 3.28.0),
     stats (>= 3.6.2),
@@ -18,7 +19,14 @@ Imports:
     utils (>= 3.6.2),
     pheatmap (>= 1.0.0),
     doParallel,
-    igraph 
-LinkingTo: Rcpp, RcppArmadillo
+    igraph,
+    Rcpp, 
+    RcppArmadillo,
+    parallel,
+    graphics
 RoxygenNote: 7.1.1
 Encoding: UTF-8
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
