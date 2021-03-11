@@ -9,7 +9,7 @@ plotDistMat(dist.list, use = "coef")
 \arguments{
 \item{dist.list}{List of list of similarity matrix. Output of function `getDistMat()`. Required.}
 
-\item{use}{Choose from "coef", "t" and "p". (Default: coef)}
+\item{use}{Choose from "coef" and "p". (Default: coef)}
 }
 \description{
 description

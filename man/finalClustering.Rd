@@ -19,7 +19,7 @@ finalClustering(
 
 \item{dist}{A list. Output of `getIDEr`. Required.}
 
-\item{use}{Character. The type of dist matrix to use. Can be one of "coef", "t" and "p". (Default: coef)}
+\item{use}{Character. The type of dist matrix to use. Can be one of "coef" and "p". (Default: coef)}
 
 \item{cutree.by}{Character. Cut the tree by which parameter, height ("h") or number of clusters ("k"). (Default: h)}
 
@@ -27,7 +27,7 @@ finalClustering(
 
 \item{cutree.k}{Numeric/integer. Used to cut the tree. Ignored if `cutree.by = 'h`. (Default: 3)}
 
-\item{hc.method}{Character. Used to choose the hirarchical clustering method.}
+\item{hc.method}{Character. Used to choose the hierarchical clustering method.}
 }
 \value{
 Seurat S4 object with final clustering results in `cider_final_cluster` of meta.data.

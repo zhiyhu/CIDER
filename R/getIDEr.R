@@ -3,10 +3,9 @@
 #' @description Calculate the similarity matrix based on the metrics of Inter-group Differential ExpRession (IDER)
 #'
 #' @param seu Seurat S4 object with the column of `initial_cluster` in its meta.data. Required.
-#' @param group.by.var Group/initial clusters variable. Needs to be one of the `colnames(seu@meta.data)`. Default: "initial_cluster".
-#' @param batch.by.var Batch variable. Needs to be one of the `colnames(seu@meta.data)`. Default: "Batch"
-#' @param subset.row subset.row
-#' @param de.method Character. Methods for the DE analysis. It can be either "voom" (default) or "trend". limma trend is about 3 times faster than voom.
+#' @param group.by.var initial clusters (batch-specific groups) variable. Needs to be one of the `colnames(seu@meta.data)`. Default: "initial_cluster".
+#' @param batch.by.var Batch variable. Needs to be one of the `colnames(seu@meta.data)`. Default: "Batch".
+#' @param de.method Character. Methods for the DE analysis. It can be either "voom" or "trend" (default). limma trend is about 3 times faster than voom.
 #' @param similarity.measure Similarity measures. (Default: "pearson")
 #' @param verbose Boolean. Print the message and progress bar. (Default: TRUE)
 #' @param use.parallel Boolean. Use parallel computation, which requires doParallel; no progress bar will be printed out. Run time will be 1/n.cores compared to the situation when no parallelisation is used. (Default: FALSE)
@@ -14,7 +13,8 @@
 #' @param downsampling.size Numeric. The number of cells representing each group. (Default: 40)
 #' @param downsampling.include Boolean. Using `include = TRUE` to include the group smaller than required size. (Default: FALSE)
 #' @param downsampling.replace Boolean. Using `replace = TRUE` if the group is smaller than required size and some cells will be repeatedly used. (Default: FALSE)
-#' @param bg.downsampling.factor Numeric. The factor used to downsampling background cells. Using a number over 1 can decrease the computing time. The minimum number of background cells used is 50. (Default: 1)
+#' @param bg.downsampling.factor Numeric. The factor used to downsampling background cells. Using a number over 1 can shorten the computing time. The minimum number of background cells used is 50. (Default: 1)
+#' @param subset.row subset.row (not in use)
 #'
 #' @details Details
 #'
@@ -28,12 +28,13 @@
 #' @importFrom parallel detectCores
 #' @importFrom parallel stopCluster
 #' @importFrom stats model.matrix cor
+#' @importFrom parallel makeCluster
 #'
 getIDEr <- function(seu,
                     group.by.var = "initial_cluster",
                     batch.by.var = "Batch",
                     subset.row = NULL,
-                    de.method = "voom",
+                    de.method = "trend",
                     similarity.measure = "pearson",
                     verbose = TRUE,
                     use.parallel = FALSE,
@@ -77,14 +78,14 @@ getIDEr <- function(seu,
   keep <- rowSums(matrix > 0.5) > 5
   dge <- edgeR::DGEList(counts = matrix[keep, , drop = F]) # make a edgeR object
   dge <- dge[!grepl("ERCC-", rownames(dge)), ] # remove ERCC
-  dge <- dge[!grepl("MT-", rownames(dge)), ]
-
+  dge <- dge[!grepl("MT-", rownames(dge)), ] # remove mitochondria genes
+  dge <- dge[!grepl("mt-", rownames(dge)), ]
+  
   df <- data.frame(
-    g = metadata$label[select],
+    g = metadata$label[select], ## label
     b = metadata$batch[select], ## batch
-    # ground_truth = metadata$ground_truth[select],
     stringsAsFactors = F
-  ) ## label
+  ) 
 
   df$detrate <- scale(colMeans(matrix > 0))[, 1]
   rownames(df) <- colnames(matrix)
@@ -107,9 +108,10 @@ getIDEr <- function(seu,
   combinations <- combinations[c(1, idx), ]
   rownames(combinations) <- 1:nrow(combinations)
 
-  dist_p <- dist_t <- dist_coef <- matrix(0, nrow = N, ncol = N)
+  # dist_p <- dist_t <- dist_coef <- matrix(0, nrow = N, ncol = N)
+  dist_p <- dist_coef <- matrix(0, nrow = N, ncol = N)
   colnames(dist_p) <- rownames(dist_p) <- unique(df$g)
-  colnames(dist_t) <- rownames(dist_t) <- unique(df$g)
+  # colnames(dist_t) <- rownames(dist_t) <- unique(df$g)
   colnames(dist_coef) <- rownames(dist_coef) <- unique(df$g)
 
   if (use.parallel == FALSE) {
@@ -169,7 +171,7 @@ getIDEr <- function(seu,
       
       if (similarity.measure == "pearson") {
         dist_coef[idx1, idx2] <- cor(coef(group_fit)[, 1], coef(group_fit)[, 2])
-        dist_t   [idx1, idx2] <- cor(group_fit$t[, 1], group_fit$t[, 2])
+        # dist_t   [idx1, idx2] <- cor(group_fit$t[, 1], group_fit$t[, 2])
         dist_p   [idx1, idx2] <- cor(
           -log10(group_fit$p.value)[, 1] * sign(coef(group_fit)[, 1]),
           -log10(group_fit$p.value)[, 2] * sign(coef(group_fit)[, 2])
@@ -177,8 +179,8 @@ getIDEr <- function(seu,
       } else {
         dist_coef[idx1, idx2] <- measureSimilarity(coef(group_fit)[, 1], coef(group_fit)[, 2], 
                                                    method = similarity.measure)
-        dist_t   [idx1, idx2] <- measureSimilarity(group_fit$t[, 1], group_fit$t[, 2], 
-                                                   method = similarity.measure)
+        # dist_t   [idx1, idx2] <- measureSimilarity(group_fit$t[, 1], group_fit$t[, 2], 
+        #                                            method = similarity.measure)
         dist_p   [idx1, idx2] <- measureSimilarity(
           -log10(group_fit$p.value)[, 1] * sign(coef(group_fit)[, 1]),
           -log10(group_fit$p.value)[, 2] * sign(coef(group_fit)[, 2]), 
@@ -192,17 +194,22 @@ getIDEr <- function(seu,
   } else if (use.parallel == TRUE) { # use parallel
 
     if (is.null(n.cores)) {
-      n.cores <- detectCores(logical = FALSE)
+      n.cores <- detectCores(logical = FALSE) - 1
     } else {
-      n.cores <- min(n.cores, detectCores(logical = FALSE))
+      n.cores <- min(n.cores, (detectCores(logical = FALSE) - 1))
     }
-    cl <- registerDoParallel(n.cores)
+    
+    cl <- makeCluster(n.cores)
+    registerDoParallel(cl)
     n.iter <- nrow(combinations)
 
     i <- NULL
     j <- NULL
 
-    df_dist <- foreach(i = combinations$g1, j = combinations$g2, df = rep(list(df), n.iter), dge = rep(list(dge), n.iter), bg.downsampling.factor = rep(bg.downsampling.factor, n.iter), method = rep(de.method, n.iter), .combine = "rbind") %dopar% {
+    df_dist <- foreach(i = combinations$g1, j = combinations$g2, 
+                       df = rep(list(df), n.iter), dge = rep(list(dge), n.iter), 
+                       bg.downsampling.factor = rep(bg.downsampling.factor, n.iter), 
+                       method = rep(de.method, n.iter), .combine = "rbind") %dopar% {
       df$tmp <- NA
       df$tmp <- "bg"
       df$tmp[df$g == i] <- "g1"
@@ -233,34 +240,36 @@ getIDEr <- function(seu,
 
       if (similarity.measure == "pearson") {
         dist_coef <- cor(coef(group_fit)[, 1], coef(group_fit)[, 2])
-        dist_t <- cor(group_fit$t[, 1], group_fit$t[, 2])
+        # dist_t <- cor(group_fit$t[, 1], group_fit$t[, 2])
         dist_p <- cor(
           -log10(group_fit$p.value)[, 1] * sign(coef(group_fit)[, 1]),
           -log10(group_fit$p.value)[, 2] * sign(coef(group_fit)[, 2])
         ) 
       } else { ## remove idx1 idx2 ?????!!!!!
-        dist_coef[idx1, idx2] <- measureSimilarity(coef(group_fit)[, 1], coef(group_fit)[, 2], 
+        dist_coef <- measureSimilarity(coef(group_fit)[, 1], coef(group_fit)[, 2], 
                                                    method = similarity.measure)
-        dist_t   [idx1, idx2] <- measureSimilarity(group_fit$t[, 1], group_fit$t[, 2], 
-                                                   method = similarity.measure)
-        dist_p   [idx1, idx2] <- measureSimilarity(
+        # dist_t <- measureSimilarity(group_fit$t[, 1], group_fit$t[, 2], 
+        #                                            method = similarity.measure)
+        dist_p <- measureSimilarity(
           -log10(group_fit$p.value)[, 1] * sign(coef(group_fit)[, 1]),
           -log10(group_fit$p.value)[, 2] * sign(coef(group_fit)[, 2]), 
           method = similarity.measure)
       }
-      print(c(dist_coef, dist_t, dist_p))
+      # print(c(dist_coef, dist_t, dist_p))
+      print(c(dist_coef, dist_p))
     }
     stopCluster(cl)
     for (i in 1:nrow(combinations)) {
       idx1 <- rownames(dist_coef) == combinations$g1[i]
       idx2 <- colnames(dist_coef) == combinations$g2[i]
       dist_coef[idx1, idx2] <- df_dist[i, 1]
-      dist_t   [idx1, idx2] <- df_dist[i, 2]
+      # dist_t   [idx1, idx2] <- df_dist[i, 2]
       dist_p   [idx1, idx2] <- df_dist[i, 3]
     }
   }
 
-  return(list(dist_coef, dist_t, dist_p, select, combinations))
+  # return(list(dist_coef, dist_t, dist_p, select, combinations))
+  return(list(dist_coef, dist_p, select, combinations))
 }
 
 
