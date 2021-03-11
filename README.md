@@ -1,56 +1,44 @@
-# CIDER: meta-Clustering based on Inter-group Differential Expression
-
-Introduction xxxx
-
-## Installation
+# CIDER
 
 
-* A [potential issue](https://thecoatlessprofessor.com/programming/cpp/rcpp-rcpparmadillo-and-os-x-mavericks-lgfortran-and-lquadmath-error/) about gfortran: `ld: warning: directory not found for option '-L/usr/local/lib/gcc/i686-apple-darwin8/4.2.3/x86_64'`
-* An error called `Symbol not found: ___addtf3`: [solution](https://thecoatlessprofessor.com/programming/cpp/r-compiler-tools-for-rcpp-on-macos-before-r-3.6.0/)
-* gfortran can be installed from [here](https://cran.r-project.org/bin/macosx/tools/)
+## Quick Start - asCIDER
 
-## Tutorial - clustering
+**Step 1**: Prepare batch-specific group (initial cluster) annotations
 
+```
+seu$initial_cluster <- paste(seu$Group, seu$Batch, sep = "_")
+```
 
-
-### Step 1: Initial clustering (optional)
+See here for more information to de novo create your initial clusters.
 
 ```
 dist_list <- getDistMat(seu_list)
 plotDistMat(dist_list)
-```
-
-```
 seu_list <- mergeInitialClusters(seu_list, dist_list)
 ```
 
-### Step 2: Compute inter-group similarity matrix
-
+**Step 2**: Compute inter-group similarity matrix
 
 ```
-seu$initial_cluster <- paste(seu$Group, seu$Batch, sep = "_")
 dist <- getIDEr(seu)
 ```
 
-
-Visualisation:
-
-Network Graph
-
-```
-net <- plotNetwork(seu, dist)
-```
-
-
-
-
-### Step 3: Final clustering
-
-
+**Step 3**: Final clustering
 
 ```
 seu <- finalClustering(seu, dist)
 ```
+
+## Visualisation options
+
+Network Graph
+```
+net <- plotNetwork(seu, dist)
+```
+
+## Quick Start - evaluation
+
+
 
 
 ## Compatability

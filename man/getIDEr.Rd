@@ -9,7 +9,7 @@ getIDEr(
   group.by.var = "initial_cluster",
   batch.by.var = "Batch",
   subset.row = NULL,
-  de.method = "voom",
+  de.method = "trend",
   similarity.measure = "pearson",
   verbose = TRUE,
   use.parallel = FALSE,
@@ -23,13 +23,13 @@ getIDEr(
 \arguments{
 \item{seu}{Seurat S4 object with the column of `initial_cluster` in its meta.data. Required.}
 
-\item{group.by.var}{Group/initial clusters variable. Needs to be one of the `colnames(seu@meta.data)`. Default: "initial_cluster".}
+\item{group.by.var}{initial clusters (batch-specific groups) variable. Needs to be one of the `colnames(seu@meta.data)`. Default: "initial_cluster".}
 
-\item{batch.by.var}{Batch variable. Needs to be one of the `colnames(seu@meta.data)`. Default: "Batch"}
+\item{batch.by.var}{Batch variable. Needs to be one of the `colnames(seu@meta.data)`. Default: "Batch".}
 
-\item{subset.row}{subset.row}
+\item{subset.row}{subset.row (not in use)}
 
-\item{de.method}{Character. Methods for the DE analysis. It can be either "voom" (default) or "trend". limma trend is about 3 times faster than voom.}
+\item{de.method}{Character. Methods for the DE analysis. It can be either "voom" or "trend" (default). limma trend is about 3 times faster than voom.}
 
 \item{similarity.measure}{Similarity measures. (Default: "pearson")}
 
@@ -45,7 +45,7 @@ getIDEr(
 
 \item{downsampling.replace}{Boolean. Using `replace = TRUE` if the group is smaller than required size and some cells will be repeatedly used. (Default: FALSE)}
 
-\item{bg.downsampling.factor}{Numeric. The factor used to downsampling background cells. Using a number over 1 can decrease the computing time. The minimum number of background cells used is 50. (Default: 1)}
+\item{bg.downsampling.factor}{Numeric. The factor used to downsampling background cells. Using a number over 1 can shorten the computing time. The minimum number of background cells used is 50. (Default: 1)}
 }
 \value{
 A list of four values: three similarity matrices and one list of indeces.

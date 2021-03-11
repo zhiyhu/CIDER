@@ -23,7 +23,11 @@ Imports:
     Rcpp, 
     RcppArmadillo,
     parallel,
-    graphics
+    graphics,
+    ggplot2,
+    cowplot,
+    RColorBrewer,
+    viridis
 RoxygenNote: 7.1.1
 Encoding: UTF-8
 Suggests: 
