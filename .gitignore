@@ -10,3 +10,6 @@ R/.DS_Store
 .DS_Store
 CIDER.Rproj
 inst/doc
+doc
+Meta
+inhouse_notes.txt

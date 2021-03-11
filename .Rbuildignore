@@ -6,3 +6,6 @@
 ^pkgdown$
 ^CIDER\.Rproj
 ^\.DS_Store
+^doc$
+^Meta$
+^\.github$
