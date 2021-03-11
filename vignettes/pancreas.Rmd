@@ -1,8 +1,8 @@
 ---
-title: "Run meta-clustering on the pancreas dataset"
+title: "Run meta-clustering (asCIDER) on the pancreas dataset"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{my-vignette}
+  %\VignetteIndexEntry{pancreas}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -16,11 +16,126 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(CIDER)
+library(Seurat)
+library(pheatmap)
+library(ggplot2)
+library(cowplot)
+library(RColorBrewer)
+library(viridis)
 
+qual_col_pals = brewer.pal.info[brewer.pal.info$category == 'qual',]
+col_vector = unlist(mapply(brewer.pal, qual_col_pals$maxcolors, rownames(qual_col_pals)))
 ```
 
+
+# Load data
+
+Pancreatic cell data$^1$ contain cells from human (n = 8241) and mouse (1886).
 
 ```{r}
-
+data("pancreas_counts")
+data("pancreas_meta")
+seu <- CreateSeuratObject(counts = pancreas_counts, meta.data = pancreas_meta)
+table(seu$Batch)
 ```
 
+# Prepare initial clusters
+
+asCIDER uses existing within-batch clustering results. Here we concatenate the batch ID and the within-batch cluster ID to obtain cluster-specific groups (i.e. initial clusters).
+
+```{r initial_cluster}
+seu$initial_cluster <- paste(seu$Group, seu$Batch, sep = "_")
+table(seu$initial_cluster)
+```
+
+# Calculation of IDER similarity matrix
+
+The function `getIDEr` calculate the IDER-based similarity matrix. 
+
+By default, it will use the column called "initial_cluster" as initial clusters, and "Batch" as batch. If you are using columns other than this two, please revise these two parameters.
+
+The available DE methods are "trend" (default) for limma-trend and "voom" for limma-voom. limma-trend usually runs faster than voom and they tend to give similar outputs.
+
+For this step, you can choose to use parallel computation by setting `use.parallel = TRUE` or not (default `use.parallel = FALSE`). The default number of cores used for parallel computation is `detectCores(logical = FALSE) - 1`.
+
+```{r run-getIDER-parallel}
+sim <- getIDEr(seu, 
+               group.by.var = "initial_cluster",
+               batch.by.var = "Batch",
+               de.method = "trend",
+               downsampling.size = 35)
+```
+
+Visualise the distance matrix with heatmap.
+
+```{r heatmap, fig.height=7, fig.width=5}
+groups <- c("alpha","beta","delta", "gamma","ductal","endothelial", "activated_stellate", "quiescent_stellate", "macrophage")
+idx1 <- paste0(groups, "_human")
+idx2 <- paste0(groups, "_mouse")
+tmp <- sim[[1]] + t(sim[[1]])
+diag(tmp) <- 1
+pheatmap::pheatmap(
+  tmp[idx1, idx2],
+  color = inferno(10),
+  border_color = NA,
+  display_numbers = TRUE,
+  cluster_rows = FALSE,
+  cluster_cols = FALSE,
+  width = 7,
+  height = 5,
+  cellwidth = 25,
+  cellheight = 25
+)
+```
+
+
+# Final Clustering
+
+Next we put both Seurat object and the similarity matrix list into `finalClustering`. You can either cut trees by height (set `cutree.by = 'h`) or by k (set `cutree.by = 'k`). The default is cutting by the height of 0.45.
+
+The final clustering results are stored in Colume `cider_final_cluster` of Seurat object metadata and can be extracted using `seu$cider_final_cluster`.
+
+```{r final-clustering}
+seu <- finalClustering(seu, sim, cutree.h = 0.45)
+head(seu@meta.data)
+```
+
+# Visualisation
+
+```{r seurat-pipeline}
+seu <- NormalizeData(seu, verbose = FALSE)
+seu <- FindVariableFeatures(seu, selection.method = "vst", nfeatures = 2000, verbose = FALSE)
+seu <- ScaleData(seu, verbose = FALSE)
+seu <- RunPCA(seu, npcs = 20, verbose = FALSE)
+seu <- RunTSNE(seu, reduction = "pca", dims = 1:15)
+```
+
+```{r summary-tsne-plots, fig.width=6, fig.height=15}
+df_plot <- data.frame(tSNE_1 = seu@reductions$tsne@cell.embeddings[,1],
+                      tSNE_2 = seu@reductions$tsne@cell.embeddings[,2],
+                      Batch = as.factor(seu$Batch),
+                      Ground_truth = as.factor(seu$Group),
+                      asCIDER_cluster = as.factor(seu$cider_final_cluster)
+                      )
+
+scatterPlot <- function(df, var, colvec) { # function for tSNE plot
+  ggplot(df_plot, aes_string(x = "tSNE_1", y = "tSNE_2", col = var)) + 
+    geom_point(alpha = 0.6, size=0.5)  +  
+    theme_classic() + theme(legend.position = "right") +  
+    theme(axis.ticks.x = element_blank(),axis.ticks.y = element_blank(),axis.text = element_blank()) +
+    scale_color_manual(values = colvec)
+}
+  
+plot_list <- list()
+plot_list[[1]] <- scatterPlot(df = df_plot, var = "Batch", colvec = col_vector[1:10]) 
+plot_list[[2]] <- scatterPlot(df = df_plot, var = "Ground_truth", colvec = col_vector[1:20]) 
+plot_list[[3]] <- scatterPlot(df = df_plot, var = "asCIDER_cluster", colvec = col_vector[1:20]) 
+plot_grid(plotlist = plot_list, ncol = 1)
+```
+
+
+
+
+# References
+
+1. Baron, M. et al. A Single-Cell Transcriptomic Map of the Human and Mouse Pancreas Reveals Inter- and Intra-cell Population Structure. Cell Syst 3, 346–360.e4 (2016).
