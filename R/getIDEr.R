@@ -5,16 +5,12 @@
 #' @param seu Seurat S4 object with the column of `initial_cluster` in its meta.data. Required.
 #' @param group.by.var initial clusters (batch-specific groups) variable. Needs to be one of the `colnames(seu@meta.data)`. Default: "initial_cluster".
 #' @param batch.by.var Batch variable. Needs to be one of the `colnames(seu@meta.data)`. Default: "Batch".
-#' @param de.method Character. Methods for the DE analysis. It can be either "voom" or "trend" (default). limma trend is about 3 times faster than voom.
-#' @param similarity.measure Similarity measures. (Default: "pearson")
 #' @param verbose Boolean. Print the message and progress bar. (Default: TRUE)
 #' @param use.parallel Boolean. Use parallel computation, which requires doParallel; no progress bar will be printed out. Run time will be 1/n.cores compared to the situation when no parallelisation is used. (Default: FALSE)
-#' @param n.cores Numeric. Number of cores used for parallel computing. If no value is given (default), it will use the output of `detectCores(logical = FALSE) - 1`.
+#' @param n.cores Numeric. Number of cores used for parallel computing (default: 1). 
 #' @param downsampling.size Numeric. The number of cells representing each group. (Default: 40)
 #' @param downsampling.include Boolean. Using `include = TRUE` to include the group smaller than required size. (Default: FALSE)
 #' @param downsampling.replace Boolean. Using `replace = TRUE` if the group is smaller than required size and some cells will be repeatedly used. (Default: FALSE)
-#' @param bg.downsampling.factor Numeric. The factor used to downsampling background cells. Using a number over 1 can shorten the computing time. The minimum number of background cells used is 50. (Default: 1)
-#' @param subset.row subset.row (not in use)
 #'
 #' @details Details
 #'
@@ -29,20 +25,18 @@
 #' @importFrom parallel stopCluster
 #' @importFrom stats model.matrix cor
 #' @importFrom parallel makeCluster
+#' @importFrom edgeR cpm
 #'
 getIDEr <- function(seu,
                     group.by.var = "initial_cluster",
                     batch.by.var = "Batch",
                     subset.row = NULL,
-                    de.method = "trend",
-                    similarity.measure = "pearson",
                     verbose = TRUE,
                     use.parallel = FALSE,
-                    n.cores = NULL,
+                    n.cores = 1,
                     downsampling.size = 40,
                     downsampling.include = TRUE,
-                    downsampling.replace = TRUE,
-                    bg.downsampling.factor = 1) {
+                    downsampling.replace = TRUE) {
 
   if(!group.by.var %in% colnames(seu@meta.data)) {
     warning("group.by.var is not in the colnames of seu@meta.data.")
@@ -56,30 +50,32 @@ getIDEr <- function(seu,
   
   tmp <- seu@meta.data[,colnames(seu@meta.data) == group.by.var]
   
-  if(batch.by.var != "Batch") {
+  if(batch.by.var != "Batch") { # which is the batch var
     seu$Batch <- seu@meta.data[,colnames(seu@meta.data) == batch.by.var]
   }
   
   ## merge seurat list
   metadata <- data.frame(
     label = tmp,
-    batch = seu$Batch,
-    # ground_truth = seu$Group, 
+    batch = seu$Batch, # batch
     stringsAsFactors = FALSE
   )
 
-  select <- downsampling(
-    metadata = metadata, n.size = downsampling.size,
-    include = downsampling.include, replace = downsampling.replace
+  select <- downsampling( # sampling
+    metadata = metadata, 
+    n.size = downsampling.size,
+    include = downsampling.include, 
+    replace = downsampling.replace
   )
 
-  matrix <- as.matrix(seu@assays$RNA@counts[, select])
+  matrix <- as.matrix(seu@assays$RNA@counts[, select]) # matrix for dist calculation
   colnames(matrix) <- paste0(colnames(matrix), 1:ncol(matrix)) # avoid duplication
   keep <- rowSums(matrix > 0.5) > 5
   dge <- edgeR::DGEList(counts = matrix[keep, , drop = F]) # make a edgeR object
   dge <- dge[!grepl("ERCC-", rownames(dge)), ] # remove ERCC
   dge <- dge[!grepl("MT-", rownames(dge)), ] # remove mitochondria genes
-  dge <- dge[!grepl("mt-", rownames(dge)), ]
+  dge <- dge[!grepl("mt-", rownames(dge)), ] # remove mitochondria genes for other species
+  logCPM <- cpm(dge, log = TRUE, prior.count = 3) # calculate cpm
   
   df <- data.frame(
     g = metadata$label[select], ## label
@@ -87,8 +83,10 @@ getIDEr <- function(seu,
     stringsAsFactors = F
   ) 
 
-  df$detrate <- scale(colMeans(matrix > 0))[, 1]
+  df$detrate <- scale(colMeans(matrix > 0))[, 1] # gene detection rate
   rownames(df) <- colnames(matrix)
+  rm(matrix)
+  gc()
 
   N <- length(unique(df$g)) # number of groups
 
@@ -99,6 +97,7 @@ getIDEr <- function(seu,
   combinations$b1 <- df$b[match(combinations$g1, df$g)]
   combinations$b2 <- df$b[match(combinations$g2, df$g)]
   combinations <- combinations[combinations$b1 != combinations$b2, ]
+  
   idx <- c()
   for (i in 2:nrow(combinations)) {
     if (!combinations$g2[i] %in% combinations$g1[1:(i - 1)]) {
@@ -107,200 +106,113 @@ getIDEr <- function(seu,
   }
   combinations <- combinations[c(1, idx), ]
   rownames(combinations) <- 1:nrow(combinations)
-
-  # dist_p <- dist_t <- dist_coef <- matrix(0, nrow = N, ncol = N)
-  dist_p <- dist_coef <- matrix(0, nrow = N, ncol = N)
-  colnames(dist_p) <- rownames(dist_p) <- unique(df$g)
-  # colnames(dist_t) <- rownames(dist_t) <- unique(df$g)
+  
+  dist_coef <- matrix(0, nrow = N, ncol = N) # distance matrix
   colnames(dist_coef) <- rownames(dist_coef) <- unique(df$g)
 
-  if (use.parallel == FALSE) {
+  if(use.parallel & n.cores == 1){
+    n.cores <- detectCores(logical = FALSE) - 1
+    if(verbose){
+      message(sprintf("Use %d cores for calculation.", n.cores))
+    }
+  }
+  
+  if (use.parallel == FALSE | n.cores == 1) { # not using parallel -----
 
     # create progress bar
-    if (verbose == TRUE) {
+    if (verbose) {
       message("Generating distance matrix...")
       pb <- txtProgressBar(min = 0, max = nrow(combinations), style = 3)
       k <- 1
     }
 
     for (i in 1:nrow(combinations)) {
-      if (verbose == TRUE) {
+      if (verbose) {
         setTxtProgressBar(pb, k) # progress bar
         k <- k + 1
       }
 
-      df$tmp <- NA
       df$tmp <- "bg"
-      df$tmp[df$g == combinations$g1[i]] <- "g1"
-      df$tmp[df$g == combinations$g2[i]] <- "g2"
-      df2 <- df[!is.na(df$tmp), ]
-      dge2 <- dge[, !is.na(df$tmp)]
+      df$tmp[which(df$g == combinations$g1[i])] <- "g1"
+      df$tmp[which(df$g == combinations$g2[i])] <- "g2"
 
-      ## downsampling the bg
-      n_bg <- sum(df2$tmp == "bg")
-
-      if (bg.downsampling.factor > 1) {
-        set.seed(12345)
-        random.idx <- sample(
-          x = which(df2$tmp == "bg"),
-          size = max(n_bg / bg.downsampling.factor, 50), replace = FALSE
-        )
-        select2 <- c(random.idx, which(df2$tmp %in% c("g1", "g2")))
-        select2 <- sort(select2)
-      } else {
-        select2 <- 1:nrow(df2)
-      }
-
-      design <- model.matrix(~ 0 + tmp + b + detrate, data = df2[select2, ])
-      groups <- paste0("tmp", unique(df2$tmp))
-      groups <- groups[groups != "tmpbg"]
-      perm_groups <- data.frame(
-        g1 = groups,
-        g2 = "tmpbg", stringsAsFactors = F
-      )
-      perm_groups <- perm_groups[perm_groups$g1 != perm_groups$g2, ]
-      perm_groups$pair <- paste0(perm_groups$g1, "-", perm_groups$g2)
-      contrast_m <- makeContrasts(
-        contrasts = perm_groups$pair,
+      design <- model.matrix(~ 0 + tmp + b + detrate, data = df)
+      contrast_m <- limma::makeContrasts(
+        contrasts = c("tmpg1-tmpbg", "tmpg2-tmpbg"),
         levels = design
       )
-      group_fit <- getGroupFit(dge2[, select2], design, contrast_m, de.method)
-
       idx1 <- rownames(dist_coef) == combinations$g1[i]
       idx2 <- colnames(dist_coef) == combinations$g2[i]
-      
-      if (similarity.measure == "pearson") {
-        dist_coef[idx1, idx2] <- cor(coef(group_fit)[, 1], coef(group_fit)[, 2])
-        # dist_t   [idx1, idx2] <- cor(group_fit$t[, 1], group_fit$t[, 2])
-        dist_p   [idx1, idx2] <- cor(
-          -log10(group_fit$p.value)[, 1] * sign(coef(group_fit)[, 1]),
-          -log10(group_fit$p.value)[, 2] * sign(coef(group_fit)[, 2])
-        )
-      } else {
-        dist_coef[idx1, idx2] <- measureSimilarity(coef(group_fit)[, 1], coef(group_fit)[, 2], 
-                                                   method = similarity.measure)
-        # dist_t   [idx1, idx2] <- measureSimilarity(group_fit$t[, 1], group_fit$t[, 2], 
-        #                                            method = similarity.measure)
-        dist_p   [idx1, idx2] <- measureSimilarity(
-          -log10(group_fit$p.value)[, 1] * sign(coef(group_fit)[, 1]),
-          -log10(group_fit$p.value)[, 2] * sign(coef(group_fit)[, 2]), 
-          method = similarity.measure)
-      }
+      dist_coef[idx1, idx2] <- getGroupFit(logCPM, design, contrast_m)
       
     }
     if (verbose == TRUE) {
       close(pb) # close progress bar
     }
-  } else if (use.parallel == TRUE) { # use parallel
-
-    if (is.null(n.cores)) {
-      n.cores <- detectCores(logical = FALSE) - 1
-    } else {
-      n.cores <- min(n.cores, (detectCores(logical = FALSE) - 1))
+  } else if (use.parallel == TRUE) { # using parallel -----
+    
+    # decide OS and register parallel the parallel backend
+    if(Sys.info()["sysname"] == "Linux") { 
+      registerDoParallel(cores = n.cores)
+    } else{
+      if(n.cores > detectCores(logical = FALSE) - 1){
+        warning("too many cores assign. Setting n.cores = detectCores(logical = FALSE) - 1")
+        n.cores <- detectCores(logical = FALSE) - 1
+      }
+      cl <- makeCluster(n.cores)
+      registerDoParallel(cl = cl)
     }
     
-    cl <- makeCluster(n.cores)
-    registerDoParallel(cl)
-    n.iter <- nrow(combinations)
+    n.iter <- nrow(combinations) # number of iterations
 
     i <- NULL
     j <- NULL
-
+    
+    
     df_dist <- foreach(i = combinations$g1, j = combinations$g2, 
-                       df = rep(list(df), n.iter), dge = rep(list(dge), n.iter), 
-                       bg.downsampling.factor = rep(bg.downsampling.factor, n.iter), 
-                       method = rep(de.method, n.iter), .combine = "rbind") %dopar% {
-      df$tmp <- NA
-      df$tmp <- "bg"
-      df$tmp[df$g == i] <- "g1"
-      df$tmp[df$g == j] <- "g2"
-      df2 <- df[!is.na(df$tmp), ]
-      dge2 <- dge[, !is.na(df$tmp)]
-
-      n_bg <- sum(df2$tmp == "bg")
-      if (bg.downsampling.factor > 1) {
-        set.seed(12345)
-        random.idx <- sample(
-          x = which(df2$tmp == "bg"),
-          size = max(n_bg / bg.downsampling.factor, 50), replace = FALSE
-        )
-        select2 <- c(random.idx, which(df2$tmp %in% c("g1", "g2")))
-        select2 <- sort(select2)
-      } else {
-        select2 <- 1:nrow(df2)
-      }
-
-      ## by group
-      design <- model.matrix(~ 0 + tmp + b + detrate, data = df2[select2, ])
-      contrast_m <- makeContrasts(
-        contrasts = c("tmpg1-tmpbg", "tmpg2-tmpbg"),
-        levels = design
-      )
-      group_fit <- getGroupFit(dge2[, select2], design, contrast_m, de.method)
-
-      if (similarity.measure == "pearson") {
-        dist_coef <- cor(coef(group_fit)[, 1], coef(group_fit)[, 2])
-        # dist_t <- cor(group_fit$t[, 1], group_fit$t[, 2])
-        dist_p <- cor(
-          -log10(group_fit$p.value)[, 1] * sign(coef(group_fit)[, 1]),
-          -log10(group_fit$p.value)[, 2] * sign(coef(group_fit)[, 2])
-        ) 
-      } else { ## remove idx1 idx2 ?????!!!!!
-        dist_coef <- measureSimilarity(coef(group_fit)[, 1], coef(group_fit)[, 2], 
-                                                   method = similarity.measure)
-        # dist_t <- measureSimilarity(group_fit$t[, 1], group_fit$t[, 2], 
-        #                                            method = similarity.measure)
-        dist_p <- measureSimilarity(
-          -log10(group_fit$p.value)[, 1] * sign(coef(group_fit)[, 1]),
-          -log10(group_fit$p.value)[, 2] * sign(coef(group_fit)[, 2]), 
-          method = similarity.measure)
-      }
-      # print(c(dist_coef, dist_t, dist_p))
-      print(c(dist_coef, dist_p))
+                       df = rep(list(df), n.iter), logCPM = rep(list(logCPM), n.iter), 
+                       .combine = "rbind", .verbose = verbose) %dopar% 
+                       {
+                      
+                         df$tmp <- "bg"
+                         df$tmp[df$g == i] <- "g1"
+                         df$tmp[df$g == j] <- "g2"
+                         
+                         design <- model.matrix(~  0 + tmp + b + detrate, data = df) 
+                         contrast_m <- limma::makeContrasts(
+                           contrasts = c("tmpg1-tmpbg", "tmpg2-tmpbg"),
+                           levels = design
+                         )
+                         getGroupFit(logCPM, design, contrast_m)
+                       }
+    
+    if(Sys.info()["sysname"] == "Linux") { 
+      stopImplicitCluster()
+    } else {
+      stopCluster(cl)
     }
-    stopCluster(cl)
-    for (i in 1:nrow(combinations)) {
+
+    for (i in 1:nrow(combinations)) { # assign the distance values into the matrix
       idx1 <- rownames(dist_coef) == combinations$g1[i]
       idx2 <- colnames(dist_coef) == combinations$g2[i]
       dist_coef[idx1, idx2] <- df_dist[i, 1]
-      # dist_t   [idx1, idx2] <- df_dist[i, 2]
-      dist_p   [idx1, idx2] <- df_dist[i, 3]
     }
   }
 
-  # return(list(dist_coef, dist_t, dist_p, select, combinations))
-  return(list(dist_coef, dist_p, select, combinations))
+  return(list(dist_coef + t(dist_coef), select, combinations))
 }
-
 
 
 #' @title Calculate linear regression Fit
 #'
-#' @param dge dge
+#' @param logCPM logCPM
 #' @param design design
 #' @param contrast_m contrast matrix
-#' @param method DE.method
 #'
-#' @import limma edgeR
-#' @export
-#'
-#' @seealso \code{\link{getIDEr}}
-#'
-getGroupFit <- function(dge, design, contrast_m, method) {
-  if (method == "voom") {
-    v <- voom(dge, design, plot = FALSE)
-    fit <- lmFit(v, design)
-    group_fit <- contrasts.fit(fit, contrast_m)
-    group_fit <- eBayes(group_fit)
-  } else if (method == "trend") {
-    logCPM <- cpm(dge, log = TRUE, prior.count = 3)
-    fit <- lmFit(logCPM, design)
-    group_fit <- contrasts.fit(fit, contrast_m)
-    group_fit <- eBayes(group_fit, trend = TRUE, robust = TRUE)
-  }
-
-  group_fit$p.value[, 1] <- group_fit$p.value[, 1] + 0.00000001
-  group_fit$p.value[, 2] <- group_fit$p.value[, 2] + 0.00000001
-
-  return(group_fit)
+#' @importFrom stats cor .lm.fit
+getGroupFit <- function(logCPM, design, contrast_m){
+  fit <- .lm.fit(design, t(logCPM))
+  coef <- .zeroDominantMatrixMult(t(fit$coefficients), contrast_m)
+  return(cor(coef[, 1], coef[, 2]))
 }
+

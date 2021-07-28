@@ -1,4 +1,6 @@
+title: CIDER
+url: http://zhiyhu.github.io/CIDER
 template:
   params:
-    bootswatch: cerulean
+    bootswatch: flatly
     ganalytics: UA-000000-01

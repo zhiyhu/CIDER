@@ -7,14 +7,12 @@
 #' @param seu_list seu list
 #' @param verbose print the message and progress bar (default: TRUE)
 #' @param method voom or trend
-#' @param model one model
-#' @param additional.variate additional.variate
+#' @param additional.variate additional variate to include into the regression model
 #' @param downsampling.size downsampling.size
 #' @param downsampling.include downsampling.include
 #' @param downsampling.replace downsampling.replace
-#' @param subset.row subset.row
 #'
-#' @return A list containing
+#' @return a distance matrix
 #'
 #' @export
 #'
@@ -22,19 +20,15 @@
 #'
 getDistMat <- function(seu_list,
                        verbose = TRUE,
+                       tmp.initial.clusters = "seurat_clusters",
                        method = "trend",
-                       model = "one",
-                       additional.variate = "donor",
+                       additional.variate = NULL,
                        downsampling.size = 35,
                        downsampling.include = TRUE,
-                       downsampling.replace = TRUE,
-                       subset.row = NULL) {
-  dist_p <- list()
-  dist_t <- list()
+                       downsampling.replace = TRUE) {
   dist_coef <- list()
 
-  # create progress bar
-  if (verbose == TRUE) {
+  if (verbose == TRUE) { # create progress bar
     pb <- txtProgressBar(min = 0, max = length(seu_list), style = 3)
     k <- 1
   }
@@ -42,8 +36,8 @@ getDistMat <- function(seu_list,
   for (seu_itor in 1:length(seu_list)) {
     df_info <- data.frame(
       label = seu_list[[seu_itor]]$seurat_clusters,
-      batch = seu_list[[seu_itor]]$Batch,
-      donor = seu_list[[seu_itor]]$Tissue
+      batch = seu_list[[seu_itor]]$Batch
+      # donor = seu_list[[seu_itor]]$Tissue
     )
 
     idx <- downsampling(
@@ -64,34 +58,26 @@ getDistMat <- function(seu_list,
       rm(matrix2)
     }
 
-    if (model == "one") {
-      if (length(unique(df_info$label[idx])) > 2) {
-        dist_list <- calculateDistMatOneModel(
-          matrix = matrix, metadata = df_info[c(idx, to_add), ],
-          verbose = verbose, method = method,
-          additional.variate = additional.variate,
-          subset.row = subset.row
-        )
-      }
+    if (length(unique(df_info$label[idx])) > 2) {
+      dist_coef[[seu_itor]] <- calculateDistMatOneModel(
+        matrix = matrix, metadata = df_info[c(idx, to_add), ],
+        # matrix = matrix, metadata = df_info[idx, ],
+        verbose = verbose, method = method,
+        additional.variate = additional.variate
+      )
     }
-
-    dist_coef[[seu_itor]] <- dist_list[[1]]
-    dist_t[[seu_itor]] <- dist_list[[2]]
-    dist_p[[seu_itor]] <- dist_list[[3]]
-
+    
     if (verbose == TRUE) {
       setTxtProgressBar(pb, k) # progress bar
       k <- k + 1
     }
   }
-
   if (verbose == TRUE) {
     close(pb) # close progress bar
   }
 
-  return(list(dist_coef, dist_t, dist_p))
+  return(dist_coef)
 }
-
 
 
 #' @title Calculate distance matrix with in one model
@@ -105,7 +91,6 @@ getDistMat <- function(seu_list,
 #' @param verbose print the message and progress bar (default: TRUE)
 #' @param method voom or trend
 #' @param additional.variate additional.variate
-#' @param subset.row subset.row
 #'
 #' @return a list
 #'
@@ -117,100 +102,78 @@ getDistMat <- function(seu_list,
 calculateDistMatOneModel <- function(matrix, metadata,
                                      verbose = TRUE,
                                      method = "voom",
-                                     subset.row = NULL,
-                                     additional.variate = "donor") {
-  keep <- rowSums(matrix > 0.5) > 5
-  dge <- DGEList(counts = matrix[keep, , drop = FALSE]) # make a edgeR object
-  dge <- dge[!grepl("ERCC-", rownames(dge)), ] # remove ERCC
-  dge <- dge[!grepl("MT-", rownames(dge)), ]
+                                     additional.variate = NULL) 
+  {
+  keep <- rowSums(matrix > 0.5) > 5 
+  dge <- edgeR::DGEList(counts = matrix[keep,,drop=F]) # make a edgeR object
+  dge <- dge[!grepl("ERCC-", rownames(dge)),] # remove ERCC
+  dge <- dge[!grepl("MT-", rownames(dge)),]
+  dge <- dge[!grepl("mt-", rownames(dge)),]
 
-  df <- data.frame(
-    g = paste(metadata$label, metadata$batch, sep = "_"),
-    b = metadata$batch, ## batch
-    c = metadata$label, stringsAsFactors = FALSE ## label
-  ) 
-
-  df$detrate <- scale(colMeans(matrix > 0))[, 1]
+  df <- data.frame(g = paste(metadata$label, metadata$batch, sep = "_"),
+                   b = metadata$batch, ## batch
+                   c = metadata$label, ## label
+                   stringsAsFactors = F) 
+  df$detrate <- scale(colMeans(matrix > 0))[,1] # gene detection rate
   rownames(df) <- colnames(matrix)
-
-  N <- length(unique(df$g))
-
+  
+  N <- length(unique(df$g)) # number of initial groups
+  
   combinations <- data.frame(g1 = rep(unique(df$g), each = N), g2 = rep(unique(df$g), N), stringsAsFactors = FALSE)
   combinations <- combinations[combinations$g1 != combinations$g2, ]
-  combinations <- sort(combinations)
-
+  # combinations <- sort(combinations)
+  
   idx <- c()
-  for (i in 2:nrow(combinations)) {
-    if (!combinations$g2[i] %in% combinations$g1[1:(i - 1)]) {
+  for(i in 2:nrow(combinations)){
+    if(!combinations$g2[i] %in% combinations$g1[1:(i-1)]) {
       idx <- c(idx, i)
     }
   }
-
-  combinations <- combinations[c(1, idx), ]
+  
+  combinations <- combinations[c(1,idx),]
   rownames(combinations) <- 1:nrow(combinations)
-
-  dist_p <- dist_t <- dist_coef <- matrix(0, nrow = N, ncol = N)
-  colnames(dist_p) <- rownames(dist_p) <- sort(unique(df$g))
-  colnames(dist_t) <- rownames(dist_t) <- sort(unique(df$g))
+  
+  dist_coef <- matrix(0, nrow = N, ncol = N)
   colnames(dist_coef) <- rownames(dist_coef) <- sort(unique(df$g))
-
-
-  if (!is.null(additional.variate) & additional.variate %in% colnames(metadata)) {
-    df$subb <- metadata[, colnames(metadata) == additional.variate]
-    design <- model.matrix(~ 0 + g + subb + detrate, data = df)
-    message("model used: ~  0 + g + subb + detrate")
+  
+  if("donor" %in% colnames(metadata)){
+    df$subb <- metadata$donor
+    design <- model.matrix(~  0 + g + subb + detrate, data = df)
   } else {
-    design <- model.matrix(~ 0 + g + detrate, data = df)
-    message("model used: ~  0 + g + detrate")
+    design <- model.matrix(~  0 + g + detrate, data = df)
   }
-
+  
   groups <- sort(unique(paste0("g", df$g)))
-  n_groups <- length(groups)
-
-  df_contrasts <- data.frame(target_group = groups, contrast = NA)
-
-  for (i in 1:n_groups) {
-    df_contrasts$contrast[i] <- paste0(groups[i], "-(", paste(groups[-i], collapse = "+"), ")/", (n_groups - 1))
+  n_groups <- length(groups) # number of groups
+  
+  df_contrasts <- data.frame(target_group = groups, contrast = NA) # prepare contrast matrix
+  for(i in 1:n_groups){
+    df_contrasts$contrast[i] <- paste0(groups[i], "-(", paste(groups[-i], collapse = "+"), ")/", (n_groups-1))
   }
   # contrast matrix
   contrast_m <- makeContrasts(contrasts = df_contrasts$contrast, levels = design)
   colnames(contrast_m) <- groups
-
+  
   if (method == "voom") {
     v <- voom(dge, design, plot = FALSE)
-    suppressMessages(fit <- lmFit(v, design))
-    group_fit <- contrasts.fit(fit, contrast_m)
-    group_fit <- eBayes(group_fit)
+    fit <- lmFit(v, design)
+    group_fit <- contrasts.fit(fit, contrast_m) 
+    # group_fit <- eBayes(group_fit)
   } else if (method == "trend") {
-    logCPM <- cpm(dge, log = TRUE, prior.count = 3)
+    logCPM <- edgeR::cpm(dge, log=TRUE, prior.count=3)
     fit <- lmFit(logCPM, design)
     fit <- contrasts.fit(fit, contrast_m)
-    group_fit <- eBayes(fit, trend = TRUE, robust = TRUE)
+    group_fit <- eBayes(fit, trend=TRUE, robust = TRUE)
   }
-
-  for (i in 1:ncol(group_fit$p.value)) {
-    group_fit$p.value[, i] <- group_fit$p.value[, i] + 0.00000001
-  }
-  
-  if(!is.null(subset.row)) {
-    group_fit <- group_fit[subset.row,]
-  }
-
-  # pairwise comparison; modify this into matrix array computation
-  for (i in 1:nrow(combinations)) {
+  # pairwise comparison
+  for(i in 1:nrow(combinations)){
     idx1 <- rownames(dist_coef) == combinations$g1[i]
     idx2 <- colnames(dist_coef) == combinations$g2[i]
-
     pos1 <- df_contrasts$target_group == paste0("g", combinations$g1[i])
     pos2 <- df_contrasts$target_group == paste0("g", combinations$g2[i])
-
+    
     dist_coef[idx1, idx2] <- cor(coef(group_fit)[, pos1], coef(group_fit)[, pos2])
-    dist_t[idx1, idx2] <- cor(group_fit$t[, pos1], group_fit$t[, pos2])
-    dist_p[idx1, idx2] <- cor(-log10(group_fit$p.value)[, pos1] * sign(coef(group_fit)[, pos1]),
-      -log10(group_fit$p.value)[, pos2] * sign(coef(group_fit)[, pos2]),
-      use = "pairwise.complete.obs"
-    )
   }
-
-  return(list(dist_coef, dist_t, dist_p))
+  return(dist_coef)
 }
+

@@ -23,7 +23,7 @@
 #'
 plotNetwork <- function(seu, dist, col.vector = NULL, use = "coef",
                         colour.by = NULL, weight.factor = 6.5, vertex.size = 1) {
-  select <- dist[[4]]
+  select <- dist[[2]]
 
   if (!is.null(colour.by)) {
     if (colour.by %in% colnames(seu@meta.data)) {
@@ -44,7 +44,7 @@ plotNetwork <- function(seu, dist, col.vector = NULL, use = "coef",
   N <- length(unique(df$g)) # number of groups
 
   # get the dataframe of combinations/pairs for comparison
-  combinations <- dist[[5]]
+  combinations <- dist[[3]]
 
   df_plot <- data.frame(
     g = seu$Group[select], # colour.by

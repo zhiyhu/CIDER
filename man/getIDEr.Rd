@@ -9,15 +9,12 @@ getIDEr(
   group.by.var = "initial_cluster",
   batch.by.var = "Batch",
   subset.row = NULL,
-  de.method = "trend",
-  similarity.measure = "pearson",
   verbose = TRUE,
   use.parallel = FALSE,
-  n.cores = NULL,
+  n.cores = 1,
   downsampling.size = 40,
   downsampling.include = TRUE,
-  downsampling.replace = TRUE,
-  bg.downsampling.factor = 1
+  downsampling.replace = TRUE
 )
 }
 \arguments{
@@ -27,25 +24,17 @@ getIDEr(
 
 \item{batch.by.var}{Batch variable. Needs to be one of the `colnames(seu@meta.data)`. Default: "Batch".}
 
-\item{subset.row}{subset.row (not in use)}
-
-\item{de.method}{Character. Methods for the DE analysis. It can be either "voom" or "trend" (default). limma trend is about 3 times faster than voom.}
-
-\item{similarity.measure}{Similarity measures. (Default: "pearson")}
-
 \item{verbose}{Boolean. Print the message and progress bar. (Default: TRUE)}
 
 \item{use.parallel}{Boolean. Use parallel computation, which requires doParallel; no progress bar will be printed out. Run time will be 1/n.cores compared to the situation when no parallelisation is used. (Default: FALSE)}
 
-\item{n.cores}{Numeric. Number of cores used for parallel computing. If no value is given (default), it will use the output of `detectCores(logical = FALSE) - 1`.}
+\item{n.cores}{Numeric. Number of cores used for parallel computing (default: 1).}
 
 \item{downsampling.size}{Numeric. The number of cells representing each group. (Default: 40)}
 
 \item{downsampling.include}{Boolean. Using `include = TRUE` to include the group smaller than required size. (Default: FALSE)}
 
 \item{downsampling.replace}{Boolean. Using `replace = TRUE` if the group is smaller than required size and some cells will be repeatedly used. (Default: FALSE)}
-
-\item{bg.downsampling.factor}{Numeric. The factor used to downsampling background cells. Using a number over 1 can shorten the computing time. The minimum number of background cells used is 50. (Default: 1)}
 }
 \value{
 A list of four values: three similarity matrices and one list of indeces.

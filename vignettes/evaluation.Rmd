@@ -1,0 +1,96 @@
+---
+title: "Evaluation of integration outcome by CIDER"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Evaluation of integration outcome by CIDER}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>", warning = FALSE
+)
+```
+
+# Introduction
+
+# Set up
+
+```{r setup}
+library(CIDER)
+library(Seurat)
+library(cowplot)
+library(ggplot2)
+```
+
+# Load dendritic data
+
+```{r}
+data("dendritic")
+```
+
+# Perform integration
+
+
+```{r}
+seu.list <- SplitObject(dendritic, split.by = "Batch")
+for (i in 1:length(seu.list)) {
+  seu.list[[i]] <- NormalizeData(seu.list[[i]], verbose = FALSE)
+  seu.list[[i]] <- FindVariableFeatures(seu.list[[i]], selection.method = "vst", 
+                                        nfeatures = 1000, verbose = FALSE)
+}
+seu.anchors <- FindIntegrationAnchors(object.list = seu.list, dims = 1:15, verbose = FALSE)
+seu.integrated <- IntegrateData(anchorset = seu.anchors, dims = 1:15, verbose = FALSE)
+
+DefaultAssay(seu.integrated) <- "integrated"
+# Run the standard workflow for visualization and clustering
+seu.integrated <- ScaleData(seu.integrated, verbose = FALSE)
+seu.integrated <- RunPCA(seu.integrated, verbose = FALSE)
+seu.integrated <- RunTSNE(seu.integrated, reduction = "pca", dims = 1:5)
+```
+
+Clean up the 
+
+```{r}
+rm(seu.list, seu.anchors)
+gc()
+```
+
+# 
+
+```{r}
+seu.integrated <- hdbscan.seurat(seu.integrated)
+ider <- getIDEr(seu.integrated, use.parallel = TRUE, verbose = FALSE)
+seu.integrated <- estimateProb(seu.integrated, ider)
+```
+
+
+```{r, fig.height=5, fig.width=5}
+plotNetwork(seu.integrated, ider, weight.factor = 3)
+```
+
+```{r, fig.height=5, fig.width=5}
+plotHeatmap(seu.integrated, ider)
+```
+
+```{r, fig.height=4, fig.width=5}
+plot(hclust(as.dist(1-ider[[1]])))
+```
+
+
+
+```{r, fig.height=9, fig.width=4}
+p1 <- scatterPlot(seu.integrated, "tsne", "dbscan_cluster")
+p2 <- scatterPlot(seu.integrated, "tsne", colour.by = "similarity") + labs(fill = "Similarity")
+p3 <- scatterPlot(seu.integrated, "tsne", colour.by = "pvalue") + labs(fill = "Empirical p values")
+plot_grid(p1,p2,p3, ncol = 1)
+```
+
+# Refering to ground-truth annotation
+
+```{r, fig.height=3, fig.width=5}
+scatterPlot(seu.integrated, "tsne", colour.by = "Group") + labs(fill = "Group\n (ground truth)")
+```
+

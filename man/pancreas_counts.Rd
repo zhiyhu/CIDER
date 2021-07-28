@@ -3,9 +3,9 @@
 \docType{data}
 \name{pancreas_counts}
 \alias{pancreas_counts}
-\title{Sparse count matrix of pancreatic cells}
+\title{Sparse count matrix of cells from pancreatic tissues}
 \format{
-A data frame with xxx rows and xxx variables:
+A sparse matrix with xxx rows and xxx variables:
 \describe{
   \item{Col1}{description of Col1}
   \item{Col2}{description of Col2}

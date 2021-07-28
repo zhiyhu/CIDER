@@ -7,7 +7,6 @@
 finalClustering(
   seu,
   dist,
-  use = "coef",
   cutree.by = "h",
   cutree.h = 0.45,
   cutree.k = 3,
@@ -19,8 +18,6 @@ finalClustering(
 
 \item{dist}{A list. Output of `getIDEr`. Required.}
 
-\item{use}{Character. The type of dist matrix to use. Can be one of "coef" and "p". (Default: coef)}
-
 \item{cutree.by}{Character. Cut the tree by which parameter, height ("h") or number of clusters ("k"). (Default: h)}
 
 \item{cutree.h}{Numeric between 0 and 1. The height used to cut the tree. Ignored if `cutree.by = 'k`. (Default: 0.45)}
@@ -28,9 +25,11 @@ finalClustering(
 \item{cutree.k}{Numeric/integer. Used to cut the tree. Ignored if `cutree.by = 'h`. (Default: 3)}
 
 \item{hc.method}{Character. Used to choose the hierarchical clustering method.}
+
+\item{use}{Character. The type of dist matrix to use. Can be one of "coef" and "p". (Default: coef)}
 }
 \value{
-Seurat S4 object with final clustering results in `cider_final_cluster` of meta.data.
+Seurat S4 object with final clustering results in `CIDER_clusters` of meta.data.
 }
 \description{
 Merge initial clusters into final clusters based on the matrix of IDEr.

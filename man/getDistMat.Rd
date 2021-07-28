@@ -7,13 +7,12 @@
 getDistMat(
   seu_list,
   verbose = TRUE,
+  tmp.initial.clusters = "seurat_clusters",
   method = "trend",
-  model = "one",
-  additional.variate = "donor",
+  additional.variate = NULL,
   downsampling.size = 35,
   downsampling.include = TRUE,
-  downsampling.replace = TRUE,
-  subset.row = NULL
+  downsampling.replace = TRUE
 )
 }
 \arguments{
@@ -23,20 +22,16 @@ getDistMat(
 
 \item{method}{voom or trend}
 
-\item{model}{one model}
-
-\item{additional.variate}{additional.variate}
+\item{additional.variate}{additional variate to include into the regression model}
 
 \item{downsampling.size}{downsampling.size}
 
 \item{downsampling.include}{downsampling.include}
 
 \item{downsampling.replace}{downsampling.replace}
-
-\item{subset.row}{subset.row}
 }
 \value{
-A list containing
+a distance matrix
 }
 \description{
 discription

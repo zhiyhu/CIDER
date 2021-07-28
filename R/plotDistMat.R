@@ -31,3 +31,23 @@ plotDistMat <- function(dist.list, use = "coef") {
   }
   return(hm)
 }
+
+
+#' @import pheatmap
+#' @export
+plotHeatmap <- function(seu, ider) {
+  idx <- getSharedGroups(seu, ider[[1]])
+  shared_g <- idx[[1]]
+  idx1 <- idx[[2]]
+  idx2 <- idx[[3]]
+  
+  pheatmap::pheatmap(
+    ider[[1]][idx1, idx2],
+    border_color = "grey20",
+    color = viridis::inferno(50),
+    display_numbers = TRUE,
+    cluster_rows = FALSE,
+    cluster_cols = FALSE
+  )
+  
+}

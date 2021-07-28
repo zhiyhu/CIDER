@@ -4,20 +4,15 @@
 \alias{getGroupFit}
 \title{Calculate linear regression Fit}
 \usage{
-getGroupFit(dge, design, contrast_m, method)
+getGroupFit(logCPM, design, contrast_m)
 }
 \arguments{
-\item{dge}{dge}
+\item{logCPM}{logCPM}
 
 \item{design}{design}
 
 \item{contrast_m}{contrast matrix}
-
-\item{method}{DE.method}
 }
 \description{
 Calculate linear regression Fit
-}
-\seealso{
-\code{\link{getIDEr}}
 }

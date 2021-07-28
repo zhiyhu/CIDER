@@ -1,52 +1,45 @@
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
 # CIDER
 
+<!-- badges: start -->
+<!-- badges: end -->
+The goal of CIDER is to ...
 
-## Quick Start - asCIDER
+## Installation
 
-**Step 1**: Prepare batch-specific group (initial cluster) annotations
+You can install the released version of CIDER from [CRAN](https://CRAN.R-project.org) with:
 
-```
-seu$initial_cluster <- paste(seu$Group, seu$Batch, sep = "_")
-```
-
-See here for more information to de novo create your initial clusters.
-
-```
-dist_list <- getDistMat(seu_list)
-plotDistMat(dist_list)
-seu_list <- mergeInitialClusters(seu_list, dist_list)
+``` r
+install.packages("CIDER")
 ```
 
-**Step 2**: Compute inter-group similarity matrix
+## Example
 
-```
-dist <- getIDEr(seu)
-```
+This is a basic example which shows you how to solve a common problem:
 
-**Step 3**: Final clustering
-
-```
-seu <- finalClustering(seu, dist)
+``` r
+library(CIDER)
+## basic example code
 ```
 
-## Visualisation options
+What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
 
-Network Graph
+``` r
+summary(cars)
+#>      speed           dist       
+#>  Min.   : 4.0   Min.   :  2.00  
+#>  1st Qu.:12.0   1st Qu.: 26.00  
+#>  Median :15.0   Median : 36.00  
+#>  Mean   :15.4   Mean   : 42.98  
+#>  3rd Qu.:19.0   3rd Qu.: 56.00  
+#>  Max.   :25.0   Max.   :120.00
 ```
-net <- plotNetwork(seu, dist)
-```
 
-## Quick Start - evaluation
+You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this. You could also use GitHub Actions to re-render `README.Rmd` every time you push. An example workflow can be found here: <https://github.com/r-lib/actions/tree/master/examples>.
 
+You can also embed plots, for example:
 
+<img src="man/figures/README-pressure-1.png" width="100%" />
 
-
-## Compatability
-
-
-## Technical notes
-
-This package was developed using R version 3.6.3 (2020-02-29), platform: x86_64-apple-darwin15.6.0 (64-bit).
-
-
-
+In that case, don't forget to commit and push the resulting figure files, so they display on GitHub and CRAN.

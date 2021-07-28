@@ -1,6 +1,6 @@
 Package: CIDER
 Type: Package
-Title: Meta-Clustering based on Inter-group Differential Expression
+Title: Meta-Clustering based on Inter-group Differential ExpRession
 biocViews: BatchEffect, GeneExpression, RNASeq, SingleCell, Transcriptomics
 Version: 0.99.0
 Date:
@@ -14,7 +14,7 @@ Imports:
     limma (>= 3.42.0),
     edgeR (>= 3.28.0),
     stats (>= 3.6.2),
-    foreach (>= 1.5.0),
+    foreach (>= 1.4.7),
     Seurat (>= 3.1.0),
     utils (>= 3.6.2),
     pheatmap (>= 1.0.0),
@@ -35,3 +35,5 @@ Suggests:
     rmarkdown,
     testthat
 VignetteBuilder: knitr
+Depends: 
+    R (>= 2.10)
