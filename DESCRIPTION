@@ -18,6 +18,7 @@ Imports:
     Seurat (>= 3.1.0),
     utils (>= 3.6.2),
     pheatmap (>= 1.0.0),
+    dbscan (>= 1.1-5),
     doParallel,
     igraph,
     Rcpp, 
