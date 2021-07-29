@@ -7,13 +7,13 @@
 hdbscan.seurat(seu, reduction = "pca", dims = 1:15, minPts = 25)
 }
 \arguments{
-\item{seu}{seu after integration}
+\item{seu}{a Seurat object after integration or batch corrected.}
 
-\item{reduction}{reduction}
+\item{reduction}{Name of the dimension reduction after integration or batch correction. Default: PCA.}
 
-\item{dims}{dims}
+\item{dims}{Dimensions used. Default: 1:15.}
 
-\item{minPts}{minPts}
+\item{minPts}{interger; Minimum size of clusters. Will pass to the `hdbscan` function}
 }
 \value{
 A list of four values: three similarity matrices and one list of indeces.

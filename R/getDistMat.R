@@ -16,7 +16,8 @@
 #'
 #' @export
 #'
-#' @import Seurat utils
+#' @import Seurat utils limma
+#' @importFrom edgeR cpm
 #'
 getDistMat <- function(seu_list,
                        verbose = TRUE,
@@ -162,8 +163,8 @@ calculateDistMatOneModel <- function(matrix, metadata,
   } else if (method == "trend") {
     logCPM <- edgeR::cpm(dge, log=TRUE, prior.count=3)
     fit <- lmFit(logCPM, design)
-    fit <- contrasts.fit(fit, contrast_m)
-    group_fit <- eBayes(fit, trend=TRUE, robust = TRUE)
+    group_fit <- contrasts.fit(fit, contrast_m)
+    # group_fit <- eBayes(fit, trend=TRUE, robust = TRUE)
   }
   # pairwise comparison
   for(i in 1:nrow(combinations)){

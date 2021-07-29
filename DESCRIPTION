@@ -35,7 +35,8 @@ Encoding: UTF-8
 Suggests: 
     knitr,
     rmarkdown,
-    testthat
+    testthat,
+    statmod (>= 1.2.2)
 VignetteBuilder: knitr
 Depends: 
-    R (>= 2.10)
+    R (>= 3.5.0)
