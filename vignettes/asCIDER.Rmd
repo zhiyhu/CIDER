@@ -97,21 +97,12 @@ By default, it will use the column called "initial_cluster" as initial clusters,
 
 For this step, you can choose to use parallel computation by setting `use.parallel = TRUE` or not (default `use.parallel = FALSE`). The default number of cores used for parallel computation is `detectCores(logical = FALSE) - 1`.
 
-```{r run-getIDER-parallel}
+```{r run-getIDER-noparallel}
 ider <- getIDEr(seu, 
                 group.by.var = "initial_cluster",
                 batch.by.var = "Batch",
                 downsampling.size = 35, 
-                use.parallel = TRUE, verbose = FALSE)
-```
-
-```{r run-getIDER-no-parallel}
-ider_noParallel <- getIDEr(seu, 
-                group.by.var = "initial_cluster",
-                batch.by.var = "Batch",
-                downsampling.size = 35, 
                 use.parallel = FALSE, verbose = FALSE)
-identical(ider, ider_noParallel)
 ```
 
 ## Visualise the similarity matrix

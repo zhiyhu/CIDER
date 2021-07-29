@@ -46,7 +46,7 @@ table(seu$Batch)
 
 ```{r}
 seu <- initialClustering(seu, additional.vars.to.regress = "Sample", dims = 1:15)
-ider <- getIDEr(seu, downsampling.size = 35, use.parallel = TRUE, verbose = FALSE)
+ider <- getIDEr(seu, downsampling.size = 35, use.parallel = FALSE, verbose = FALSE)
 seu <- finalClustering(seu, ider, cutree.h = 0.35) # final clustering
 ```
 

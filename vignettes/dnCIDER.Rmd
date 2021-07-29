@@ -122,7 +122,7 @@ ider <- getIDEr(seu,
                 group.by.var = "initial_cluster",
                 batch.by.var = "Batch",
                 downsampling.size = 35, 
-                use.parallel = TRUE, verbose = FALSE)
+                use.parallel = FALSE, verbose = FALSE)
 ```
 
 ```{r plot-network, fig.height=9, fig.width=9}
@@ -140,7 +140,6 @@ plot(as.dendrogram(hc), horiz = T)
 
 ```{r}
 seu <- finalClustering(seu, ider, cutree.h = 0.35) # final clustering
-mclust::adjustedRandIndex(seu$CIDER_cluster, seu$Group)
 ```
 
 

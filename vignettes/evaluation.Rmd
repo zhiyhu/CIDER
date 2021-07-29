@@ -62,7 +62,7 @@ gc()
 
 ```{r}
 seu.integrated <- hdbscan.seurat(seu.integrated)
-ider <- getIDEr(seu.integrated, use.parallel = TRUE, verbose = FALSE)
+ider <- getIDEr(seu.integrated, use.parallel = FALSE, verbose = FALSE)
 seu.integrated <- estimateProb(seu.integrated, ider)
 ```
 
