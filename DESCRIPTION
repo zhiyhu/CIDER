@@ -19,6 +19,7 @@ Imports:
     utils (>= 3.6.2),
     pheatmap (>= 1.0.0),
     dbscan (>= 1.1-5),
+    kernlab (>= 0.9-29),
     doParallel,
     igraph,
     Rcpp, 
