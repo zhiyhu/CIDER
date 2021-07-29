@@ -25,8 +25,6 @@ finalClustering(
 \item{cutree.k}{Numeric/integer. Used to cut the tree. Ignored if `cutree.by = 'h`. (Default: 3)}
 
 \item{hc.method}{Character. Used to choose the hierarchical clustering method.}
-
-\item{use}{Character. The type of dist matrix to use. Can be one of "coef" and "p". (Default: coef)}
 }
 \value{
 Seurat S4 object with final clustering results in `CIDER_clusters` of meta.data.
@@ -35,5 +33,5 @@ Seurat S4 object with final clustering results in `CIDER_clusters` of meta.data.
 Merge initial clusters into final clusters based on the matrix of IDEr.
 }
 \seealso{
-\code{\link{getIDEr}} \code{\link[stats]{hclust}}
+\code{\link{getIDEr}}
 }

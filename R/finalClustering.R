@@ -4,7 +4,6 @@
 #'
 #' @param seu Seurat S4 object after the step of `getIDEr`. Required.
 #' @param dist A list. Output of `getIDEr`. Required.
-#' @param use Character. The type of dist matrix to use. Can be one of "coef" and "p". (Default: coef)
 #' @param cutree.by Character. Cut the tree by which parameter, height ("h") or number of clusters ("k"). (Default: h)
 #' @param cutree.h Numeric between 0 and 1. The height used to cut the tree. Ignored if `cutree.by = 'k`. (Default: 0.45)
 #' @param cutree.k Numeric/integer. Used to cut the tree. Ignored if `cutree.by = 'h`. (Default: 3)
@@ -12,10 +11,9 @@
 #'
 #' @return Seurat S4 object with final clustering results in `CIDER_clusters` of meta.data.
 #'
-#' @seealso \code{\link{getIDEr}} \code{\link[stats]{hclust}}
+#' @seealso \code{\link{getIDEr}}
 #'
 #' @export
-#'
 #' @importFrom stats hclust cutree as.dist
 #'
 finalClustering <- function(seu, dist, 

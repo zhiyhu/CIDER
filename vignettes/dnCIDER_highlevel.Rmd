@@ -1,8 +1,8 @@
 ---
-title: "Perform dnCIDER (high-level) on pancreas data"
+title: "Getting Start with De Novo CIDER (dnCIDER)"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Perform dnCIDER (high-level) on pancreas data}
+  %\VignetteIndexEntry{Getting Start with De Novo CIDER (dnCIDER)}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -31,7 +31,7 @@ library(parallel)
 library(cowplot)
 ```
 
-# Load example data
+# Load pancreas data
 
 Pancreatic cell data$^1$ contain cells from human (8241 cells) and mouse (1886 cells).
 
@@ -44,11 +44,17 @@ table(seu$Batch)
 
 # Perform dnCIDER (high-level)
 
+DnCIDER contains three steps 
+
 ```{r}
 seu <- initialClustering(seu, additional.vars.to.regress = "Sample", dims = 1:15)
 ider <- getIDEr(seu, downsampling.size = 35, use.parallel = FALSE, verbose = FALSE)
 seu <- finalClustering(seu, ider, cutree.h = 0.35) # final clustering
 ```
+
+# Visualise clustering results
+
+We use the Seurat pipeline to perform normalisation (`NormalizeData`), preprocessing (`FindVariableFeatures` and `ScaleData`) and dimension reduction (`RunPCA` and `RunTSNE`).
 
 ```{r seurat-pipeline}
 seu <- NormalizeData(seu, verbose = FALSE)
@@ -58,12 +64,18 @@ seu <- RunPCA(seu, npcs = 20, verbose = FALSE)
 seu <- RunTSNE(seu, reduction = "pca", dims = 1:12)
 ```
 
-```{r tsne-plot-CIDER-results, fig.height=3, fig.width=7}
-plot_list <- list()
-plot_list[[1]] <- scatterPlot(seu, "tsne", colour.by = "CIDER_cluster", title = "asCIDER clustering results") 
-plot_list[[2]] <- scatterPlot(seu, "tsne", colour.by = "Group", title = "Ground truth of cell populations") 
-plot_grid(plotlist = plot_list, ncol = 2)
+We can see 
+
+```{r tsne-plot-CIDER-results, fig.height=3, fig.width=4}
+scatterPlot(seu, "tsne", colour.by = "CIDER_cluster", title = "asCIDER clustering results") 
 ```
+
+By comparing the dnCIDER results to the cell annotation from the publication$^1$, we observe that dnCIDER correctly identify the majority of populations across two species.
+
+```{r tsne-plot-ground-truth, fig.height=3, fig.width=4}
+scatterPlot(seu, "tsne", colour.by = "Group", title = "Ground truth of cell populations") 
+```
+
 
 # References
 

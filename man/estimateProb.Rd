@@ -19,6 +19,12 @@ estimateProb(
 \item{ider}{ider}
 
 \item{n_size}{40}
+
+\item{seeds}{seeds}
+
+\item{n.perm}{n.perm}
+
+\item{verbose}{verbose}
 }
 \description{
 Estimate probability

@@ -2,7 +2,7 @@
 % Please edit documentation in R/scatterPlot.R
 \name{scatterPlot}
 \alias{scatterPlot}
-\title{Plot Network Graph}
+\title{Scatterplot}
 \usage{
 scatterPlot(
   seu,
@@ -17,22 +17,29 @@ scatterPlot(
 \arguments{
 \item{seu}{Seurat S4 object after the step of `getIDER`. Required.}
 
-\item{reduction}{list. Output of `getIDER`. Required.}
+\item{reduction}{Character. The dimension reduction used to plot. Common options: "pca", "tsne", "umap". The availability of dimension reduction can be checked by `Reductions(seu)`.}
 
-\item{colour.by}{A vector of Hex colour codes. If no value is given, a vector of 74 colours will be used. (Default: NULL)}
+\item{colour.by}{Character. One of the column names of `seu@meta.data`. Can be either discreet or continuous variables.}
 
-\item{colvec}{Character. The type of dist matrix to use. Can be one of "coef", "t" and "p". (Default: coef)}
+\item{colvec}{A vector of Hex colour codes. If no value is given (default), a vector of 74 colours will be used.}
 
-\item{title}{Character. It should be one of the colnames of Seurat object meta.data. It is used to colour the vertex of the networkgraph. (Default: NULL)}
+\item{title}{Character. Title of the figure.}
 
-\item{sort.by.numbers}{Numerical. Adjust the thickness of the edges. (Default: 6.5)}
-}
-\value{
-An igraph object
+\item{sort.by.numbers}{Boolean. Whether to sort the groups by the number of cells. (Default: True)}
+
+\item{viridis_option}{viridis_option. (Default: B)}
 }
 \description{
-Plot network for the initial clusters based on IDEr. The width of edges denotes the similarity between two initial clusters.
+Scatterplot of a Seurat object based on dimension reduction.
 }
-\details{
-Details
+\examples{
+library(Seurat)
+data("pancreas_counts") # count matrix
+data("pancreas_meta") # meta data/cell information
+seu <- CreateSeuratObject(counts = pancreas_counts, meta.data = pancreas_meta)
+seu <- NormalizeData(seu, verbose = FALSE)
+seu <- FindVariableFeatures(seu, selection.method = "vst", nfeatures = 2000, verbose = FALSE)
+seu <- ScaleData(seu, verbose = FALSE)
+seu <- RunPCA(seu, npcs = 20, verbose = FALSE)
+scatterPlot(seu, "pca",colour.by = "Batch", title = "PCA") 
 }

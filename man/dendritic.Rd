@@ -14,6 +14,9 @@ A data frame with xxx rows and xxx variables:
 dendritic
 }
 \description{
-A data.frame containing cell annotations
+A Seurat object of dendritic cells
+}
+\examples{
+data("dendritic")
 }
 \keyword{datasets}

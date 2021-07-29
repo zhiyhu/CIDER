@@ -1,8 +1,11 @@
 ---
-title: "Run meta-clustering (asCIDER) on the pancreas dataset"
-output: rmarkdown::html_vignette
+title: "Getting Start with Assisted CIDER (asCIDER)"
+description: "Hu et al. An interpretable meta-clustering framework for single-cell RNA-Seq data integration and evaluation"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
 vignette: >
-  %\VignetteIndexEntry{Run meta-clustering (asCIDER) on the pancreas dataset}
+  %\VignetteIndexEntry{Getting Start with Assisted CIDER (asCIDER)}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -16,7 +19,9 @@ knitr::opts_chunk$set(
 
 # Introduction
 
-This vignette performs asCIDER on a cross-species pancreas dataset.
+This vignette performs asCIDER, a meta-clustering method, on a cross-species pancreas dataset. AsCIDER is aimed to achieve the clustering task in data confounded by unwanted variables. In this scenario, the unwanted variable is species effects.
+
+asCIDER is short for assisted CIDER, assisted by the prior batch-specific annotations or clustering results.
 
 # Set up
 
@@ -31,9 +36,9 @@ library(cowplot)
 library(viridis)
 ```
 
-# Load example data
+# Pancreas data
 
-Pancreatic cell data$^1$ contain cells from human (8241 cells) and mouse (1886 cells).
+This data$^1$ contain cells from human (8241 cells) and mouse (1886 cells).
 
 ```{r} 
 data("pancreas_counts") # count matrix
@@ -44,7 +49,10 @@ table(seu$Batch)
 
 # Exam if data are confounded
 
-To exam if clustering will be confounded by the cross-species factors, we perform the conventional Seurat$^2$ clustering pipeline.
+Prior to use CIDER (or other integration methods for clustering) it is important to exam if clustering will be confounded by the cross-species factors.
+
+
+Her we first perform the conventional Seurat$^2$ clustering pipeline.
 
 ```{r seurat-pipeline}
 seu <- NormalizeData(seu, verbose = FALSE)
@@ -56,7 +64,11 @@ seu <- RunTSNE(seu, reduction = "pca", dims = 1:12)
 
 ## Confounded dimension reduction 
 
-```{r, fig.width=7, fig.height=3}
+The PCA and *t*-SNE plots both showed that the data are confounded by species. 
+
+The `scatterPlot` function is used to generate dimension reduction figures. It takes input of a Seurat object (`seu` here), the name of reduction (`pca` and `tsne` here), the variable deciding dot colours (`Batch` here) and the title of plots. See more information by `?scatterPlot`
+
+```{r scatterPlot-confounded, fig.width=7, fig.height=3}
 p1 <- scatterPlot(seu, "pca",colour.by = "Batch", title = "PCA") 
 p2 <- scatterPlot(seu, "tsne",colour.by = "Batch", title = "t-SNE") 
 plot_grid(p1, p2)

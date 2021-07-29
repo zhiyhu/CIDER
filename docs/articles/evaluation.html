@@ -156,14 +156,14 @@
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/rm.html">rm</a></span><span class="op">(</span><span class="va">seu.list</span>, <span class="va">seu.anchors</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/gc.html">gc</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt;            used  (Mb) gc trigger  (Mb) limit (Mb) max used  (Mb)</span>
-<span class="co">#&gt; Ncells  2645977 141.4    5204245 278.0         NA  5173954 276.4</span>
-<span class="co">#&gt; Vcells 23720082 181.0   80232792 612.2      16384 77065198 588.0</span></code></pre></div>
+<span class="co">#&gt; Ncells  2646388 141.4    5205261 278.0         NA  5174365 276.4</span>
+<span class="co">#&gt; Vcells 23720744 181.0   80234770 612.2      16384 77065854 588.0</span></code></pre></div>
 </div>
 <div id="section" class="section level1">
 <h1></h1>
 <div class="sourceCode"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">seu.integrated</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hdbscan.seurat.html">hdbscan.seurat</a></span><span class="op">(</span><span class="va">seu.integrated</span><span class="op">)</span>
-<span class="va">ider</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getIDEr.html">getIDEr</a></span><span class="op">(</span><span class="va">seu.integrated</span>, use.parallel <span class="op">=</span> <span class="cn">TRUE</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<span class="va">ider</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getIDEr.html">getIDEr</a></span><span class="op">(</span><span class="va">seu.integrated</span>, use.parallel <span class="op">=</span> <span class="cn">FALSE</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 <span class="va">seu.integrated</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/estimateProb.html">estimateProb</a></span><span class="op">(</span><span class="va">seu.integrated</span>, <span class="va">ider</span><span class="op">)</span>
 <span class="co">#&gt; Repeated column names found in count matrix</span>
 <span class="co">#&gt; Repeated column names found in count matrix</span>
@@ -173,15 +173,15 @@
 <div class="sourceCode"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/plotNetwork.html">plotNetwork</a></span><span class="op">(</span><span class="va">seu.integrated</span>, <span class="va">ider</span>, weight.factor <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></code></pre></div>
 <p><img src="evaluation_files/figure-html/unnamed-chunk-6-1.png" width="480"></p>
-<pre><code>#&gt; IGRAPH 611a9a5 UNW- 9 10 -- 
+<pre><code>#&gt; IGRAPH 073d2af UNW- 9 10 -- 
 #&gt; + attr: name (v/c), frame.color (v/c), size (v/n), label.family (v/c),
 #&gt; | weight (e/n), width (e/n)
-#&gt; + edges from 611a9a5 (vertex names):
+#&gt; + edges from 073d2af (vertex names):
 #&gt;  [1] 4_Batch1--4_Batch2 4_Batch1--0_Batch2 2_Batch1--4_Batch2 2_Batch1--2_Batch2
 #&gt;  [5] 2_Batch1--3_Batch2 3_Batch1--2_Batch2 3_Batch1--3_Batch2 1_Batch1--0_Batch2
 #&gt;  [9] 1_Batch1--1_Batch2 1_Batch1--3_Batch2</code></pre>
 <div class="sourceCode"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">plotHeatmap</span><span class="op">(</span><span class="va">seu.integrated</span>, <span class="va">ider</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="../reference/plotHeatmap.html">plotHeatmap</a></span><span class="op">(</span><span class="va">seu.integrated</span>, <span class="va">ider</span><span class="op">)</span></code></pre></div>
 <p><img src="evaluation_files/figure-html/unnamed-chunk-7-1.png" width="480"></p>
 <div class="sourceCode"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/hclust.html">hclust</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/dist.html">as.dist</a></span><span class="op">(</span><span class="fl">1</span><span class="op">-</span><span class="va">ider</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>

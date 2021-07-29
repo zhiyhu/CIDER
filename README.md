@@ -8,36 +8,43 @@ The goal of CIDER is to ...
 
 ## Installation
 
-You can install the released version of CIDER from [CRAN](https://CRAN.R-project.org) with:
+You can install CIDER from [github](https://github.com/zhiyhu/CIDER/) with:
 
 ``` r
-install.packages("CIDER")
+# install.packages("devtools")
+devtools::install_github('zhiyhu/CIDER')
 ```
 
-## Example
+## Quick start for evaluating integration resutls
 
-This is a basic example which shows you how to solve a common problem:
+`seu.integrated` is a Seurat object with corrected PCs in `seu.integrated@reductions$pca`.
 
 ``` r
 library(CIDER)
-## basic example code
+seu.integrated <- hdbscan.seurat(seu.integrated)
+ider <- getIDEr(seu.integrated, verbose = FALSE)
+seu.integrated <- estimateProb(seu.integrated, ider)
 ```
 
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
+The evaluation scores (IDER-based similarity and empirical p values) can be visualised by
 
 ``` r
-summary(cars)
-#>      speed           dist       
-#>  Min.   : 4.0   Min.   :  2.00  
-#>  1st Qu.:12.0   1st Qu.: 26.00  
-#>  Median :15.0   Median : 36.00  
-#>  Mean   :15.4   Mean   : 42.98  
-#>  3rd Qu.:19.0   3rd Qu.: 56.00  
-#>  Max.   :25.0   Max.   :120.00
+p1 <- scatterPlot(seu.integrated, "tsne", colour.by = "similarity")
+p2 <- scatterPlot(seu.integrated, "tsne", colour.by = "pvalue") 
+plot_grid(p1,p2, ncol = 3)
 ```
 
-You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this. You could also use GitHub Actions to re-render `README.Rmd` every time you push. An example workflow can be found here: <https://github.com/r-lib/actions/tree/master/examples>.
+![](man/figures/evaluation_scatterplot.png)
 
-You can also embed plots, for example:
+## Quick start for asCIDER
 
-In that case, don't forget to commit and push the resulting figure files, so they display on GitHub and CRAN.
+``` r
+ider <- getIDEr(seu, 
+                group.by.var = "initial_cluster",
+                batch.by.var = "Batch")
+seu <- finalClustering(seu, ider, cutree.h = 0.45)
+```
+
+## Quick start for dnCIDER
+
+<!--- You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this. You could also use GitHub Actions to re-render `README.Rmd` every time you push. An example workflow can be found here: <https://github.com/r-lib/actions/tree/master/examples>.--->

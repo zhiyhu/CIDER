@@ -20,4 +20,7 @@ pancreas_counts
 \description{
 A count matrix containing xxx
 }
+\examples{
+data("pancreas_meta")
+}
 \keyword{datasets}

@@ -8,7 +8,6 @@ getIDEr(
   seu,
   group.by.var = "initial_cluster",
   batch.by.var = "Batch",
-  subset.row = NULL,
   verbose = TRUE,
   use.parallel = FALSE,
   n.cores = 1,

@@ -25,6 +25,8 @@ initialClustering(
 
 \item{nfeatures}{nfeatures = 2000}
 
+\item{additional.vars.to.regress}{additional.vars.to.regress}
+
 \item{dims}{dims}
 
 \item{resolution}{resolution}
@@ -32,8 +34,6 @@ initialClustering(
 \item{downsampling.size}{downsampling.size}
 
 \item{verbose}{verbose}
-
-\item{additional.vars.to.regres}{additional.vars.to.regres}
 }
 \value{
 Seurat S4 object with initial clustering results in `initial_cluster` of meta.data.

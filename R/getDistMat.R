@@ -6,6 +6,7 @@
 #'
 #' @param seu_list seu list
 #' @param verbose print the message and progress bar (default: TRUE)
+#' @param tmp.initial.clusters tmp.initial.clusters
 #' @param method voom or trend
 #' @param additional.variate additional variate to include into the regression model
 #' @param downsampling.size downsampling.size

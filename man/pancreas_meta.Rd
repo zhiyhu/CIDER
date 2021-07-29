@@ -16,4 +16,7 @@ pancreas_meta
 \description{
 A data.frame containing cell annotations
 }
+\examples{
+data("pancreas_meta")
+}
 \keyword{datasets}

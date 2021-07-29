@@ -20,6 +20,8 @@ getDistMat(
 
 \item{verbose}{print the message and progress bar (default: TRUE)}
 
+\item{tmp.initial.clusters}{tmp.initial.clusters}
+
 \item{method}{voom or trend}
 
 \item{additional.variate}{additional variate to include into the regression model}

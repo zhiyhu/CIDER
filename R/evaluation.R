@@ -1,26 +1,22 @@
-#' @title Compute IDER-based similarity
+#' @title Initial clustering to evaluate integration
 #'
-#' @description Calculate the similarity matrix based on the metrics of Inter-group Differential ExpRession (IDER)
+#' @description Initial clustering to evaluate integration
 #'
-#' @param seu seu after integration
-#' @param reduction reduction
-#' @param dims dims
-#' @param minPts minPts
-#' 
-#' @details Details
+#' @param seu a Seurat object containing integrated or batch corrected PCA.
+#' @param reduction Character. Name of the dimension reduction after integration or batch correction. (Default: PCA)
+#' @param dims Numeric vector. Dimensions used for initial clustering. (Default: 1:15)
+#' @param minPts Interger. Minimum size of clusters. Will be passed to the `hdbscan` function. (Default: 25)
 #'
-#' @return A list of four values: three similarity matrices and one list of indeces.
+#' @return A Seurat object having two additional columns in its meta.data: dbscan_cluster and initial_cluster.
 #'
-#' @seealso \code{\link{plotNetwork}} \code{\link{finalClustering}}
-#'
+#' @seealso Usage of this function should be followed by \code{\link{getIDEr}} and \code{\link{estimateProb}}.
 #' @export
 #'
 #' @import Seurat
 #' @importFrom dbscan hdbscan
-#'
-hdbscan.seurat <- function(seu, reduction = "pca",dims = 1:15, minPts = 25){
+hdbscan.seurat <- function(seu, reduction = "pca", dims = 1:15, minPts = 25){
   if(!reduction %in% Reductions(seu)) stop("pca does not exist.")
-  seu <- RunTSNE(seu.integrated, reduction = reduction, dims = dims)
+  seu <- RunTSNE(seu, reduction = reduction, dims = dims)
   res <- dbscan::hdbscan(Reductions(seu, "tsne")@cell.embeddings[,1:2], minPts = minPts)
   seu$dbscan_cluster <- factor(as.character(res$cluster))
   seu$initial_cluster <- factor(as.character(paste0(seu$dbscan_cluster, "_", seu$Batch)))
@@ -29,15 +25,15 @@ hdbscan.seurat <- function(seu, reduction = "pca",dims = 1:15, minPts = 25){
 
 
 #' @title Estimate probability
-#' 
 #' @param seu seu
 #' @param ider ider
 #' @param n_size 40
-#' 
+#' @param seeds seeds
+#' @param n.perm n.perm
+#' @param verbose verbose
 #' @import limma edgeR foreach utils doParallel
 #' @importFrom kernlab specc
 #' @export
-#' 
 estimateProb <- function(seu, ider, n_size = 40, seeds = c(12345, 89465, 10385, 10385, 17396), 
                          n.perm = 5, verbose = FALSE){
   

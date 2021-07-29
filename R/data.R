@@ -8,6 +8,8 @@
 #'   \item{Col2}{description of Col2}
 #' }
 #' @source \url{https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE84133}
+#' @examples 
+#' data("pancreas_meta")
 "pancreas_counts"
 
 #' Metadata of pancreatic cells
@@ -16,12 +18,16 @@
 #' 
 #' @format A data frame with xxx rows and xxx variables:
 #' @source \url{https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE84133}
+#' @examples 
+#' data("pancreas_meta")
 "pancreas_meta"
 
 #' Seurat object of dendritic cells
 #'
-#' A data.frame containing cell annotations
+#' A Seurat object of dendritic cells
 #' 
 #' @format A data frame with xxx rows and xxx variables:
 #' @source \url{https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE84133}
+#' @examples 
+#' data("dendritic")
 "dendritic"

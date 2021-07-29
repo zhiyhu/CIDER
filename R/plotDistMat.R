@@ -18,9 +18,6 @@ plotDistMat <- function(dist.list, use = "coef") {
     dist_coef <- dist.list[[2]]
   }
   
-  # else if (use == "t") {
-  #   dist_coef <- dist.list[[2]]
-
   hm <- list()
   for (i in which(sapply(dist_coef, function(x) {
     return(!is.null(x))
@@ -32,14 +29,28 @@ plotDistMat <- function(dist.list, use = "coef") {
   return(hm)
 }
 
-
-#' @import pheatmap
+#' @title Plot Heatmap for the IDER-based similarity matrix
+#'
+#' @description description
+#'
+#' @param seu Seurat object.
+#' @param ider output of function `getIDEr`.
+#'
+#' @seealso \code{\link{getIDEr}}
+#' @import pheatmap viridis
 #' @export
+#' @examples 
+#' \donttest{
+#'   plotHeatmap(seu, ider)
+#' } 
 plotHeatmap <- function(seu, ider) {
   idx <- getSharedGroups(seu, ider[[1]])
-  shared_g <- idx[[1]]
-  idx1 <- idx[[2]]
-  idx2 <- idx[[3]]
+  shared_g <- idx[[1]] # shared groups
+  if(length(shared_g) == 1){
+    stop("No shared groups.")
+  }
+  idx1 <- idx[[2]] # rownames
+  idx2 <- idx[[3]] # colnames 
   
   pheatmap::pheatmap(
     ider[[1]][idx1, idx2],
@@ -49,5 +60,4 @@ plotHeatmap <- function(seu, ider) {
     cluster_rows = FALSE,
     cluster_cols = FALSE
   )
-  
 }

@@ -593,7 +593,7 @@
                 group.by.var <span class="op">=</span> <span class="st">"initial_cluster"</span>,
                 batch.by.var <span class="op">=</span> <span class="st">"Batch"</span>,
                 downsampling.size <span class="op">=</span> <span class="fl">35</span>, 
-                use.parallel <span class="op">=</span> <span class="cn">TRUE</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+                use.parallel <span class="op">=</span> <span class="cn">FALSE</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
 <div class="sourceCode"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">net</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plotNetwork.html">plotNetwork</a></span><span class="op">(</span><span class="va">seu</span>, <span class="va">ider</span>, colour.by <span class="op">=</span> <span class="st">"Group"</span> , vertex.size <span class="op">=</span> <span class="fl">0.6</span>, weight.factor <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></code></pre></div>
 <p><img src="dnCIDER_files/figure-html/plot-network-1.png" width="864"></p>
@@ -606,9 +606,7 @@
 <h1 class="hasAnchor">
 <a href="#perform-final-clustering" class="anchor"></a>Perform final Clustering</h1>
 <div class="sourceCode"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/finalClustering.html">finalClustering</a></span><span class="op">(</span><span class="va">seu</span>, <span class="va">ider</span>, cutree.h <span class="op">=</span> <span class="fl">0.35</span><span class="op">)</span> <span class="co"># final clustering</span>
-<span class="fu">mclust</span><span class="fu">::</span><span class="fu"><a href="https://mclust-org.github.io/mclust/reference/adjustedRandIndex.html">adjustedRandIndex</a></span><span class="op">(</span><span class="va">seu</span><span class="op">$</span><span class="va">CIDER_cluster</span>, <span class="va">seu</span><span class="op">$</span><span class="va">Group</span><span class="op">)</span>
-<span class="co">#&gt; [1] 0.9347196</span></code></pre></div>
+<code class="sourceCode R"><span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/finalClustering.html">finalClustering</a></span><span class="op">(</span><span class="va">seu</span>, <span class="va">ider</span>, cutree.h <span class="op">=</span> <span class="fl">0.35</span><span class="op">)</span> <span class="co"># final clustering</span></code></pre></div>
 <div class="sourceCode"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="http://www.satijalab.org/seurat/reference/NormalizeData.html">NormalizeData</a></span><span class="op">(</span><span class="va">seu</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 <span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="http://www.satijalab.org/seurat/reference/FindVariableFeatures.html">FindVariableFeatures</a></span><span class="op">(</span><span class="va">seu</span>, selection.method <span class="op">=</span> <span class="st">"vst"</span>, 

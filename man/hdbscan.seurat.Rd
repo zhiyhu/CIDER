@@ -2,28 +2,25 @@
 % Please edit documentation in R/evaluation.R
 \name{hdbscan.seurat}
 \alias{hdbscan.seurat}
-\title{Compute IDER-based similarity}
+\title{Initial clustering to evaluate integration}
 \usage{
 hdbscan.seurat(seu, reduction = "pca", dims = 1:15, minPts = 25)
 }
 \arguments{
-\item{seu}{a Seurat object after integration or batch corrected.}
+\item{seu}{a Seurat object containing integrated or batch corrected PCA.}
 
-\item{reduction}{Name of the dimension reduction after integration or batch correction. Default: PCA.}
+\item{reduction}{Character. Name of the dimension reduction after integration or batch correction. (Default: PCA)}
 
-\item{dims}{Dimensions used. Default: 1:15.}
+\item{dims}{Numeric vector. Dimensions used for initial clustering. (Default: 1:15)}
 
-\item{minPts}{interger; Minimum size of clusters. Will pass to the `hdbscan` function}
+\item{minPts}{Interger. Minimum size of clusters. Will be passed to the `hdbscan` function. (Default: 25)}
 }
 \value{
-A list of four values: three similarity matrices and one list of indeces.
+A Seurat object having two additional columns in its meta.data: dbscan_cluster and initial_cluster.
 }
 \description{
-Calculate the similarity matrix based on the metrics of Inter-group Differential ExpRession (IDER)
-}
-\details{
-Details
+Initial clustering to evaluate integration
 }
 \seealso{
-\code{\link{plotNetwork}} \code{\link{finalClustering}}
+Usage of this function should be followed by \code{\link{getIDEr}} and \code{\link{estimateProb}}.
 }

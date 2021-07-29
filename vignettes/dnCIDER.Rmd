@@ -1,5 +1,5 @@
 ---
-title: "Perform meta-clustering (dnCIDER) on pancreas data"
+title: "Detailed walk-through of de novo CIDER on pancreas data"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Perform meta-clustering (dnCIDER) on pancreas data}

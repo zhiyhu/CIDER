@@ -6,7 +6,7 @@
 #' @param batch.var batch.var
 #' @param cut.height cut.height
 #' @param nfeatures  nfeatures = 2000
-#' @param additional.vars.to.regres additional.vars.to.regres
+#' @param additional.vars.to.regress additional.vars.to.regress
 #' @param dims dims
 #' @param resolution resolution
 #' @param verbose verbose
