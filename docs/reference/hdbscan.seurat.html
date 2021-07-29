@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Compute IDER-based similarity — hdbscan.seurat • CIDER</title>
+<title>Initial clustering to evaluate integration — hdbscan.seurat • CIDER</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Compute IDER-based similarity — hdbscan.seurat" />
-<meta property="og:description" content="Calculate the similarity matrix based on the metrics of Inter-group Differential ExpRession (IDER)" />
+<meta property="og:title" content="Initial clustering to evaluate integration — hdbscan.seurat" />
+<meta property="og:description" content="Initial clustering to evaluate integration" />
 
 
 
@@ -105,16 +105,16 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/asCIDER.html">Run meta-clustering (asCIDER) on the pancreas dataset</a>
+      <a href="../articles/asCIDER.html">Getting Start with Assisted CIDER (asCIDER)</a>
     </li>
     <li>
-      <a href="../articles/dnCIDER.html">Perform meta-clustering (dnCIDER) on pancreas data</a>
+      <a href="../articles/dnCIDER.html">Detailed walk-through of de novo CIDER on pancreas data</a>
     </li>
     <li>
-      <a href="../articles/dnCIDER_highlevel.html">Perform dnCIDER (high-level) on pancreas data</a>
+      <a href="../articles/dnCIDER_highlevel.html">Getting Start with De Novo CIDER (dnCIDER)</a>
     </li>
     <li>
-      <a href="../articles/evaluation.html">Evaluation of integration outcome by CIDER</a>
+      <a href="../articles/evaluation.html">Evaluating integration results by CIDER</a>
     </li>
   </ul>
 </li>
@@ -142,13 +142,13 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Compute IDER-based similarity</h1>
+    <h1>Initial clustering to evaluate integration</h1>
     <small class="dont-index">Source: <a href='https://github.com/zhiyhu/CIDER/blob/master/R/evaluation.R'><code>R/evaluation.R</code></a></small>
     <div class="hidden name"><code>hdbscan.seurat.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Calculate the similarity matrix based on the metrics of Inter-group Differential ExpRession (IDER)</p>
+    <p>Initial clustering to evaluate integration</p>
     </div>
 
     <pre class="usage"><span class='fu'>hdbscan.seurat</span><span class='op'>(</span><span class='va'>seu</span>, reduction <span class='op'>=</span> <span class='st'>"pca"</span>, dims <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>15</span>, minPts <span class='op'>=</span> <span class='fl'>25</span><span class='op'>)</span></pre>
@@ -158,31 +158,28 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>seu</th>
-      <td><p>a Seurat object after integration or batch corrected.</p></td>
+      <td><p>a Seurat object containing integrated or batch corrected PCA.</p></td>
     </tr>
     <tr>
       <th>reduction</th>
-      <td><p>Name of the dimension reduction after integration or batch correction. Default: PCA.</p></td>
+      <td><p>Character. Name of the dimension reduction after integration or batch correction. (Default: PCA)</p></td>
     </tr>
     <tr>
       <th>dims</th>
-      <td><p>Dimensions used. Default: 1:15.</p></td>
+      <td><p>Numeric vector. Dimensions used for initial clustering. (Default: 1:15)</p></td>
     </tr>
     <tr>
       <th>minPts</th>
-      <td><p>interger; Minimum size of clusters. Will pass to the `hdbscan` function</p></td>
+      <td><p>Interger. Minimum size of clusters. Will be passed to the `hdbscan` function. (Default: 25)</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A list of four values: three similarity matrices and one list of indeces.</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>Details</p>
+    <p>A Seurat object having two additional columns in its meta.data: dbscan_cluster and initial_cluster.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='plotNetwork.html'>plotNetwork</a></code> <code><a href='finalClustering.html'>finalClustering</a></code></p></div>
+    <div class='dont-index'><p>Usage of this function should be followed by <code><a href='getIDEr.html'>getIDEr</a></code> and <code><a href='estimateProb.html'>estimateProb</a></code>.</p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
