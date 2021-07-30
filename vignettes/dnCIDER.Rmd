@@ -1,8 +1,8 @@
 ---
-title: "Detailed walk-through of de novo CIDER on pancreas data"
+title: "Detailed walk-through of de novo CIDER (dnCIDER) on pancreas data"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Perform meta-clustering (dnCIDER) on pancreas data}
+  %\VignetteIndexEntry{Detailed walk-through of de novo CIDER (dnCIDER) on pancreas data}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
