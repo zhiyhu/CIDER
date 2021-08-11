@@ -6,26 +6,23 @@
 \usage{
 plotNetwork(
   seu,
-  dist,
-  col.vector = NULL,
-  use = "coef",
+  ider,
   colour.by = NULL,
   weight.factor = 6.5,
+  col.vector = NULL,
   vertex.size = 1
 )
 }
 \arguments{
-\item{seu}{Seurat S4 object after the step of `getIDER`. Required.}
+\item{seu}{Seurat S4 object after the step of `getIDER`, containing `initial_cluster` and `Batch` in its meta.data. Required.}
 
-\item{dist}{A list. Output of `getIDER`. Required.}
+\item{ider}{A list. Output of `getIDER`. Required.}
 
-\item{col.vector}{A vector of Hex colour codes. If no value is given, a vector of 74 colours will be used. (Default: NULL)}
-
-\item{use}{Character. The type of dist matrix to use. Can be one of "coef", "t" and "p". (Default: coef)}
-
-\item{colour.by}{Character. It should be one of the colnames of Seurat object meta.data. It is used to colour the vertex of the networkgraph. (Default: NULL)}
+\item{colour.by}{Character. It should be one of the colnames of Seurat object meta.data. It is used to colour the vertex of the network graph. (Default: NULL)}
 
 \item{weight.factor}{Numerical. Adjust the thickness of the edges. (Default: 6.5)}
+
+\item{col.vector}{A vector of Hex colour codes. If no value is given (default), a vector of 74 colours will be used.}
 
 \item{vertex.size}{Numerical. Adjsut the size of vertexes. (Default: 1)}
 }
@@ -33,10 +30,14 @@ plotNetwork(
 An igraph object
 }
 \description{
-Plot network for the initial clusters based on IDEr. The width of edges denotes the similarity between two initial clusters.
+Network visualisation for an IDER-based similarity matrix. 
+The vertexes are initial clusters, and
+the edge width denotes the similarity between two initial clusters.
 }
-\details{
-Details
+\examples{
+\dontrun{
+plotNetwork(seu, ider, weight.factor = 5)
+}
 }
 \seealso{
 \code{\link{getIDEr}} \code{\link[igraph]{graph_from_data_frame}}

@@ -63,7 +63,7 @@
       <a href="../articles/asCIDER.html">Getting Start with Assisted CIDER (asCIDER)</a>
     </li>
     <li>
-      <a href="../articles/dnCIDER.html">Detailed walk-through of de novo CIDER on pancreas data</a>
+      <a href="../articles/dnCIDER.html">Detailed walk-through of de novo CIDER (dnCIDER) on pancreas data</a>
     </li>
     <li>
       <a href="../articles/dnCIDER_highlevel.html">Getting Start with De Novo CIDER (dnCIDER)</a>
@@ -167,8 +167,8 @@
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/rm.html">rm</a></span><span class="op">(</span><span class="va">seu.list</span>, <span class="va">seu.anchors</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/gc.html">gc</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt;            used  (Mb) gc trigger  (Mb) limit (Mb) max used  (Mb)</span>
-<span class="co">#&gt; Ncells  2646936 141.4    5205470 278.1         NA  5176981 276.5</span>
-<span class="co">#&gt; Vcells 23723177 181.0   80258763 612.4      16384 77082408 588.1</span></code></pre></div>
+<span class="co">#&gt; Ncells  2646898 141.4    5205138 278.0         NA  5176943 276.5</span>
+<span class="co">#&gt; Vcells 23723141 181.0   80258607 612.4      16384 77082374 588.1</span></code></pre></div>
 </div>
 <div id="evaluate-by-cider" class="section level1">
 <h1 class="hasAnchor">
@@ -206,10 +206,10 @@
 <div class="sourceCode"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/plotNetwork.html">plotNetwork</a></span><span class="op">(</span><span class="va">seu.integrated</span>, <span class="va">ider</span>, weight.factor <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></code></pre></div>
 <p><img src="evaluation_files/figure-html/unnamed-chunk-7-1.png" width="480"></p>
-<pre><code>#&gt; IGRAPH 91af944 UNW- 9 10 -- 
+<pre><code>#&gt; IGRAPH 6f3b4cf UNW- 9 10 -- 
 #&gt; + attr: name (v/c), frame.color (v/c), size (v/n), label.family (v/c),
 #&gt; | weight (e/n), width (e/n)
-#&gt; + edges from 91af944 (vertex names):
+#&gt; + edges from 6f3b4cf (vertex names):
 #&gt;  [1] 4_Batch1--4_Batch2 4_Batch1--0_Batch2 2_Batch1--4_Batch2 2_Batch1--2_Batch2
 #&gt;  [5] 2_Batch1--3_Batch2 3_Batch1--2_Batch2 3_Batch1--3_Batch2 1_Batch1--0_Batch2
 #&gt;  [9] 1_Batch1--1_Batch2 1_Batch1--3_Batch2</code></pre>
