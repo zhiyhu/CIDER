@@ -167,8 +167,8 @@
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/rm.html">rm</a></span><span class="op">(</span><span class="va">seu.list</span>, <span class="va">seu.anchors</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/gc.html">gc</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt;            used  (Mb) gc trigger  (Mb) limit (Mb) max used  (Mb)</span>
-<span class="co">#&gt; Ncells  3062975 163.6    5364350 286.5         NA  5364350 286.5</span>
-<span class="co">#&gt; Vcells 24443957 186.5   74456644 568.1      16384 74239970 566.5</span></code></pre></div>
+<span class="co">#&gt; Ncells  3062975 163.6    5364352 286.5         NA  5364352 286.5</span>
+<span class="co">#&gt; Vcells 24443959 186.5   74456651 568.1      16384 74239972 566.5</span></code></pre></div>
 </div>
 <div id="evaluate-by-cider" class="section level1">
 <h1 class="hasAnchor">
@@ -206,10 +206,10 @@
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/plotNetwork.html">plotNetwork</a></span><span class="op">(</span><span class="va">seu.integrated</span>, <span class="va">ider</span>, weight.factor <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></code></pre></div>
 <p><img src="evaluation_files/figure-html/unnamed-chunk-7-1.png" width="480"></p>
-<pre><code>#&gt; IGRAPH 01a1863 UNW- 10 10 -- 
+<pre><code>#&gt; IGRAPH 122d83b UNW- 10 10 -- 
 #&gt; + attr: name (v/c), frame.color (v/c), size (v/n), label.family (v/c),
 #&gt; | weight (e/n), width (e/n)
-#&gt; + edges from 01a1863 (vertex names):
+#&gt; + edges from 122d83b (vertex names):
 #&gt;  [1] 4_Batch1--4_Batch2 4_Batch1--2_Batch2 2_Batch1--4_Batch2 2_Batch1--2_Batch2
 #&gt;  [5] 2_Batch1--3_Batch2 0_Batch1--0_Batch2 1_Batch1--1_Batch2 1_Batch1--3_Batch2
 #&gt;  [9] 3_Batch1--2_Batch2 3_Batch1--3_Batch2</code></pre>
