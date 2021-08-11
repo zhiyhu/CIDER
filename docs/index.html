@@ -107,6 +107,7 @@
 <li>address the <strong>clustering</strong> task for confounded scRNA-Seq data, or</li>
 <li>assess the biological correctness of integration as <strong>a test metric</strong>, while it does <strong>not</strong> require the existence of prior cellular annotations.</li>
 </ol>
+<p>For more informtion please see our <a href="https://doi.org/10.1101/2021.03.29.437525">preprint</a>.</p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
@@ -115,9 +116,9 @@
 <code class="sourceCode R"><span class="co"># install.packages("devtools")</span>
 <span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/devtools/man/remote-reexports.html">install_github</a></span><span class="op">(</span><span class="st">'zhiyhu/CIDER'</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="quick-start-for-evaluating-integration-resutls" class="section level2">
+<div id="cider-as-an-evaluation-metric---quick-start" class="section level2">
 <h2 class="hasAnchor">
-<a href="#quick-start-for-evaluating-integration-resutls" class="anchor"></a>Quick start for evaluating integration resutls</h2>
+<a href="#cider-as-an-evaluation-metric---quick-start" class="anchor"></a>CIDER as an evaluation metric - Quick start</h2>
 <p>If you have scRNA-Seq data corrected by an integration algorithm (e.g. Seurat-CCA, Harmony, Scanrama…). You can use CIDER to evaluate if the biological populations are correctly aligned.</p>
 <p>Before running CIDER evaluation functions, make sure that you have a Seurat object (e.g. <code>seu.integrated</code>) with corrected PCs in <code>seu.integrated@reductions$pca@cell.embeddings</code>. Seurat-CCA automatically put the corrected PCs there. If other methods are used, the corrected PCs can be added using <code>seu.integrated@reductions$pca@cell.embeddings &lt;- corrected.PCs</code>.</p>
 <div class="sourceCode"><pre class="downlit sourceCode r">
@@ -132,19 +133,24 @@
 <span class="fu">plot_grid</span><span class="op">(</span><span class="va">p1</span>,<span class="va">p2</span>, ncol <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></code></pre></div>
 <p><img src="reference/figures/evaluation_scatterplot.png"></p>
 </div>
-<div id="quick-start-for-using-ascider-to-perform-clustering" class="section level2">
+<div id="use-cider-for-clustering-tasks" class="section level2">
 <h2 class="hasAnchor">
-<a href="#quick-start-for-using-ascider-to-perform-clustering" class="anchor"></a>Quick start for using asCIDER to perform clustering</h2>
+<a href="#use-cider-for-clustering-tasks" class="anchor"></a>Use CIDER for clustering tasks</h2>
+<p><img src="reference/figures/clustering_diagram.png"></p>
+<div id="quick-start---ascider" class="section level3">
+<h3 class="hasAnchor">
+<a href="#quick-start---ascider" class="anchor"></a>Quick start - asCIDER</h3>
 <div class="sourceCode"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">ider</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/getIDEr.html">getIDEr</a></span><span class="op">(</span><span class="va">seu</span>, 
                 group.by.var <span class="op">=</span> <span class="st">"initial_cluster"</span>,
                 batch.by.var <span class="op">=</span> <span class="st">"Batch"</span><span class="op">)</span>
 <span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/finalClustering.html">finalClustering</a></span><span class="op">(</span><span class="va">seu</span>, <span class="va">ider</span>, cutree.h <span class="op">=</span> <span class="fl">0.45</span><span class="op">)</span></code></pre></div>
 </div>
-<div id="quick-start-for-using-dncider-to-perform-clustering" class="section level2">
-<h2 class="hasAnchor">
-<a href="#quick-start-for-using-dncider-to-perform-clustering" class="anchor"></a>Quick start for using dnCIDER to perform clustering</h2>
+<div id="quick-start---dncider" class="section level3">
+<h3 class="hasAnchor">
+<a href="#quick-start---dncider" class="anchor"></a>Quick start - dnCIDER</h3>
 <!--- You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this. You could also use GitHub Actions to re-render `README.Rmd` every time you push. An example workflow can be found here: <https://github.com/r-lib/actions/tree/master/examples>.--->
+</div>
 </div>
 <div id="citation" class="section level2">
 <h2 class="hasAnchor">

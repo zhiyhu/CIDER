@@ -4,7 +4,7 @@ Title: Meta-Clustering based on Inter-group Differential ExpRession
 biocViews: BatchEffect, GeneExpression, RNASeq, SingleCell, Transcriptomics, DifferentialExpression, Clustering, Software
 Version: 0.99.0
 Date:
-Author: Zhiyuan Hu
+Author: Zhiyuan Hu, Christopher Yau
 Maintainer: Zhiyuan Hu <zhiyuan.cheryl.hu@gmail.com>
 Description: Using meta-clustering to integration populations from single-cell RNA-seq. Using meta-clustering to integration populations from single-cell RNA-seq.
 URL: https://github.com/zhiyhu/CIDER
