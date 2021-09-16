@@ -1,15 +1,14 @@
 #' @title Plot Network Graph
-#' @description Plot network for the initial clusters based on IDEr. The width of edges denotes the similarity between two initial clusters.
+#' @description Network visualisation for an IDER-based similarity matrix. 
+#' The vertexes are initial clusters, and
+#' the edge width denotes the similarity between two initial clusters.
 #'
-#' @param seu Seurat S4 object after the step of `getIDER`. Required.
-#' @param dist A list. Output of `getIDER`. Required.
-#' @param col.vector A vector of Hex colour codes. If no value is given, a vector of 74 colours will be used. (Default: NULL)
-#' @param use Character. The type of dist matrix to use. Can be one of "coef", "t" and "p". (Default: coef)
-#' @param colour.by Character. It should be one of the colnames of Seurat object meta.data. It is used to colour the vertex of the networkgraph. (Default: NULL)
+#' @param seu Seurat S4 object after the step of `getIDER`, containing `initial_cluster` and `Batch` in its meta.data. Required.
+#' @param ider A list. Output of `getIDER`. Required.
+#' @param colour.by Character. It should be one of the colnames of Seurat object meta.data. It is used to colour the vertex of the network graph. (Default: NULL)
 #' @param weight.factor Numerical. Adjust the thickness of the edges. (Default: 6.5)
+#' @param col.vector A vector of Hex colour codes. If no value is given (default), a vector of 74 colours will be used.
 #' @param vertex.size Numerical. Adjsut the size of vertexes. (Default: 1)
-#'
-#' @details Details
 #'
 #' @return An igraph object
 #'
@@ -18,12 +17,15 @@
 #' @import Seurat igraph
 #' @importFrom graphics plot legend
 #'
-#'
 #' @export
-#'
-plotNetwork <- function(seu, dist, col.vector = NULL, use = "coef",
-                        colour.by = NULL, weight.factor = 6.5, vertex.size = 1) {
-  select <- dist[[2]]
+#' @examples 
+#' \dontrun{
+#' plotNetwork(seu, ider, weight.factor = 5)
+#' }
+plotNetwork <- function(seu, ider, 
+                        colour.by = NULL, weight.factor = 6.5, 
+                        col.vector = NULL, vertex.size = 1) {
+  select <- ider[[2]]
 
   if (!is.null(colour.by)) {
     if (colour.by %in% colnames(seu@meta.data)) {
@@ -44,7 +46,7 @@ plotNetwork <- function(seu, dist, col.vector = NULL, use = "coef",
   N <- length(unique(df$g)) # number of groups
 
   # get the dataframe of combinations/pairs for comparison
-  combinations <- dist[[3]]
+  combinations <- ider[[3]]
 
   df_plot <- data.frame(
     g = seu$Group[select], # colour.by
@@ -61,16 +63,16 @@ plotNetwork <- function(seu, dist, col.vector = NULL, use = "coef",
 
   edges <- data.frame(from = combinations$g1, to = combinations$g2, weight = NA) # edges
 
-  if (use == "coef") { # type of dist matrix to use
-    tmp <- dist[[1]] + t(dist[[1]])
-  } else if (use == "t") {
-    tmp <- dist[[2]] + t(dist[[2]])
-  } else if (use == "p") {
-    tmp <- dist[[3]] + t(dist[[3]])
-  } else {
-    warning("'use' is incorrect. Please use one of coef, t or p.")
-  }
-
+  # if (use == "coef") { # type of ider matrix to use
+  #   tmp <- ider[[1]] + t(ider[[1]])
+  # } else if (use == "t") {
+  #   tmp <- ider[[2]] + t(ider[[2]])
+  # } else if (use == "p") {
+  #   tmp <- ider[[3]] + t(ider[[3]])
+  # } else {
+  #   warning("'use' is incorrect. Please use one of coef, t or p.")
+  # }
+  tmp <- ider[[1]] + t(ider[[1]])
   for (i in 1:nrow(edges)) {
     edges$weight[i] <- tmp[rownames(tmp) == edges$from[i], colnames(tmp) == edges$to[i]]
   }

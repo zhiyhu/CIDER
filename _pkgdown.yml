@@ -1,6 +1,12 @@
 title: CIDER
 url: http://zhiyhu.github.io/CIDER
 template:
+  opengraph:
+    image:
+      src: man/figures/card.png
+  twitter:
+      creator: "@zhi_yuan_hu"
+      card: summary_large_image
   params:
     bootswatch: flatly
-    ganalytics: UA-000000-01
+    ganalytics: G-CTJ0X3K4G6

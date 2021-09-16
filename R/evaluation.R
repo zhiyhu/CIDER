@@ -1,6 +1,6 @@
-#' @title Initial clustering to evaluate integration
+#' @title Initial clustering for evaluating integration
 #'
-#' @description Initial clustering to evaluate integration
+#' @description This function applies HDBSCAN, a density-based clustering method, on the corrected dimension reduction. 
 #'
 #' @param seu a Seurat object containing integrated or batch corrected PCA.
 #' @param reduction Character. Name of the dimension reduction after integration or batch correction. (Default: PCA)
@@ -24,13 +24,13 @@ hdbscan.seurat <- function(seu, reduction = "pca", dims = 1:15, minPts = 25){
 }
 
 
-#' @title Estimate probability
-#' @param seu seu
-#' @param ider ider
-#' @param n_size 40
+#' @title Estimate the empirical p value of whether two set of cells from distince batches belong to the same population
+#' @param seu A Seurat object
+#' @param ider The output list of function `getIDEr`.
+#' @param n_size Default: 40
 #' @param seeds seeds
-#' @param n.perm n.perm
-#' @param verbose verbose
+#' @param n.perm Numeric. Time of permutations.
+#' @param verbose Boolean. Print out progress or not. (Default: FALSEW)
 #' @import limma edgeR foreach utils doParallel
 #' @importFrom kernlab specc
 #' @export
