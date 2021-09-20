@@ -23,12 +23,12 @@
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]--><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=G-CTJ0X3K4G6"></script><script>
+<![endif]--><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-207749729-1"></script><script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
 
-  gtag('config', 'G-CTJ0X3K4G6');
+  gtag('config', 'UA-207749729-1');
 </script>
 </head>
 <body data-spy="scroll" data-target="#toc">
@@ -174,8 +174,8 @@
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/rm.html">rm</a></span><span class="op">(</span><span class="va">seu.list</span>, <span class="va">seu.anchors</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/gc.html">gc</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt;            used  (Mb) gc trigger  (Mb) limit (Mb) max used  (Mb)</span>
-<span class="co">#&gt; Ncells  3071459 164.1    5375502 287.1         NA  5375502 287.1</span>
-<span class="co">#&gt; Vcells 24455609 186.6   74979244 572.1      16384 74499743 568.4</span></code></pre></div>
+<span class="co">#&gt; Ncells  3071514 164.1    5375455 287.1         NA  5375455 287.1</span>
+<span class="co">#&gt; Vcells 24455778 186.6   74979488 572.1      16384 74499889 568.4</span></code></pre></div>
 </div>
 <div id="evaluate-by-cider" class="section level1">
 <h1 class="hasAnchor">
@@ -213,10 +213,10 @@
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/plotNetwork.html">plotNetwork</a></span><span class="op">(</span><span class="va">seu.integrated</span>, <span class="va">ider</span>, weight.factor <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></code></pre></div>
 <p><img src="evaluation_files/figure-html/unnamed-chunk-7-1.png" width="480"></p>
-<pre><code>#&gt; IGRAPH 9fb2d10 UNW- 10 10 -- 
+<pre><code>#&gt; IGRAPH 888b9f9 UNW- 10 10 -- 
 #&gt; + attr: name (v/c), frame.color (v/c), size (v/n), label.family (v/c),
 #&gt; | weight (e/n), width (e/n)
-#&gt; + edges from 9fb2d10 (vertex names):
+#&gt; + edges from 888b9f9 (vertex names):
 #&gt;  [1] 4_Batch1--4_Batch2 4_Batch1--2_Batch2 2_Batch1--4_Batch2 2_Batch1--2_Batch2
 #&gt;  [5] 2_Batch1--3_Batch2 0_Batch1--0_Batch2 1_Batch1--1_Batch2 1_Batch1--3_Batch2
 #&gt;  [9] 3_Batch1--2_Batch2 3_Batch1--3_Batch2</code></pre>
@@ -256,7 +256,7 @@
 
 
       <footer><div class="copyright">
-  <p>Developed by Zhiyuan Hu.</p>
+  <p>Developed by Zhiyuan Hu, Christopher Yau.</p>
 </div>
 
 <div class="pkgdown">
