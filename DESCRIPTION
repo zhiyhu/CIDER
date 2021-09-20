@@ -5,6 +5,14 @@ biocViews: BatchEffect, GeneExpression, RNASeq, SingleCell, Transcriptomics, Dif
 Version: 0.99.0
 Date:
 Author: Zhiyuan Hu, Christopher Yau
+Authors@R: c(
+    person("Zhiyuan", "Hu", role = c("aut", "cre"),
+      comment = c(ORCID = "0000-0002-1688-6032")
+    ),
+    person("Christopher", "Yau", email = "christopher.yau@manchester.ac.uk", role = "aut",
+      comment = c(ORCID = "0000-0001-7615-8523")
+    )
+  )
 Maintainer: Zhiyuan Hu <zhiyuan.cheryl.hu@gmail.com>
 Description: Using meta-clustering to integration populations from single-cell RNA-seq. Using meta-clustering to integration populations from single-cell RNA-seq.
 URL: https://github.com/zhiyhu/CIDER
