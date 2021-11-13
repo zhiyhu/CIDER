@@ -3,7 +3,7 @@ pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
   evaluation: evaluation.html
-last_built: 2021-11-13T22:32Z
+last_built: 2021-11-13T22:50Z
 urls:
   reference: http://zhiyhu.github.io/CIDER/reference
   article: http://zhiyhu.github.io/CIDER/articles
