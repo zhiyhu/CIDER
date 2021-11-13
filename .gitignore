@@ -12,3 +12,8 @@ inst/doc
 doc
 Meta
 inhouse_notes.txt
+
+.Rhistory
+.DS_Store
+.git/.DS_Store
+.git/objects/.DS_Store
