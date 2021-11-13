@@ -17,3 +17,13 @@ inhouse_notes.txt
 .DS_Store
 .git/.DS_Store
 .git/objects/.DS_Store
+..Rcheck/00check.log
+CIDER.Rproj
+.Rhistory
+.DS_Store
+.git/.DS_Store
+.git/objects/.DS_Store
+.Rproj.user/.DS_Store
+data/.DS_Store
+vignettes/.DS_Store
+..Rcheck/00check.log
