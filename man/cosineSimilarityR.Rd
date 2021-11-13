@@ -9,6 +9,9 @@ cosineSimilarityR(x)
 \arguments{
 \item{x}{a matrix}
 }
+\value{
+a similarity matrix among all rows of the input matrix
+}
 \description{
 cosine similarity in R
 }

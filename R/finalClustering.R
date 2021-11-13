@@ -1,15 +1,21 @@
 #' @title Final clustering
 #'
-#' @description Merge initial clusters into final clusters based on the matrix of IDEr.
+#' @description Merge initial clusters into final clusters based on the 
+#' matrix of IDEr.
 #'
 #' @param seu Seurat S4 object after the step of `getIDEr`. Required.
 #' @param dist A list. Output of `getIDEr`. Required.
-#' @param cutree.by Character. Cut the tree by which parameter, height ("h") or number of clusters ("k"). (Default: h)
-#' @param cutree.h Numeric between 0 and 1. The height used to cut the tree. Ignored if `cutree.by = 'k`. (Default: 0.45)
-#' @param cutree.k Numeric/integer. Used to cut the tree. Ignored if `cutree.by = 'h`. (Default: 3)
-#' @param hc.method Character. Used to choose the hierarchical clustering method.
+#' @param cutree.by Character. Cut the tree by which parameter, height ("h") or 
+#' number of clusters ("k"). (Default: h)
+#' @param cutree.h Numeric between 0 and 1. The height used to cut the tree. 
+#' Ignored if `cutree.by = 'k`. (Default: 0.45)
+#' @param cutree.k Numeric/integer. Used to cut the tree. Ignored if 
+#' `cutree.by = 'h`. (Default: 3)
+#' @param hc.method Character. Used to choose the hierarchical 
+#' clustering method.
 #'
-#' @return Seurat S4 object with final clustering results in `CIDER_clusters` of meta.data.
+#' @return Seurat S4 object with final clustering results in `CIDER_clusters` 
+#' of meta.data.
 #'
 #' @seealso \code{\link{getIDEr}}
 #'
@@ -37,7 +43,8 @@ finalClustering <- function(seu, dist,
     seu$initial_cluster,
     df_merge$initial_clusters
   )]
-  seu$CIDER_cluster[is.na(seu$CIDER_cluster)] <- seu$initial_cluster[is.na(seu$CIDER_cluster)]
+  seu$CIDER_cluster[is.na(seu$CIDER_cluster)] <- 
+    seu$initial_cluster[is.na(seu$CIDER_cluster)]
 
   return(seu)
 }

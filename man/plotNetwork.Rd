@@ -14,15 +14,21 @@ plotNetwork(
 )
 }
 \arguments{
-\item{seu}{Seurat S4 object after the step of `getIDER`, containing `initial_cluster` and `Batch` in its meta.data. Required.}
+\item{seu}{Seurat S4 object after the step of `getIDER`, containing 
+`initial_cluster` and `Batch` in its meta.data. Required.}
 
 \item{ider}{A list. Output of `getIDER`. Required.}
 
-\item{colour.by}{Character. It should be one of the colnames of Seurat object meta.data. It is used to colour the vertex of the network graph. (Default: NULL)}
+\item{colour.by}{Character. It should be one of the colnames of Seurat 
+object meta.data.It is used to colour the vertex of the network graph. 
+(Default: NULL)}
 
-\item{weight.factor}{Numerical. Adjust the thickness of the edges. (Default: 6.5)}
+\item{weight.factor}{Numerical. Adjust the thickness of the edges. 
+(Default: 6.5)}
 
-\item{col.vector}{A vector of Hex colour codes. If no value is given (default), a vector of 74 colours will be used.}
+\item{col.vector}{A vector of Hex colour codes. If no value is given 
+(default), a vector 
+of 74 colours will be used.}
 
 \item{vertex.size}{Numerical. Adjsut the size of vertexes. (Default: 1)}
 }

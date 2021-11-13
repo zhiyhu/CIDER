@@ -2,7 +2,8 @@
 % Please edit documentation in R/evaluation.R
 \name{estimateProb}
 \alias{estimateProb}
-\title{Estimate probability}
+\title{Estimate the empirical probability of whether two set of cells 
+from distinct batches belong to the same population}
 \usage{
 estimateProb(
   seu,
@@ -14,18 +15,23 @@ estimateProb(
 )
 }
 \arguments{
-\item{seu}{seu}
+\item{seu}{A Seurat object}
 
-\item{ider}{ider}
+\item{ider}{The output list of function `getIDEr`.}
 
-\item{n_size}{40}
+\item{n_size}{Default: 40}
 
 \item{seeds}{seeds}
 
-\item{n.perm}{n.perm}
+\item{n.perm}{Numeric. Time of permutations.}
 
-\item{verbose}{verbose}
+\item{verbose}{Boolean. Print out progress or not. (Default: FALSEW)}
+}
+\value{
+A Seurat object with IDER-based similarity and empirical 
+probability of rejection
 }
 \description{
-Estimate probability
+Estimate the empirical probability of whether two set of cells 
+from distinct batches belong to the same population
 }

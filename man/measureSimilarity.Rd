@@ -13,6 +13,9 @@ measureSimilarity(x1, x2, method = "pearson")
 
 \item{method}{method}
 }
+\value{
+similarity matrix
+}
 \description{
 Measure similarity between two vectors
 }

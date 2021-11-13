@@ -17,29 +17,41 @@ getIDEr(
 )
 }
 \arguments{
-\item{seu}{Seurat S4 object with the column of `initial_cluster` in its meta.data. Required.}
+\item{seu}{Seurat S4 object with the column of `initial_cluster` in 
+its meta.data. Required.}
 
-\item{group.by.var}{initial clusters (batch-specific groups) variable. Needs to be one of the `colnames(seu@meta.data)`. Default: "initial_cluster".}
+\item{group.by.var}{initial clusters (batch-specific groups) variable. 
+Needs to be one of the `colnames(seu@meta.data)`. Default: "initial_cluster".}
 
-\item{batch.by.var}{Batch variable. Needs to be one of the `colnames(seu@meta.data)`. Default: "Batch".}
+\item{batch.by.var}{Batch variable. Needs to be one of the 
+`colnames(seu@meta.data)`. Default: "Batch".}
 
 \item{verbose}{Boolean. Print the message and progress bar. (Default: TRUE)}
 
-\item{use.parallel}{Boolean. Use parallel computation, which requires doParallel; no progress bar will be printed out. Run time will be 1/n.cores compared to the situation when no parallelisation is used. (Default: FALSE)}
+\item{use.parallel}{Boolean. Use parallel computation, which requires 
+doParallel; no progress bar will be printed out. Run time will be 1/n.cores
+ compared to the situation when no parallelisation is used. (Default: FALSE)}
 
-\item{n.cores}{Numeric. Number of cores used for parallel computing (default: 1).}
+\item{n.cores}{Numeric. Number of cores used for parallel computing 
+(default: 1).}
 
-\item{downsampling.size}{Numeric. The number of cells representing each group. (Default: 40)}
+\item{downsampling.size}{Numeric. The number of cells representing each 
+group. (Default: 40)}
 
-\item{downsampling.include}{Boolean. Using `include = TRUE` to include the group smaller than required size. (Default: FALSE)}
+\item{downsampling.include}{Boolean. Using `include = TRUE` to include 
+the group smaller than required size. (Default: FALSE)}
 
-\item{downsampling.replace}{Boolean. Using `replace = TRUE` if the group is smaller than required size and some cells will be repeatedly used. (Default: FALSE)}
+\item{downsampling.replace}{Boolean. Using `replace = TRUE` if the group 
+is smaller than required size and some cells will be repeatedly used. 
+(Default: FALSE)}
 }
 \value{
-A list of four values: three similarity matrices and one list of indeces.
+A list of four values: three similarity matrices and one list 
+of indeces.
 }
 \description{
-Calculate the similarity matrix based on the metrics of Inter-group Differential ExpRession (IDER)
+Calculate the similarity matrix based on the metrics of 
+Inter-group Differential ExpRession (IDER)
 }
 \details{
 Details

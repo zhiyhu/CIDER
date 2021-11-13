@@ -12,7 +12,8 @@
 #' @param verbose verbose
 #' @param downsampling.size downsampling.size
 #'
-#' @return Seurat S4 object with initial clustering results in `initial_cluster` of meta.data.
+#' @return Seurat S4 object with initial clustering results in 
+#' `initial_cluster` of meta.data.
 #'
 #' @export
 #'
@@ -23,7 +24,8 @@
 initialClustering <- function(seu, batch.var = "Batch", 
                               cut.height = 0.4,
                               nfeatures = 2000,
-                              additional.vars.to.regress = NULL, dims = 1:14, resolution = 0.6,
+                              additional.vars.to.regress = NULL, 
+                              dims = seq_len(14), resolution = 0.6,
                               downsampling.size = 50,
                               verbose = FALSE
                               ) {
@@ -39,18 +41,22 @@ initialClustering <- function(seu, batch.var = "Batch",
   
   if(!is.null(additional.vars.to.regress)){
     if(!all(additional.vars.to.regress %in% colnames(seu@meta.data))) {
-      stop("additional.vars.to.regress do(es) not exist in colnames(seu@meta.data).")
+      stop("additional.vars.to.regress do(es) not 
+           exist in colnames(seu@meta.data).")
     }
   }
   
   seu_list <- Seurat::SplitObject(seu, split.by = batch.var)
   seu_list <- mclapply(seu_list, function(x) {
-    x <- NormalizeData(x, normalization.method = "LogNormalize", scale.factor = 10000, verbose = verbose)
-    x <- FindVariableFeatures(x, selection.method = "vst", nfeatures = nfeatures, verbose = verbose)
+    x <- NormalizeData(x, normalization.method = "LogNormalize", 
+                       scale.factor = 10000, verbose = verbose)
+    x <- FindVariableFeatures(x, selection.method = "vst", 
+                              nfeatures = nfeatures, verbose = verbose)
     if(is.null(additional.vars.to.regress)){
       x <- ScaleData(x, verbose = verbose)
     } else {
-      x <- ScaleData(x, verbose = verbose, vars.to.regress = additional.vars.to.regress)
+      x <- ScaleData(x, verbose = verbose, 
+                     vars.to.regress = additional.vars.to.regress)
     }
     
     x <- RunPCA(x, features = VariableFeatures(object = x), verbose = verbose)  
@@ -61,16 +67,20 @@ initialClustering <- function(seu, batch.var = "Batch",
   
   dist_coef <- getDistMat(seu_list, downsampling.size = downsampling.size)
   
-  for(seu_itor in 1:length(seu_list)){
+  for(seu_itor in seq_len(length(seu_list))){
     tmp <- dist_coef[[seu_itor]] + t(dist_coef[[seu_itor]])
     diag(tmp) <- 1
     tmp <- 1 - tmp
     hc <- hclust(as.dist(tmp), method = "average")
     hres <- cutree(hc, h = cut.height)
     df_hres <- data.frame(hres)
-    df_hres$hres <- paste0(df_hres$hres, "_", unique(seu_list[[seu_itor]]$Batch))
-    seu_list[[seu_itor]]$inicluster_tmp <- paste0(seu_list[[seu_itor]]$seurat_clusters, "_", seu_list[[seu_itor]]$Batch)
-    seu_list[[seu_itor]]$inicluster <- df_hres$hres[match(seu_list[[seu_itor]]$inicluster_tmp,rownames(df_hres))]
+    df_hres$hres <- paste0(df_hres$hres, "_", 
+                           unique(seu_list[[seu_itor]]$Batch))
+    seu_list[[seu_itor]]$inicluster_tmp <- 
+      paste0(seu_list[[seu_itor]]$seurat_clusters, 
+             "_", seu_list[[seu_itor]]$Batch)
+    seu_list[[seu_itor]]$inicluster <- 
+      df_hres$hres[match(seu_list[[seu_itor]]$inicluster_tmp,rownames(df_hres))]
   }
   
   res <- unlist(lapply(seu_list, function(x) return(x$inicluster)))

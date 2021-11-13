@@ -3,7 +3,6 @@ Type: Package
 Title: Meta-clustering and Similarity Metric calculation based on Inter-group Differential ExpRession
 biocViews: BatchEffect, GeneExpression, RNASeq, SingleCell, Transcriptomics, DifferentialExpression, Clustering, Software
 Version: 0.99.0
-Date:
 Authors@R: c(
     person("Zhiyuan", "Hu", role = c("aut", "cre"),
       email = "zhiyuan.cheryl.hu@gmail.com",
@@ -13,8 +12,7 @@ Authors@R: c(
       comment = c(ORCID = "0000-0001-7615-8523")
     )
   )
-Maintainer: Zhiyuan Hu <zhiyuan.cheryl.hu@gmail.com>
-Description: Using meta-clustering to integration populations from single-cell RNA-seq. Using meta-clustering to integration populations from single-cell RNA-seq.
+Description: Here we present CIDER, a meta-clustering workflow based on inter-group similarity measures. CIDER can also be used to assess the biological correctness of integration in real datasets, while it does not require the existence of prior cellular annotations. The core of CIDER is the IDER metric, which can be used to compute the similarity between two groups of cells across datasets. IDER first identifies the differentially expressed signature (DES) for each group of cells against all other cells with the unwanted variables regressed out. Next, a similarity measure is computed by using the consistency of DESs between two groups across datasets.
 URL: https://github.com/zhiyhu/CIDER
 BugReports: https://github.com/zhiyhu/CIDER/issues
 License: MIT + file LICENSE

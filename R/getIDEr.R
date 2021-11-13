@@ -1,20 +1,32 @@
 #' @title Compute IDER-based similarity
 #'
-#' @description Calculate the similarity matrix based on the metrics of Inter-group Differential ExpRession (IDER)
+#' @description Calculate the similarity matrix based on the metrics of 
+#' Inter-group Differential ExpRession (IDER)
 #'
-#' @param seu Seurat S4 object with the column of `initial_cluster` in its meta.data. Required.
-#' @param group.by.var initial clusters (batch-specific groups) variable. Needs to be one of the `colnames(seu@meta.data)`. Default: "initial_cluster".
-#' @param batch.by.var Batch variable. Needs to be one of the `colnames(seu@meta.data)`. Default: "Batch".
+#' @param seu Seurat S4 object with the column of `initial_cluster` in 
+#' its meta.data. Required.
+#' @param group.by.var initial clusters (batch-specific groups) variable. 
+#' Needs to be one of the `colnames(seu@meta.data)`. Default: "initial_cluster".
+#' @param batch.by.var Batch variable. Needs to be one of the 
+#' `colnames(seu@meta.data)`. Default: "Batch".
 #' @param verbose Boolean. Print the message and progress bar. (Default: TRUE)
-#' @param use.parallel Boolean. Use parallel computation, which requires doParallel; no progress bar will be printed out. Run time will be 1/n.cores compared to the situation when no parallelisation is used. (Default: FALSE)
-#' @param n.cores Numeric. Number of cores used for parallel computing (default: 1). 
-#' @param downsampling.size Numeric. The number of cells representing each group. (Default: 40)
-#' @param downsampling.include Boolean. Using `include = TRUE` to include the group smaller than required size. (Default: FALSE)
-#' @param downsampling.replace Boolean. Using `replace = TRUE` if the group is smaller than required size and some cells will be repeatedly used. (Default: FALSE)
+#' @param use.parallel Boolean. Use parallel computation, which requires 
+#' doParallel; no progress bar will be printed out. Run time will be 1/n.cores
+#'  compared to the situation when no parallelisation is used. (Default: FALSE)
+#' @param n.cores Numeric. Number of cores used for parallel computing 
+#' (default: 1). 
+#' @param downsampling.size Numeric. The number of cells representing each 
+#' group. (Default: 40)
+#' @param downsampling.include Boolean. Using `include = TRUE` to include 
+#' the group smaller than required size. (Default: FALSE)
+#' @param downsampling.replace Boolean. Using `replace = TRUE` if the group 
+#' is smaller than required size and some cells will be repeatedly used. 
+#' (Default: FALSE)
 #'
 #' @details Details
 #'
-#' @return A list of four values: three similarity matrices and one list of indeces.
+#' @return A list of four values: three similarity matrices and one list 
+#' of indeces.
 #'
 #' @seealso \code{\link{plotNetwork}} \code{\link{finalClustering}}
 #'
@@ -67,19 +79,23 @@ getIDEr <- function(seu,
     replace = downsampling.replace
   )
 
-  matrix <- as.matrix(seu@assays$RNA@counts[, select]) # matrix for dist calculation
-  colnames(matrix) <- paste0(colnames(matrix), 1:ncol(matrix)) # avoid duplication
+  matrix <- as.matrix(seu@assays$RNA@counts[, select]) 
+  # matrix for dist calculation
+  colnames(matrix) <- paste0(colnames(matrix), seq_len(ncol(matrix))) 
+  # avoid duplication
   keep <- rowSums(matrix > 0.5) > 5
-  dge <- edgeR::DGEList(counts = matrix[keep, , drop = F]) # make a edgeR object
+  dge <- edgeR::DGEList(counts = matrix[keep, , drop = FALSE]) 
+  # make a edgeR object
   dge <- dge[!grepl("ERCC-", rownames(dge)), ] # remove ERCC
   dge <- dge[!grepl("MT-", rownames(dge)), ] # remove mitochondria genes
-  dge <- dge[!grepl("mt-", rownames(dge)), ] # remove mitochondria genes for other species
+  dge <- dge[!grepl("mt-", rownames(dge)), ] 
+  # remove mitochondria genes for other species
   logCPM <- cpm(dge, log = TRUE, prior.count = 3) # calculate cpm
   
   df <- data.frame(
     g = metadata$label[select], ## label
     b = metadata$batch[select], ## batch
-    stringsAsFactors = F
+    stringsAsFactors = FALSE
   ) 
 
   df$detrate <- scale(colMeans(matrix > 0))[, 1] # gene detection rate
@@ -91,7 +107,8 @@ getIDEr <- function(seu,
 
   # get the dataframe of combinations/pairs for comparison
   combinations <- data.frame(g1 = rep(unique(df$g), each = N), 
-                             g2 = rep(unique(df$g), N), stringsAsFactors = FALSE)
+                             g2 = rep(unique(df$g), N), 
+                             stringsAsFactors = FALSE)
   combinations <- combinations[combinations$g1 != combinations$g2, ]
   combinations$b1 <- df$b[match(combinations$g1, df$g)]
   combinations$b2 <- df$b[match(combinations$g2, df$g)]
@@ -99,12 +116,12 @@ getIDEr <- function(seu,
   
   idx <- c()
   for (i in 2:nrow(combinations)) {
-    if (!combinations$g2[i] %in% combinations$g1[1:(i - 1)]) {
+    if (!combinations$g2[i] %in% combinations$g1[seq_len(i - 1)]) {
       idx <- c(idx, i)
     }
   }
   combinations <- combinations[c(1, idx), ]
-  rownames(combinations) <- 1:nrow(combinations)
+  rownames(combinations) <- seq_len(nrow(combinations))
   
   dist_coef <- matrix(0, nrow = N, ncol = N) # distance matrix
   colnames(dist_coef) <- rownames(dist_coef) <- unique(df$g)
@@ -125,7 +142,7 @@ getIDEr <- function(seu,
       k <- 1
     }
 
-    for (i in 1:nrow(combinations)) {
+    for (i in seq_len(nrow(combinations))) {
       if (verbose) {
         setTxtProgressBar(pb, k) # progress bar
         k <- k + 1
@@ -155,7 +172,8 @@ getIDEr <- function(seu,
       registerDoParallel(cores = n.cores)
     } else{
       if(n.cores > detectCores(logical = FALSE) - 1){
-        warning("too many cores assign. Setting n.cores = detectCores(logical = FALSE) - 1")
+        warning("too many cores assign. Setting n.cores = 
+                detectCores(logical = FALSE) - 1")
         n.cores <- detectCores(logical = FALSE) - 1
       }
       cl <- makeCluster(n.cores)
@@ -169,7 +187,8 @@ getIDEr <- function(seu,
     
     
     df_dist <- foreach(i = combinations$g1, j = combinations$g2, 
-                       df = rep(list(df), n.iter), logCPM = rep(list(logCPM), n.iter), 
+                       df = rep(list(df), n.iter), 
+                       logCPM = rep(list(logCPM), n.iter), 
                        .combine = "rbind", .verbose = verbose) %dopar% 
                        {
                       
@@ -177,7 +196,8 @@ getIDEr <- function(seu,
                          df$tmp[df$g == i] <- "g1"
                          df$tmp[df$g == j] <- "g2"
                          
-                         design <- model.matrix(~  0 + tmp + b + detrate, data = df) 
+                         design <- model.matrix(~  0 + tmp + b + detrate, 
+                                                data = df) 
                          contrast_m <- limma::makeContrasts(
                            contrasts = c("tmpg1-tmpbg", "tmpg2-tmpbg"),
                            levels = design
@@ -191,7 +211,8 @@ getIDEr <- function(seu,
       stopCluster(cl)
     }
 
-    for (i in 1:nrow(combinations)) { # assign the distance values into the matrix
+    for (i in seq_len(nrow(combinations))) { 
+      # assign the distance values into the matrix
       idx1 <- rownames(dist_coef) == combinations$g1[i]
       idx2 <- colnames(dist_coef) == combinations$g2[i]
       dist_coef[idx1, idx2] <- df_dist[i, 1]
@@ -202,12 +223,12 @@ getIDEr <- function(seu,
 }
 
 
-#' @title Calculate linear regression Fit
+#' @title Calculate IDER-based similarity between two groups
 #'
 #' @param logCPM logCPM
 #' @param design design
 #' @param contrast_m contrast matrix
-#'
+#' @return Numeric. The IDER-based similarity between two groups.
 #' @importFrom stats cor .lm.fit
 getGroupFit <- function(logCPM, design, contrast_m){
   fit <- .lm.fit(design, t(logCPM))

@@ -2,9 +2,10 @@
 #'
 #' @description description
 #'
-#' @param dist.list List of list of similarity matrix. Output of function `getDistMat()`. Required.
+#' @param dist.list List of list of similarity matrix. Output of 
+#' function `getDistMat()`. Required.
 #' @param use Choose from "coef" and "p". (Default: coef)
-#'
+#' @return a pheatmap showing the similarity matrix
 #' @export
 #'
 #' @import pheatmap
@@ -19,7 +20,7 @@ plotDistMat <- function(dist.list, use = "coef") {
   }
   
   hm <- list()
-  for (i in which(sapply(dist_coef, function(x) {
+  for (i in which(vapply(dist_coef, function(x) {
     return(!is.null(x))
   }))) {
     tmp <- dist_coef[[i]] + t(dist_coef[[i]])
@@ -35,12 +36,13 @@ plotDistMat <- function(dist.list, use = "coef") {
 #'
 #' @param seu Seurat object.
 #' @param ider output of function `getIDEr`.
+#' @return a heatmap shows the similarity between shared groups in two batches
 #'
 #' @seealso \code{\link{getIDEr}}
 #' @import pheatmap viridis
 #' @export
 #' @examples 
-#' \donttest{
+#' \dontrun{
 #'   plotHeatmap(seu, ider)
 #' } 
 plotHeatmap <- function(seu, ider) {

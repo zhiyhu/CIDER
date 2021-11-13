@@ -11,11 +11,14 @@ plotHeatmap(seu, ider)
 
 \item{ider}{output of function `getIDEr`.}
 }
+\value{
+a heatmap shows the similarity between shared groups in two batches
+}
 \description{
 description
 }
 \examples{
-\donttest{
+\dontrun{
   plotHeatmap(seu, ider)
 } 
 }

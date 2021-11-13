@@ -2,7 +2,7 @@
 % Please edit documentation in R/getIDER.R
 \name{getGroupFit}
 \alias{getGroupFit}
-\title{Calculate linear regression Fit}
+\title{Calculate IDER-based similarity between two groups}
 \usage{
 getGroupFit(logCPM, design, contrast_m)
 }
@@ -13,6 +13,9 @@ getGroupFit(logCPM, design, contrast_m)
 
 \item{contrast_m}{contrast matrix}
 }
+\value{
+Numeric. The IDER-based similarity between two groups.
+}
 \description{
-Calculate linear regression Fit
+Calculate IDER-based similarity between two groups
 }

@@ -24,7 +24,8 @@ getDistMat(
 
 \item{method}{voom or trend}
 
-\item{additional.variate}{additional variate to include into the regression model}
+\item{additional.variate}{additional variate to include into the regression 
+model}
 
 \item{downsampling.size}{downsampling.size}
 

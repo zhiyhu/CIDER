@@ -7,9 +7,13 @@
 plotDistMat(dist.list, use = "coef")
 }
 \arguments{
-\item{dist.list}{List of list of similarity matrix. Output of function `getDistMat()`. Required.}
+\item{dist.list}{List of list of similarity matrix. Output of 
+function `getDistMat()`. Required.}
 
 \item{use}{Choose from "coef" and "p". (Default: coef)}
+}
+\value{
+a pheatmap showing the similarity matrix
 }
 \description{
 description

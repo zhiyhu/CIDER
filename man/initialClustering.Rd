@@ -10,7 +10,7 @@ initialClustering(
   cut.height = 0.4,
   nfeatures = 2000,
   additional.vars.to.regress = NULL,
-  dims = 1:14,
+  dims = seq_len(14),
   resolution = 0.6,
   downsampling.size = 50,
   verbose = FALSE
@@ -36,7 +36,8 @@ initialClustering(
 \item{verbose}{verbose}
 }
 \value{
-Seurat S4 object with initial clustering results in `initial_cluster` of meta.data.
+Seurat S4 object with initial clustering results in 
+`initial_cluster` of meta.data.
 }
 \description{
 Perform batch-specific initial clustering.
