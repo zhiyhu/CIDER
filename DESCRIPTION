@@ -1,12 +1,12 @@
 Package: CIDER
 Type: Package
-Title: Meta-Clustering based on Inter-group Differential ExpRession
+Title: Meta-clustering and Similarity Metric calculation based on Inter-group Differential ExpRession
 biocViews: BatchEffect, GeneExpression, RNASeq, SingleCell, Transcriptomics, DifferentialExpression, Clustering, Software
 Version: 0.99.0
 Date:
-Author: Zhiyuan Hu, Christopher Yau
 Authors@R: c(
     person("Zhiyuan", "Hu", role = c("aut", "cre"),
+      email = "zhiyuan.cheryl.hu@gmail.com",
       comment = c(ORCID = "0000-0002-1688-6032")
     ),
     person("Christopher", "Yau", email = "christopher.yau@manchester.ac.uk", role = "aut",
