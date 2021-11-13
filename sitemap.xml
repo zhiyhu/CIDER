@@ -10,9 +10,6 @@
     <loc>http://zhiyhu.github.io/CIDER/reference/cosineSimilarityR.html</loc>
   </url>
   <url>
-    <loc>http://zhiyhu.github.io/CIDER/reference/dendritic.html</loc>
-  </url>
-  <url>
     <loc>http://zhiyhu.github.io/CIDER/reference/downsampling.html</loc>
   </url>
   <url>
@@ -46,12 +43,6 @@
     <loc>http://zhiyhu.github.io/CIDER/reference/mergeInitialClusters.html</loc>
   </url>
   <url>
-    <loc>http://zhiyhu.github.io/CIDER/reference/pancreas_counts.html</loc>
-  </url>
-  <url>
-    <loc>http://zhiyhu.github.io/CIDER/reference/pancreas_meta.html</loc>
-  </url>
-  <url>
     <loc>http://zhiyhu.github.io/CIDER/reference/plotDistMat.html</loc>
   </url>
   <url>
@@ -62,5 +53,8 @@
   </url>
   <url>
     <loc>http://zhiyhu.github.io/CIDER/reference/scatterPlot.html</loc>
+  </url>
+  <url>
+    <loc>http://zhiyhu.github.io/CIDER/articles/evaluation.html</loc>
   </url>
 </urlset>

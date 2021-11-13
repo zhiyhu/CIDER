@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Initial clustering to evaluate integration — hdbscan.seurat • CIDER</title>
+<title>Initial clustering for evaluating integration — hdbscan.seurat • CIDER</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,8 +46,9 @@
 
 
 
-<meta property="og:title" content="Initial clustering to evaluate integration — hdbscan.seurat" />
-<meta property="og:description" content="Initial clustering to evaluate integration" />
+<meta property="og:title" content="Initial clustering for evaluating integration — hdbscan.seurat" />
+<meta property="og:description" content="This function applies HDBSCAN, a density-based 
+clustering method, on the corrected dimension reduction." />
 <meta property="og:image" content="http://zhiyhu.github.io/CIDER/reference/figures/card.png" />
 
 
@@ -105,6 +106,18 @@
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/evaluation.html">Evaluating integration results by CIDER</a>
+    </li>
+  </ul>
+</li>
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
@@ -129,44 +142,51 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Initial clustering to evaluate integration</h1>
+    <h1>Initial clustering for evaluating integration</h1>
     <small class="dont-index">Source: <a href='https://github.com/zhiyhu/CIDER/blob/master/R/evaluation.R'><code>R/evaluation.R</code></a></small>
     <div class="hidden name"><code>hdbscan.seurat.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Initial clustering to evaluate integration</p>
+    <p>This function applies HDBSCAN, a density-based 
+clustering method, on the corrected dimension reduction.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>hdbscan.seurat</span><span class='op'>(</span><span class='va'>seu</span>, reduction <span class='op'>=</span> <span class='st'>"pca"</span>, dims <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>15</span>, minPts <span class='op'>=</span> <span class='fl'>25</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>hdbscan.seurat</span><span class='op'>(</span><span class='va'>seu</span>, reduction <span class='op'>=</span> <span class='st'>"pca"</span>, dims <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq_len</a></span><span class='op'>(</span><span class='fl'>15</span><span class='op'>)</span>, minPts <span class='op'>=</span> <span class='fl'>25</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>seu</th>
-      <td><p>a Seurat object containing integrated or batch corrected PCA.</p></td>
+      <td><p>a Seurat object containing integrated or batch corrected
+PCA.</p></td>
     </tr>
     <tr>
       <th>reduction</th>
-      <td><p>Character. Name of the dimension reduction after integration or batch correction. (Default: PCA)</p></td>
+      <td><p>Character. Name of the dimension reduction after 
+integration or batch correction. (Default: PCA)</p></td>
     </tr>
     <tr>
       <th>dims</th>
-      <td><p>Numeric vector. Dimensions used for initial clustering. (Default: 1:15)</p></td>
+      <td><p>Numeric vector. Dimensions used for initial clustering. 
+(Default: 1:15)</p></td>
     </tr>
     <tr>
       <th>minPts</th>
-      <td><p>Interger. Minimum size of clusters. Will be passed to the `hdbscan` function. (Default: 25)</p></td>
+      <td><p>Interger. Minimum size of clusters. Will be passed 
+to the `hdbscan` function. (Default: 25)</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A Seurat object having two additional columns in its meta.data: dbscan_cluster and initial_cluster.</p>
+    <p>A Seurat object having two additional columns in its 
+meta.data: dbscan_cluster and initial_cluster.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>Usage of this function should be followed by <code><a href='getIDEr.html'>getIDEr</a></code> and <code><a href='estimateProb.html'>estimateProb</a></code>.</p></div>
+    <div class='dont-index'><p>Usage of this function should be followed by 
+<code><a href='getIDEr.html'>getIDEr</a></code> and <code><a href='estimateProb.html'>estimateProb</a></code>.</p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

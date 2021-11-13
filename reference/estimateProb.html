@@ -6,7 +6,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Estimate probability — estimateProb • CIDER</title>
+<title>Estimate the empirical probability of whether two set of cells 
+from distinct batches belong to the same population — estimateProb • CIDER</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,8 +47,10 @@
 
 
 
-<meta property="og:title" content="Estimate probability — estimateProb" />
-<meta property="og:description" content="Estimate probability" />
+<meta property="og:title" content="Estimate the empirical probability of whether two set of cells 
+from distinct batches belong to the same population — estimateProb" />
+<meta property="og:description" content="Estimate the empirical probability of whether two set of cells 
+from distinct batches belong to the same population" />
 <meta property="og:image" content="http://zhiyhu.github.io/CIDER/reference/figures/card.png" />
 
 
@@ -105,6 +108,18 @@
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/evaluation.html">Evaluating integration results by CIDER</a>
+    </li>
+  </ul>
+</li>
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
@@ -129,13 +144,15 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Estimate probability</h1>
+    <h1>Estimate the empirical probability of whether two set of cells 
+from distinct batches belong to the same population</h1>
     <small class="dont-index">Source: <a href='https://github.com/zhiyhu/CIDER/blob/master/R/evaluation.R'><code>R/evaluation.R</code></a></small>
     <div class="hidden name"><code>estimateProb.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Estimate probability</p>
+    <p>Estimate the empirical probability of whether two set of cells 
+from distinct batches belong to the same population</p>
     </div>
 
     <pre class="usage"><span class='fu'>estimateProb</span><span class='op'>(</span>
@@ -152,15 +169,15 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>seu</th>
-      <td><p>seu</p></td>
+      <td><p>A Seurat object</p></td>
     </tr>
     <tr>
       <th>ider</th>
-      <td><p>ider</p></td>
+      <td><p>The output list of function `getIDEr`.</p></td>
     </tr>
     <tr>
       <th>n_size</th>
-      <td><p>40</p></td>
+      <td><p>Default: 40</p></td>
     </tr>
     <tr>
       <th>seeds</th>
@@ -168,14 +185,18 @@
     </tr>
     <tr>
       <th>n.perm</th>
-      <td><p>n.perm</p></td>
+      <td><p>Numeric. Time of permutations.</p></td>
     </tr>
     <tr>
       <th>verbose</th>
-      <td><p>verbose</p></td>
+      <td><p>Boolean. Print out progress or not. (Default: FALSEW)</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A Seurat object with IDER-based similarity and empirical 
+probability of rejection</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

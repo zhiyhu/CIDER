@@ -104,6 +104,18 @@
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/evaluation.html">Evaluating integration results by CIDER</a>
+    </li>
+  </ul>
+</li>
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
@@ -166,12 +178,6 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="dendritic.html">dendritic</a></code> </p>
-        </td>
-        <td><p>Seurat object of dendritic cells</p></td>
-      </tr><tr>
-        
-        <td>
           <p><code><a href="downsampling.html">downsampling()</a></code> </p>
         </td>
         <td><p>Downsampling cells</p></td>
@@ -180,7 +186,8 @@
         <td>
           <p><code><a href="estimateProb.html">estimateProb()</a></code> </p>
         </td>
-        <td><p>Estimate probability</p></td>
+        <td><p>Estimate the empirical probability of whether two set of cells 
+from distinct batches belong to the same population</p></td>
       </tr><tr>
         
         <td>
@@ -204,7 +211,7 @@
         <td>
           <p><code><a href="getGroupFit.html">getGroupFit()</a></code> </p>
         </td>
-        <td><p>Calculate linear regression Fit</p></td>
+        <td><p>Calculate IDER-based similarity between two groups</p></td>
       </tr><tr>
         
         <td>
@@ -216,7 +223,7 @@
         <td>
           <p><code><a href="hdbscan.seurat.html">hdbscan.seurat()</a></code> </p>
         </td>
-        <td><p>Initial clustering to evaluate integration</p></td>
+        <td><p>Initial clustering for evaluating integration</p></td>
       </tr><tr>
         
         <td>
@@ -235,18 +242,6 @@
           <p><code><a href="mergeInitialClusters.html">mergeInitialClusters()</a></code> </p>
         </td>
         <td><p>Merge Initial Clusters</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="pancreas_counts.html">pancreas_counts</a></code> </p>
-        </td>
-        <td><p>Sparse count matrix of cells from pancreatic tissues</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="pancreas_meta.html">pancreas_meta</a></code> </p>
-        </td>
-        <td><p>Metadata of pancreatic cells</p></td>
       </tr><tr>
         
         <td>
@@ -270,7 +265,7 @@
         <td>
           <p><code><a href="scatterPlot.html">scatterPlot()</a></code> </p>
         </td>
-        <td><p>Scatterplot</p></td>
+        <td><p>Scatterplot by a selected feature</p></td>
       </tr>
     </tbody>
     </table>
