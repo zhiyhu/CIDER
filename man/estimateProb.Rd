@@ -2,36 +2,31 @@
 % Please edit documentation in R/evaluation.R
 \name{estimateProb}
 \alias{estimateProb}
-\title{Estimate the empirical probability of whether two set of cells 
+\title{Estimate the empirical probability of whether two set of cells
 from distinct batches belong to the same population}
 \usage{
-estimateProb(
-  seu,
-  ider,
-  n_size = 40,
-  seeds = c(12345, 89465, 10385, 10385, 17396),
-  n.perm = 5,
-  verbose = FALSE
-)
+estimateProb(seu, ider, n_size = 40, n.perm = 5, verbose = FALSE)
 }
 \arguments{
 \item{seu}{A Seurat object}
 
 \item{ider}{The output list of function `getIDEr`.}
 
-\item{n_size}{Default: 40}
-
-\item{seeds}{seeds}
+\item{n_size}{Number of cells per group used to compute the similarity. Default: 40}
 
 \item{n.perm}{Numeric. Time of permutations.}
 
 \item{verbose}{Boolean. Print out progress or not. (Default: FALSEW)}
 }
 \value{
-A Seurat object with IDER-based similarity and empirical 
+A Seurat object with IDER-based similarity and empirical
 probability of rejection
 }
 \description{
-Estimate the empirical probability of whether two set of cells 
+Estimate the empirical probability of whether two set of cells
 from distinct batches belong to the same population
+}
+\seealso{
+Usage of this function should be after \code{\link{hdbscan.seurat}}
+and \code{\link{getIDEr}}
 }

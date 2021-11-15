@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Final clustering — finalClustering • CIDER</title>
+<title>Final clustering step for meta-clustering — finalClustering • CIDER</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,8 +46,9 @@
 
 
 
-<meta property="og:title" content="Final clustering — finalClustering" />
-<meta property="og:description" content="Merge initial clusters into final clusters based on the matrix of IDEr." />
+<meta property="og:title" content="Final clustering step for meta-clustering — finalClustering" />
+<meta property="og:description" content="Merge initial clusters into final clusters based on the
+matrix of IDEr." />
 <meta property="og:image" content="http://zhiyhu.github.io/CIDER/reference/figures/card.png" />
 
 
@@ -150,13 +151,14 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Final clustering</h1>
+    <h1>Final clustering step for meta-clustering</h1>
     <small class="dont-index">Source: <a href='https://github.com/zhiyhu/CIDER/blob/master/R/finalClustering.R'><code>R/finalClustering.R</code></a></small>
     <div class="hidden name"><code>finalClustering.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Merge initial clusters into final clusters based on the matrix of IDEr.</p>
+    <p>Merge initial clusters into final clusters based on the
+matrix of IDEr.</p>
     </div>
 
     <pre class="usage"><span class='fu'>finalClustering</span><span class='op'>(</span>
@@ -181,28 +183,33 @@
     </tr>
     <tr>
       <th>cutree.by</th>
-      <td><p>Character. Cut the tree by which parameter, height ("h") or number of clusters ("k"). (Default: h)</p></td>
+      <td><p>Character. Cut the tree by which parameter, height ("h") or
+number of clusters ("k"). (Default: h)</p></td>
     </tr>
     <tr>
       <th>cutree.h</th>
-      <td><p>Numeric between 0 and 1. The height used to cut the tree. Ignored if `cutree.by = 'k`. (Default: 0.45)</p></td>
+      <td><p>Numeric between 0 and 1. The height used to cut the tree.
+Ignored if `cutree.by = 'k`. (Default: 0.45)</p></td>
     </tr>
     <tr>
       <th>cutree.k</th>
-      <td><p>Numeric/integer. Used to cut the tree. Ignored if `cutree.by = 'h`. (Default: 3)</p></td>
+      <td><p>Numeric/integer. Used to cut the tree. Ignored if
+`cutree.by = 'h`. (Default: 3)</p></td>
     </tr>
     <tr>
       <th>hc.method</th>
-      <td><p>Character. Used to choose the hierarchical clustering method.</p></td>
+      <td><p>Character. Used to choose the hierarchical
+clustering method.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Seurat S4 object with final clustering results in `CIDER_clusters` of meta.data.</p>
+    <p>Seurat S4 object with final clustering results in `CIDER_clusters`
+of meta.data.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='getIDEr.html'>getIDEr</a></code></p></div>
+    <div class='dont-index'><p><code><a href='getIDEr.html'>getIDEr</a></code>.</p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

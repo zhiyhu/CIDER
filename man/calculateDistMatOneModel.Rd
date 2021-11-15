@@ -13,21 +13,27 @@ calculateDistMatOneModel(
 )
 }
 \arguments{
-\item{matrix}{matrix}
+\item{matrix}{The count matrix. Rows are genes/features and columns are
+samples/cells.}
 
-\item{metadata}{metadata}
+\item{metadata}{Data frame. Its rows should correspond to
+columns of the `matrix` input.}
 
-\item{verbose}{print the message and progress bar (default: TRUE)}
+\item{verbose}{Print the message and progress bar (default: TRUE)}
 
-\item{method}{voom or trend}
+\item{method}{Methods for DE analysis. Options: "voom" or "trend" (default)}
 
-\item{additional.variate}{additional.variate}
+\item{additional.variate}{additional variate to include into the linear
+model to regress out}
 }
 \value{
-a list
+A similarity matrix
 }
 \description{
-description
+This function is called by `getDistMat`.
+}
+\seealso{
+This function is called by \code{\link{getDistMat}}
 }
 \author{
 Zhiyuan Hu

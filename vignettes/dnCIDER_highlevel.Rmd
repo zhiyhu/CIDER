@@ -1,0 +1,96 @@
+---
+title: "Getting Start with De Novo CIDER (dnCIDER)"
+output: 
+  rmarkdown::html_vignette:
+    toc: TRUE
+    number_sections: true
+vignette: >
+  %\VignetteIndexEntry{Getting Start with De Novo CIDER (dnCIDER)}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+# Introduction
+
+This vignette performs dnCIDER on a cross-species pancreas dataset.
+
+
+# Set up
+
+In addition to **CIDER**, we will load the following packages:
+
+```{r setup}
+library(CIDER)
+library(Seurat)
+library(parallel)
+library(cowplot)
+```
+
+# Load pancreas data
+
+The example data can be downloaded from https://figshare.com/s/d5474749ca8c711cc205. 
+
+Pancreatic cell data$^1$ contain cells from human (8241 cells) and mouse (1886 cells).
+
+```{r} 
+load("../data/pancreas_counts.RData") # count matrix
+load("../data/pancreas_meta.RData") # meta data/cell information
+seu <- CreateSeuratObject(counts = pancreas_counts, meta.data = pancreas_meta)
+table(seu$Batch)
+```
+
+# Perform dnCIDER (high-level)
+
+DnCIDER contains three steps 
+
+```{r}
+seu <- initialClustering(seu, additional.vars.to.regress = "Sample", dims = 1:15)
+ider <- getIDEr(seu, downsampling.size = 35, use.parallel = FALSE, verbose = FALSE)
+seu <- finalClustering(seu, ider, cutree.h = 0.35) # final clustering
+```
+
+# Visualise clustering results
+
+We use the Seurat pipeline to perform normalisation (`NormalizeData`), preprocessing (`FindVariableFeatures` and `ScaleData`) and dimension reduction (`RunPCA` and `RunTSNE`).
+
+```{r seurat-pipeline}
+seu <- NormalizeData(seu, verbose = FALSE)
+seu <- FindVariableFeatures(seu, selection.method = "vst", nfeatures = 2000, verbose = FALSE)
+seu <- ScaleData(seu, verbose = FALSE)
+seu <- RunPCA(seu, npcs = 20, verbose = FALSE)
+seu <- RunTSNE(seu, reduction = "pca", dims = 1:12)
+```
+
+We can see 
+
+```{r tsne-plot-CIDER-results, fig.height=3, fig.width=4}
+scatterPlot(seu, "tsne", colour.by = "CIDER_cluster", title = "asCIDER clustering results") 
+```
+
+By comparing the dnCIDER results to the cell annotation from the publication$^1$, we observe that dnCIDER correctly identify the majority of populations across two species.
+
+```{r tsne-plot-ground-truth, fig.height=3, fig.width=4}
+scatterPlot(seu, "tsne", colour.by = "Group", title = "Ground truth of cell populations") 
+```
+
+# Technical
+
+```{r sessionInfo}
+sessionInfo()
+```
+
+
+# References
+
+1. Baron, M. et al. A Single-Cell Transcriptomic Map of the Human and Mouse Pancreas Reveals Inter- and Intra-cell Population Structure. Cell Syst 3, 346–360.e4 (2016).
+2. Satija R, et al. Spatial reconstruction of single-cell gene expression data. Nature Biotechnology 33, 495-502 (2015). 
+
+

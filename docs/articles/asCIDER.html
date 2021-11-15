@@ -101,7 +101,7 @@
 
       
 
-      </header><div class="row">
+      </header><script src="asCIDER_files/header-attrs-2.11/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Getting Start with Assisted CIDER (asCIDER)</h1>
@@ -124,22 +124,23 @@
 <h1 class="hasAnchor">
 <a href="#set-up" class="anchor"></a>Set up</h1>
 <p>In addition to <strong>CIDER</strong>, we will load the following packages:</p>
-<div class="sourceCode"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/zhiyhu/CIDER">CIDER</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://www.satijalab.org/seurat">Seurat</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://satijalab.org/seurat">Seurat</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">pheatmap</span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://wilkelab.org/cowplot">cowplot</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/sjmgarnier/viridis">viridis</a></span><span class="op">)</span></code></pre></div>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://wilkelab.org/cowplot/">cowplot</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://sjmgarnier.github.io/viridis/">viridis</a></span><span class="op">)</span></code></pre></div>
 </div>
 <div id="pancreas-data" class="section level1">
 <h1 class="hasAnchor">
 <a href="#pancreas-data" class="anchor"></a>Pancreas data</h1>
+<p>The example data can be downloaded from <a href="https://figshare.com/s/d5474749ca8c711cc205" class="uri">https://figshare.com/s/d5474749ca8c711cc205</a>.</p>
 <p>This data<span class="math inline">\(^1\)</span> contain cells from human (8241 cells) and mouse (1886 cells).</p>
-<div class="sourceCode"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"pancreas_counts"</span><span class="op">)</span> <span class="co"># count matrix</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"pancreas_meta"</span><span class="op">)</span> <span class="co"># meta data/cell information</span>
-<span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="http://www.satijalab.org/seurat/reference/CreateSeuratObject.html">CreateSeuratObject</a></span><span class="op">(</span>counts <span class="op">=</span> <span class="va">pancreas_counts</span>, meta.data <span class="op">=</span> <span class="va">pancreas_meta</span><span class="op">)</span>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/load.html">load</a></span><span class="op">(</span><span class="st">"../data/pancreas_counts.RData"</span><span class="op">)</span> <span class="co"># count matrix</span>
+<span class="fu"><a href="https://rdrr.io/r/base/load.html">load</a></span><span class="op">(</span><span class="st">"../data/pancreas_meta.RData"</span><span class="op">)</span> <span class="co"># meta data/cell information</span>
+<span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/CreateSeuratObject.html">CreateSeuratObject</a></span><span class="op">(</span>counts <span class="op">=</span> <span class="va">pancreas_counts</span>, meta.data <span class="op">=</span> <span class="va">pancreas_meta</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="va">seu</span><span class="op">$</span><span class="va">Batch</span><span class="op">)</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; human mouse </span>
@@ -150,18 +151,18 @@
 <a href="#exam-if-data-are-confounded" class="anchor"></a>Exam if data are confounded</h1>
 <p>Prior to use CIDER (or other integration methods for clustering) it is important to exam if clustering will be confounded by the cross-species factors.</p>
 <p>Her we first perform the conventional Seurat<span class="math inline">\(^2\)</span> clustering pipeline.</p>
-<div class="sourceCode"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="http://www.satijalab.org/seurat/reference/NormalizeData.html">NormalizeData</a></span><span class="op">(</span><span class="va">seu</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="http://www.satijalab.org/seurat/reference/FindVariableFeatures.html">FindVariableFeatures</a></span><span class="op">(</span><span class="va">seu</span>, selection.method <span class="op">=</span> <span class="st">"vst"</span>, nfeatures <span class="op">=</span> <span class="fl">2000</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="http://www.satijalab.org/seurat/reference/ScaleData.html">ScaleData</a></span><span class="op">(</span><span class="va">seu</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="http://www.satijalab.org/seurat/reference/RunPCA.html">RunPCA</a></span><span class="op">(</span><span class="va">seu</span>, npcs <span class="op">=</span> <span class="fl">20</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="http://www.satijalab.org/seurat/reference/RunTSNE.html">RunTSNE</a></span><span class="op">(</span><span class="va">seu</span>, reduction <span class="op">=</span> <span class="st">"pca"</span>, dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/NormalizeData.html">NormalizeData</a></span><span class="op">(</span><span class="va">seu</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindVariableFeatures.html">FindVariableFeatures</a></span><span class="op">(</span><span class="va">seu</span>, selection.method <span class="op">=</span> <span class="st">"vst"</span>, nfeatures <span class="op">=</span> <span class="fl">2000</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/ScaleData.html">ScaleData</a></span><span class="op">(</span><span class="va">seu</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/RunPCA.html">RunPCA</a></span><span class="op">(</span><span class="va">seu</span>, npcs <span class="op">=</span> <span class="fl">20</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/RunTSNE.html">RunTSNE</a></span><span class="op">(</span><span class="va">seu</span>, reduction <span class="op">=</span> <span class="st">"pca"</span>, dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span></code></pre></div>
 <div id="confounded-dimension-reduction" class="section level2">
 <h2 class="hasAnchor">
 <a href="#confounded-dimension-reduction" class="anchor"></a>Confounded dimension reduction</h2>
 <p>The PCA and <em>t</em>-SNE plots both showed that the data are confounded by species.</p>
 <p>The <code>scatterPlot</code> function is used to generate dimension reduction figures. It takes input of a Seurat object (<code>seu</code> here), the name of reduction (<code>pca</code> and <code>tsne</code> here), the variable deciding dot colours (<code>Batch</code> here) and the title of plots. See more information by <code><a href="../reference/scatterPlot.html">?scatterPlot</a></code></p>
-<div class="sourceCode"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/scatterPlot.html">scatterPlot</a></span><span class="op">(</span><span class="va">seu</span>, <span class="st">"pca"</span>,colour.by <span class="op">=</span> <span class="st">"Batch"</span>, title <span class="op">=</span> <span class="st">"PCA"</span><span class="op">)</span> 
 <span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/scatterPlot.html">scatterPlot</a></span><span class="op">(</span><span class="va">seu</span>, <span class="st">"tsne"</span>,colour.by <span class="op">=</span> <span class="st">"Batch"</span>, title <span class="op">=</span> <span class="st">"t-SNE"</span><span class="op">)</span> 
 <span class="fu"><a href="https://wilkelab.org/cowplot/reference/plot_grid.html">plot_grid</a></span><span class="op">(</span><span class="va">p1</span>, <span class="va">p2</span><span class="op">)</span></code></pre></div>
@@ -170,15 +171,15 @@
 <div id="confounded-clustering-results" class="section level2">
 <h2 class="hasAnchor">
 <a href="#confounded-clustering-results" class="anchor"></a>Confounded clustering results</h2>
-<div class="sourceCode"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="http://www.satijalab.org/seurat/reference/FindNeighbors.html">FindNeighbors</a></span><span class="op">(</span><span class="va">seu</span>, dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindNeighbors.html">FindNeighbors</a></span><span class="op">(</span><span class="va">seu</span>, dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span>
 <span class="co">#&gt; Computing nearest neighbor graph</span>
 <span class="co">#&gt; Computing SNN</span>
-<span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="http://www.satijalab.org/seurat/reference/FindClusters.html">FindClusters</a></span><span class="op">(</span><span class="va">seu</span><span class="op">)</span>
+<span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindClusters.html">FindClusters</a></span><span class="op">(</span><span class="va">seu</span><span class="op">)</span>
 <span class="co">#&gt; Modularity Optimizer version 1.3.0 by Ludo Waltman and Nees Jan van Eck</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Number of nodes: 10127</span>
-<span class="co">#&gt; Number of edges: 352709</span>
+<span class="co">#&gt; Number of edges: 352494</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Running Louvain algorithm...</span>
 <span class="co">#&gt; Maximum modularity in 10 random starts: 0.9149</span>
@@ -187,7 +188,7 @@
 
 <span class="fu"><a href="../reference/scatterPlot.html">scatterPlot</a></span><span class="op">(</span><span class="va">seu</span>, <span class="st">"tsne"</span>,colour.by <span class="op">=</span> <span class="st">"seurat_clusters"</span>, title <span class="op">=</span> <span class="st">"t-SNE"</span><span class="op">)</span> </code></pre></div>
 <p><img src="asCIDER_files/figure-html/unnamed-chunk-3-1.png" width="480"></p>
-<div class="sourceCode"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="va">seu</span><span class="op">$</span><span class="va">seurat_clusters</span>, <span class="va">seu</span><span class="op">$</span><span class="va">Batch</span><span class="op">)</span><span class="op">)</span>
 <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">res</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>fill<span class="op">=</span><span class="va">Var2</span>, y<span class="op">=</span><span class="va">Freq</span>, x<span class="op">=</span><span class="va">Var1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">geom_bar</a></span><span class="op">(</span>position<span class="op">=</span><span class="st">"stack"</span>, stat<span class="op">=</span><span class="st">"identity"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">xlab</a></span><span class="op">(</span><span class="st">"CIDER_cluster"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ylab</a></span><span class="op">(</span><span class="st">"Proportions"</span><span class="op">)</span></code></pre></div>
@@ -200,8 +201,8 @@
 <div id="prepare-initial-clusters" class="section level2">
 <h2 class="hasAnchor">
 <a href="#prepare-initial-clusters" class="anchor"></a>Prepare initial clusters</h2>
-<p>asCIDER uses existing within-batch clustering results. Here we concatenate the batch ID and the within-batch cluster ID to obtain cluster-specific groups (i.e. initial clusters).</p>
-<div class="sourceCode"><pre class="downlit sourceCode r">
+<p>asCIDER uses existing within-batch clustering results. Here we concatenate the batch ID and the within-batch cluster ID to obtain cluster-specific groups (i.e. initial clusters).</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">seu</span><span class="op">$</span><span class="va">initial_cluster</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="va">seu</span><span class="op">$</span><span class="va">Group</span>, <span class="va">seu</span><span class="op">$</span><span class="va">Batch</span>, sep <span class="op">=</span> <span class="st">"_"</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="va">seu</span><span class="op">$</span><span class="va">initial_cluster</span><span class="op">)</span>
 <span class="co">#&gt; </span>
@@ -228,9 +229,9 @@
 <h2 class="hasAnchor">
 <a href="#calculate-of-ider-similarity-matrix" class="anchor"></a>Calculate of IDER similarity matrix</h2>
 <p>The function <code>getIDEr</code> calculate the IDER-based distance matrix.</p>
-<p>By default, it will use the column called "initial_cluster" as initial clusters, and "Batch" as batch. If you are using columns other than this two, please revise these two parameters.</p>
+<p>By default, it will use the column called “initial_cluster” as initial clusters, and “Batch” as batch. If you are using columns other than this two, please revise these two parameters.</p>
 <p>For this step, you can choose to use parallel computation by setting <code>use.parallel = TRUE</code> or not (default <code>use.parallel = FALSE</code>). The default number of cores used for parallel computation is <code>detectCores(logical = FALSE) - 1</code>.</p>
-<div class="sourceCode"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">ider</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getIDEr.html">getIDEr</a></span><span class="op">(</span><span class="va">seu</span>, 
                 group.by.var <span class="op">=</span> <span class="st">"initial_cluster"</span>,
                 batch.by.var <span class="op">=</span> <span class="st">"Batch"</span>,
@@ -240,14 +241,14 @@
 <div id="visualise-the-similarity-matrix" class="section level2">
 <h2 class="hasAnchor">
 <a href="#visualise-the-similarity-matrix" class="anchor"></a>Visualise the similarity matrix</h2>
-<div class="sourceCode"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">groups</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"alpha"</span>,<span class="st">"beta"</span>,<span class="st">"delta"</span>, <span class="st">"gamma"</span>,<span class="st">"ductal"</span>,<span class="st">"endothelial"</span>, <span class="st">"activated_stellate"</span>, <span class="st">"quiescent_stellate"</span>, <span class="st">"macrophage"</span><span class="op">)</span>
 <span class="va">idx1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">groups</span>, <span class="st">"_human"</span><span class="op">)</span>
 <span class="va">idx2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">groups</span>, <span class="st">"_mouse"</span><span class="op">)</span>
 
 <span class="fu">pheatmap</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pheatmap/man/pheatmap.html">pheatmap</a></span><span class="op">(</span>
   <span class="va">ider</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">[</span><span class="va">idx1</span>, <span class="va">idx2</span><span class="op">]</span>,
-  color <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/viridisLite/man/viridis.html">inferno</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span>,
+  color <span class="op">=</span> <span class="fu"><a href="https://sjmgarnier.github.io/viridisLite/reference/viridis.html">inferno</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span>,
   border_color <span class="op">=</span> <span class="cn">NA</span>,
   display_numbers <span class="op">=</span> <span class="cn">TRUE</span>,
   cluster_rows <span class="op">=</span> <span class="cn">FALSE</span>,
@@ -264,7 +265,7 @@
 <a href="#perform-final-clustering" class="anchor"></a>Perform final Clustering</h2>
 <p>Next we put both Seurat object and the similarity matrix list into <code>finalClustering</code>. You can either cut trees by height (set <code>cutree.by = 'h</code>) or by k (set <code>cutree.by = 'k</code>). The default is cutting by the height of 0.45.</p>
 <p>The final clustering results are stored in Colume <code>cider_final_cluster</code> of Seurat object metadata and can be extracted using <code>seu$cider_final_cluster</code>.</p>
-<div class="sourceCode"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/finalClustering.html">finalClustering</a></span><span class="op">(</span><span class="va">seu</span>, <span class="va">ider</span>, cutree.h <span class="op">=</span> <span class="fl">0.45</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">seu</span><span class="op">@</span><span class="va">meta.data</span><span class="op">)</span>
 <span class="co">#&gt;                             orig.ident nCount_RNA nFeature_RNA Batch   Group</span>
@@ -293,24 +294,91 @@
 <div id="visualise-clustering-results" class="section level1">
 <h1 class="hasAnchor">
 <a href="#visualise-clustering-results" class="anchor"></a>Visualise clustering results</h1>
-<div class="sourceCode"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">plot_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">plot_list</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/scatterPlot.html">scatterPlot</a></span><span class="op">(</span><span class="va">seu</span>, <span class="st">"tsne"</span>, colour.by <span class="op">=</span> <span class="st">"CIDER_cluster"</span>, title <span class="op">=</span> <span class="st">"asCIDER clustering results"</span><span class="op">)</span> 
 <span class="va">plot_list</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/scatterPlot.html">scatterPlot</a></span><span class="op">(</span><span class="va">seu</span>, <span class="st">"tsne"</span>, colour.by <span class="op">=</span> <span class="st">"Group"</span>, title <span class="op">=</span> <span class="st">"Ground truth of cell populations"</span><span class="op">)</span> 
 <span class="fu"><a href="https://wilkelab.org/cowplot/reference/plot_grid.html">plot_grid</a></span><span class="op">(</span>plotlist <span class="op">=</span> <span class="va">plot_list</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></code></pre></div>
 <p><img src="asCIDER_files/figure-html/summary-tsne-plots-1.png" width="768"></p>
-<div class="sourceCode"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="va">seu</span><span class="op">$</span><span class="va">CIDER_cluster</span>, <span class="va">seu</span><span class="op">$</span><span class="va">Batch</span><span class="op">)</span><span class="op">)</span>
 <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="va">res</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>fill<span class="op">=</span><span class="va">Var2</span>, y<span class="op">=</span><span class="va">Freq</span>, x<span class="op">=</span><span class="va">Var1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
     <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_bar.html">geom_bar</a></span><span class="op">(</span>position<span class="op">=</span><span class="st">"stack"</span>, stat<span class="op">=</span><span class="st">"identity"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">xlab</a></span><span class="op">(</span><span class="st">"CIDER_cluster"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">ylab</a></span><span class="op">(</span><span class="st">"Proportions"</span><span class="op">)</span></code></pre></div>
 <p><img src="asCIDER_files/figure-html/unnamed-chunk-5-1.png" width="480"></p>
 </div>
+<div id="technical" class="section level1">
+<h1 class="hasAnchor">
+<a href="#technical" class="anchor"></a>Technical</h1>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co">#&gt; R version 4.1.2 (2021-11-01)</span>
+<span class="co">#&gt; Platform: x86_64-apple-darwin17.0 (64-bit)</span>
+<span class="co">#&gt; Running under: macOS Big Sur 10.16</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Matrix products: default</span>
+<span class="co">#&gt; BLAS:   /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRblas.0.dylib</span>
+<span class="co">#&gt; LAPACK: /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRlapack.dylib</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; locale:</span>
+<span class="co">#&gt; [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; attached base packages:</span>
+<span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; other attached packages:</span>
+<span class="co">#&gt; [1] viridis_0.6.2      viridisLite_0.4.0  cowplot_1.1.1      ggplot2_3.3.5     </span>
+<span class="co">#&gt; [5] pheatmap_1.0.12    SeuratObject_4.0.3 Seurat_4.0.5       CIDER_0.99.0      </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; loaded via a namespace (and not attached):</span>
+<span class="co">#&gt;   [1] Rtsne_0.15            colorspace_2.0-2      deldir_1.0-6         </span>
+<span class="co">#&gt;   [4] ellipsis_0.3.2        ggridges_0.5.3        rprojroot_2.0.2      </span>
+<span class="co">#&gt;   [7] fs_1.5.0              spatstat.data_2.1-0   farver_2.1.0         </span>
+<span class="co">#&gt;  [10] leiden_0.3.9          listenv_0.8.0         ggrepel_0.9.1        </span>
+<span class="co">#&gt;  [13] fansi_0.5.0           codetools_0.2-18      splines_4.1.2        </span>
+<span class="co">#&gt;  [16] doParallel_1.0.16     cachem_1.0.6          knitr_1.36           </span>
+<span class="co">#&gt;  [19] polyclip_1.10-0       jsonlite_1.7.2        ica_1.0-2            </span>
+<span class="co">#&gt;  [22] kernlab_0.9-29        cluster_2.1.2         png_0.1-7            </span>
+<span class="co">#&gt;  [25] uwot_0.1.10           shiny_1.7.1           sctransform_0.3.2    </span>
+<span class="co">#&gt;  [28] spatstat.sparse_2.0-0 compiler_4.1.2        httr_1.4.2           </span>
+<span class="co">#&gt;  [31] Matrix_1.3-4          fastmap_1.1.0         lazyeval_0.2.2       </span>
+<span class="co">#&gt;  [34] limma_3.50.0          later_1.3.0           htmltools_0.5.2      </span>
+<span class="co">#&gt;  [37] tools_4.1.2           igraph_1.2.8          gtable_0.3.0         </span>
+<span class="co">#&gt;  [40] glue_1.5.0            RANN_2.6.1            reshape2_1.4.4       </span>
+<span class="co">#&gt;  [43] dplyr_1.0.7           Rcpp_1.0.7            scattermore_0.7      </span>
+<span class="co">#&gt;  [46] jquerylib_0.1.4       pkgdown_1.6.1         vctrs_0.3.8          </span>
+<span class="co">#&gt;  [49] nlme_3.1-153          iterators_1.0.13      lmtest_0.9-39        </span>
+<span class="co">#&gt;  [52] xfun_0.28             stringr_1.4.0         globals_0.14.0       </span>
+<span class="co">#&gt;  [55] mime_0.12             miniUI_0.1.1.1        lifecycle_1.0.1      </span>
+<span class="co">#&gt;  [58] irlba_2.3.3           goftest_1.2-3         future_1.23.0        </span>
+<span class="co">#&gt;  [61] edgeR_3.36.0          MASS_7.3-54           zoo_1.8-9            </span>
+<span class="co">#&gt;  [64] scales_1.1.1          spatstat.core_2.3-1   ragg_1.1.3           </span>
+<span class="co">#&gt;  [67] promises_1.2.0.1      spatstat.utils_2.2-0  parallel_4.1.2       </span>
+<span class="co">#&gt;  [70] RColorBrewer_1.1-2    yaml_2.2.1            memoise_2.0.0        </span>
+<span class="co">#&gt;  [73] reticulate_1.22       pbapply_1.5-0         gridExtra_2.3        </span>
+<span class="co">#&gt;  [76] sass_0.4.0            rpart_4.1-15          stringi_1.7.5        </span>
+<span class="co">#&gt;  [79] highr_0.9             desc_1.4.0            foreach_1.5.1        </span>
+<span class="co">#&gt;  [82] rlang_0.4.12          pkgconfig_2.0.3       systemfonts_1.0.2    </span>
+<span class="co">#&gt;  [85] matrixStats_0.61.0    evaluate_0.14         lattice_0.20-45      </span>
+<span class="co">#&gt;  [88] ROCR_1.0-11           purrr_0.3.4           tensor_1.5           </span>
+<span class="co">#&gt;  [91] labeling_0.4.2        patchwork_1.1.1       htmlwidgets_1.5.4    </span>
+<span class="co">#&gt;  [94] tidyselect_1.1.1      parallelly_1.28.1     RcppAnnoy_0.0.19     </span>
+<span class="co">#&gt;  [97] plyr_1.8.6            magrittr_2.0.1        R6_2.5.1             </span>
+<span class="co">#&gt; [100] generics_0.1.1        withr_2.4.2           mgcv_1.8-38          </span>
+<span class="co">#&gt; [103] pillar_1.6.4          fitdistrplus_1.1-6    survival_3.2-13      </span>
+<span class="co">#&gt; [106] abind_1.4-5           tibble_3.1.6          future.apply_1.8.1   </span>
+<span class="co">#&gt; [109] crayon_1.4.2          KernSmooth_2.23-20    utf8_1.2.2           </span>
+<span class="co">#&gt; [112] spatstat.geom_2.3-0   plotly_4.10.0         rmarkdown_2.11       </span>
+<span class="co">#&gt; [115] locfit_1.5-9.4        grid_4.1.2            data.table_1.14.2    </span>
+<span class="co">#&gt; [118] digest_0.6.28         xtable_1.8-4          dbscan_1.1-8         </span>
+<span class="co">#&gt; [121] tidyr_1.1.4           httpuv_1.6.3          textshaping_0.3.6    </span>
+<span class="co">#&gt; [124] munsell_0.5.0         bslib_0.3.1</span></code></pre></div>
+</div>
 <div id="references" class="section level1">
 <h1 class="hasAnchor">
 <a href="#references" class="anchor"></a>References</h1>
 <ol style="list-style-type: decimal">
-<li>Baron, M. et al. A Single-Cell Transcriptomic Map of the Human and Mouse Pancreas Reveals Inter- and Intra-cell Population Structure. Cell Syst 3, 346–360.e4 (2016).</li>
-<li>Satija R, et al. Spatial reconstruction of single-cell gene expression data. Nature Biotechnology 33, 495-502 (2015).</li>
+<li>Baron, M. et al. A Single-Cell Transcriptomic Map of the Human and Mouse Pancreas Reveals Inter- and Intra-cell Population Structure. Cell Syst 3, 346–360.e4 (2016).</li>
+<li>Satija R, et al. Spatial reconstruction of single-cell gene expression data. Nature Biotechnology 33, 495-502 (2015).</li>
 </ol>
 </div>
   </div>

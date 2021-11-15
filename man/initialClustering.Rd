@@ -19,26 +19,34 @@ initialClustering(
 \arguments{
 \item{seu}{Seurat S4 object. Required.}
 
-\item{batch.var}{batch.var}
+\item{batch.var}{Character. One of the column names of `seu@meta.data`. It
+is used to partition the Seurat object into smaller ones. Default: "Batch"}
 
-\item{cut.height}{cut.height}
+\item{cut.height}{Numeric. Height used to cut hirerchical trees. Default:
+0.4}
 
-\item{nfeatures}{nfeatures = 2000}
+\item{nfeatures}{Number of high variance genes used. Default: 2000}
 
-\item{additional.vars.to.regress}{additional.vars.to.regress}
+\item{additional.vars.to.regress}{Additional variables to regress out. Needs
+to among column names of `seu@meta.data`. Default: `NULL`}
 
-\item{dims}{dims}
+\item{dims}{Number of dimension used for clustering. Passed to Seurat.
+Default: `1:14`}
 
-\item{resolution}{resolution}
+\item{resolution}{Resolution for clustering. Passed to Seurat. Default: 0.6}
 
-\item{downsampling.size}{downsampling.size}
+\item{downsampling.size}{Numeric. The number of cells representing each
+group. (Default: 40)}
 
-\item{verbose}{verbose}
+\item{verbose}{Print the progress bar or not. Default: FALSE}
 }
 \value{
-Seurat S4 object with initial clustering results in 
+Seurat S4 object with initial cluster information in
 `initial_cluster` of meta.data.
 }
 \description{
 Perform batch-specific initial clustering.
+}
+\seealso{
+\code{\link{getIDEr}} \code{\link{finalClustering}}
 }

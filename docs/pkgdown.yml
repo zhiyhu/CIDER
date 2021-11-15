@@ -1,4 +1,4 @@
-pandoc: 1.19.2.1
+pandoc: 2.14.0.3
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
@@ -6,7 +6,7 @@ articles:
   dnCIDER: dnCIDER.html
   dnCIDER_highlevel: dnCIDER_highlevel.html
   evaluation: evaluation.html
-last_built: 2021-09-20T12:12Z
+last_built: 2021-11-15T21:46Z
 urls:
   reference: http://zhiyhu.github.io/CIDER/reference
   article: http://zhiyhu.github.io/CIDER/articles

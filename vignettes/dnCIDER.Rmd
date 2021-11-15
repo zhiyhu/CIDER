@@ -1,0 +1,179 @@
+---
+title: "Detailed walk-through of de novo CIDER (dnCIDER) on pancreas data"
+output: 
+  rmarkdown::html_vignette:
+    toc: TRUE
+    number_sections: true
+vignette: >
+  %\VignetteIndexEntry{Detailed walk-through of de novo CIDER (dnCIDER) on pancreas data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+# Introduction
+
+This vignette performs dnCIDER on a cross-species pancreas dataset. It is aimed to show the underneath structure of dnCIDER compared to the other high level [vignette](docs/articles/dnCIDER_highlevel.html).
+
+# Set up
+
+In addition to **CIDER**, we will load the following packages:
+
+```{r setup}
+library(CIDER)
+library(Seurat)
+library(parallel)
+library(cowplot)
+```
+
+# Load example data
+
+The example data can be downloaded from https://figshare.com/s/d5474749ca8c711cc205. 
+
+Pancreatic cell data$^1$ contain cells from human (8241 cells) and mouse (1886 cells).
+
+```{r} 
+load("../data/pancreas_counts.RData") # count matrix
+load("../data/pancreas_meta.RData") # meta data/cell information
+seu <- CreateSeuratObject(counts = pancreas_counts, meta.data = pancreas_meta)
+table(seu$Batch)
+```
+
+# Perform initial clustering
+
+```{r}
+seu_list <- Seurat::SplitObject(seu, split.by = "Batch")
+seu_list <- mclapply(seu_list, function(x) {
+  x <- NormalizeData(x, normalization.method = "LogNormalize", 
+                     scale.factor = 10000, verbose = FALSE)
+  x <- FindVariableFeatures(x, selection.method = "vst", 
+                            nfeatures = 2000, verbose = FALSE)
+  x <- ScaleData(x, verbose = FALSE, vars.to.regress = "Sample")
+  x <- RunPCA(x, features = VariableFeatures(object = x), verbose = FALSE)  
+  x <- FindNeighbors(x, dims = 1:15, verbose = FALSE)
+  x <- FindClusters(x, resolution = 0.6, verbose = FALSE)
+  return(x)
+})
+```
+
+```{r}
+knitr::kable(table(seu_list[[2]]$Group, seu_list[[2]]$seurat_clusters))
+```
+
+
+```{r}
+seu_list <- mclapply(seu_list, RunTSNE, dims = 1:15)
+p1 <- scatterPlot(seu_list[[1]], "tsne", colour.by = "seurat_clusters")
+p2 <- scatterPlot(seu_list[[2]], "tsne", colour.by = "seurat_clusters")
+cowplot::plot_grid(p1,p2)
+```
+
+```{r}
+dist_coef <- getDistMat(seu_list, downsampling.size = 50)
+```
+
+
+```{r}
+par(mfrow = c(length(seu_list),1))
+for(i in which(sapply(dist_coef, function(x) return(!is.null(x))))){
+  tmp <- dist_coef[[i]] + t(dist_coef[[i]])
+  diag(tmp) <- 1
+  pheatmap::pheatmap(tmp, display_numbers = TRUE)
+}
+```
+
+```{r}
+for(seu_itor in 1:2){
+  tmp <- dist_coef[[seu_itor]] + t(dist_coef[[seu_itor]])
+  diag(tmp) <- 1
+  tmp <- 1 - tmp
+  hc <- hclust(as.dist(tmp), method = "average")
+  hres <- cutree(hc, h = 0.4)
+  df_hres <- data.frame(hres)
+  df_hres$hres <- paste0(df_hres$hres, "_", unique(seu_list[[seu_itor]]$Batch))
+  seu_list[[seu_itor]]$inicluster_tmp <- paste0(seu_list[[seu_itor]]$seurat_clusters, "_", seu_list[[seu_itor]]$Batch)
+  seu_list[[seu_itor]]$inicluster <- df_hres$hres[match(seu_list[[seu_itor]]$inicluster_tmp,rownames(df_hres))]
+}
+```
+
+
+```{r}
+# plot(as.dendrogram(hc), horiz = T)
+```
+
+```{r, fig.height=3, fig.width=9}
+p1 <- scatterPlot(seu_list[[1]], "tsne", "inicluster")
+p2 <- scatterPlot(seu_list[[2]], "tsne", "inicluster")
+plot_grid(p1,p2)
+```
+
+```{r}
+scatterPlot(seu_list[[2]], "tsne", "Group")
+```
+
+# Calculate of IDER similarity matrix
+
+```{r run-getIDER-parallel}
+res <- unlist(lapply(seu_list, function(x) return(x$inicluster)))
+res_names <- unlist(lapply(seu_list, function(x) return(colnames(x))))
+seu$initial_cluster <- res[match(colnames(seu), res_names)]
+
+ider <- getIDEr(seu, 
+                group.by.var = "initial_cluster",
+                batch.by.var = "Batch",
+                downsampling.size = 35, 
+                use.parallel = FALSE, verbose = FALSE)
+```
+
+```{r plot-network, fig.height=9, fig.width=9}
+net <- plotNetwork(seu, ider, colour.by = "Group" , vertex.size = 0.6, weight.factor = 5)
+
+```
+
+
+```{r, fig.height=4}
+hc <- hclust(as.dist(1-(ider[[1]] + t(ider[[1]])))/2)
+plot(as.dendrogram(hc), horiz = TRUE)
+```
+
+# Perform final Clustering
+
+```{r perform-final-clustering}
+seu <- finalClustering(seu, ider, cutree.h = 0.35) # final clustering
+```
+
+```{r seurat-pipeline-for-visualisation}
+seu <- NormalizeData(seu, verbose = FALSE)
+seu <- FindVariableFeatures(seu, selection.method = "vst", 
+                            nfeatures = 2000, verbose = FALSE)
+seu <- ScaleData(seu, verbose = FALSE)
+seu <- RunPCA(seu, npcs = 20, verbose = FALSE)
+seu <- RunTSNE(seu, reduction = "pca", dims = 1:12)
+```
+
+```{r tsne-plot-CIDER-results, fig.height=3, fig.width=7}
+plot_list <- list()
+plot_list[[1]] <- scatterPlot(seu, "tsne", colour.by = "CIDER_cluster", title = "asCIDER clustering results") 
+plot_list[[2]] <- scatterPlot(seu, "tsne", colour.by = "Group", title = "Ground truth of cell populations") 
+plot_grid(plotlist = plot_list, ncol = 2)
+```
+
+# Technical
+
+```{r sessionInfo}
+sessionInfo()
+```
+
+# References
+
+1. Baron, M. et al. A Single-Cell Transcriptomic Map of the Human and Mouse Pancreas Reveals Inter- and Intra-cell Population Structure. Cell Syst 3, 346–360.e4 (2016).
+2. Satija R, et al. Spatial reconstruction of single-cell gene expression data. Nature Biotechnology 33, 495-502 (2015). 
+
+

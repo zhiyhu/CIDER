@@ -16,25 +16,34 @@ mergeInitialClusters(
 )
 }
 \arguments{
-\item{seu_list}{seu_list}
+\item{seu_list}{A list containing Seurat objects. Required.}
 
-\item{dist_list}{dist_list}
+\item{dist_list}{A list containing similarity matrices. The output of
+`getDistMat ()`}
 
-\item{use}{use}
+\item{use}{Default: "coef". No other option available currently.}
 
-\item{method}{method}
+\item{method}{method = "hc"}
 
-\item{hc.method}{hc.method}
+\item{hc.method}{Passed to the `method` parameter of `hclust()`. Default:
+"average"}
 
-\item{cutree.by}{cutree.by}
+\item{cutree.by}{Cut trees by height ("h", default) or number of
+clusters ("k")}
 
-\item{cutree.h}{cutree.h}
+\item{cutree.h}{Height used to cut the tree. Default: 0.6.}
 
-\item{cutree.k}{cutree.k}
+\item{cutree.k}{Number of clusters used to cut the tree. Default: 3.}
 }
 \value{
-a list of seurat objects
+a list of Seurat objects containing the updated initial clustering
+information in `seu_list[[seu_itor]]$inicluster`. The original initial
+cluster information is stored in `seu_list[[seu_itor]]$inicluster_tmp`.
 }
 \description{
 Merge Initial Clusters
+}
+\seealso{
+\code{\link{hclust}}  \code{\link{cutree}}
+\code{\link{gatherInitialClusters}} \code{\link{initialClustering}}
 }

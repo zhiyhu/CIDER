@@ -10,24 +10,24 @@ hdbscan.seurat(seu, reduction = "pca", dims = seq_len(15), minPts = 25)
 \item{seu}{a Seurat object containing integrated or batch corrected
 PCA.}
 
-\item{reduction}{Character. Name of the dimension reduction after 
+\item{reduction}{Character. Name of the dimension reduction after
 integration or batch correction. (Default: PCA)}
 
-\item{dims}{Numeric vector. Dimensions used for initial clustering. 
+\item{dims}{Numeric vector. Dimensions used for initial clustering.
 (Default: 1:15)}
 
-\item{minPts}{Interger. Minimum size of clusters. Will be passed 
+\item{minPts}{Interger. Minimum size of clusters. Will be passed
 to the `hdbscan` function. (Default: 25)}
 }
 \value{
-A Seurat object having two additional columns in its 
+A Seurat object having two additional columns in its
 meta.data: dbscan_cluster and initial_cluster.
 }
 \description{
-This function applies HDBSCAN, a density-based 
+This function applies HDBSCAN, a density-based
 clustering method, on the corrected dimension reduction.
 }
 \seealso{
-Usage of this function should be followed by 
+Usage of this function should be followed by
 \code{\link{getIDEr}} and \code{\link{estimateProb}}.
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/getDistMat.R
 \name{getDistMat}
 \alias{getDistMat}
-\title{Calculate Distance Matrix}
+\title{Calculate the Similarity Matrix}
 \usage{
 getDistMat(
   seu_list,
@@ -16,28 +16,36 @@ getDistMat(
 )
 }
 \arguments{
-\item{seu_list}{seu list}
+\item{seu_list}{A list containing Seurat objects. Required.}
 
-\item{verbose}{print the message and progress bar (default: TRUE)}
+\item{verbose}{Print the message and progress bar (default: TRUE)}
 
-\item{tmp.initial.clusters}{tmp.initial.clusters}
+\item{tmp.initial.clusters}{One of the colnames from `Seurat@meta.data`. Used
+as the group. Default: "seurat_clusters"}
 
-\item{method}{voom or trend}
+\item{method}{Methods for DE analysis. Options: "voom" or "trend" (default)}
 
-\item{additional.variate}{additional variate to include into the regression 
-model}
+\item{additional.variate}{additional variate to include into the linear
+model to regress out}
 
-\item{downsampling.size}{downsampling.size}
+\item{downsampling.size}{Number of cells used per group. Default: 35}
 
-\item{downsampling.include}{downsampling.include}
+\item{downsampling.include}{Whether to include the group of size smaller than
+`downsampling.size`. Default: TRUE}
 
-\item{downsampling.replace}{downsampling.replace}
+\item{downsampling.replace}{Whether to use `replace` in sampling for group
+of size smaller than `downsampling.size` if they are kept. Default: TRUE}
 }
 \value{
-a distance matrix
+A list of similarity matrices
 }
 \description{
-discription
+Compute the IDER-based similarity matrix for a list of Seurat
+objects. This function does not regress out batch effects and is designed to
+be used at the initial clustering step.
+}
+\seealso{
+\code{\link{calculateDistMatOneModel}}
 }
 \author{
 Zhiyuan Hu

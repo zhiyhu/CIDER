@@ -1,24 +1,19 @@
-#' @title Plot Similarity Matrix
+#' @title Plot Similarity Matrix with pheatmap
 #'
-#' @description description
-#'
-#' @param dist.list List of list of similarity matrix. Output of 
-#' function `getDistMat()`. Required.
-#' @param use Choose from "coef" and "p". (Default: coef)
-#' @return a pheatmap showing the similarity matrix
+#' @param dist.list Output of function `getDistMat()`. Required.
+#' @param use Default: "coef". No other option currently that can be used.
+#' @return A pheatmap showing the similarity matrix
 #' @export
 #'
 #' @import pheatmap
-#'
 #' @seealso \code{\link{getDistMat}}
-#'
 plotDistMat <- function(dist.list, use = "coef") {
   if (use == "coef") {
     dist_coef <- dist.list[[1]]
   } else if (use == "p") {
     dist_coef <- dist.list[[2]]
   }
-  
+
   hm <- list()
   for (i in which(vapply(dist_coef, function(x) {
     return(!is.null(x))
@@ -32,19 +27,17 @@ plotDistMat <- function(dist.list, use = "coef") {
 
 #' @title Plot Heatmap for the IDER-based similarity matrix
 #'
-#' @description description
-#'
-#' @param seu Seurat object.
-#' @param ider output of function `getIDEr`.
-#' @return a heatmap shows the similarity between shared groups in two batches
+#' @param seu An Seurat object.
+#' @param ider Output of function `getIDEr`.
+#' @return A heatmap shows the similarity between shared groups in two batches
 #'
 #' @seealso \code{\link{getIDEr}}
 #' @import pheatmap viridis
 #' @export
-#' @examples 
+#' @examples
 #' \dontrun{
 #'   plotHeatmap(seu, ider)
-#' } 
+#' }
 plotHeatmap <- function(seu, ider) {
   idx <- getSharedGroups(seu, ider[[1]])
   shared_g <- idx[[1]] # shared groups
@@ -52,8 +45,8 @@ plotHeatmap <- function(seu, ider) {
     stop("No shared groups.")
   }
   idx1 <- idx[[2]] # rownames
-  idx2 <- idx[[3]] # colnames 
-  
+  idx2 <- idx[[3]] # colnames
+
   pheatmap::pheatmap(
     ider[[1]][idx1, idx2],
     border_color = "grey20",

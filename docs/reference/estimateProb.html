@@ -6,7 +6,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Estimate probability — estimateProb • CIDER</title>
+<title>Estimate the empirical probability of whether two set of cells
+from distinct batches belong to the same population — estimateProb • CIDER</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,8 +47,10 @@
 
 
 
-<meta property="og:title" content="Estimate probability — estimateProb" />
-<meta property="og:description" content="Estimate probability" />
+<meta property="og:title" content="Estimate the empirical probability of whether two set of cells
+from distinct batches belong to the same population — estimateProb" />
+<meta property="og:description" content="Estimate the empirical probability of whether two set of cells
+from distinct batches belong to the same population" />
 <meta property="og:image" content="http://zhiyhu.github.io/CIDER/reference/figures/card.png" />
 
 
@@ -150,53 +153,52 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Estimate probability</h1>
+    <h1>Estimate the empirical probability of whether two set of cells
+from distinct batches belong to the same population</h1>
     <small class="dont-index">Source: <a href='https://github.com/zhiyhu/CIDER/blob/master/R/evaluation.R'><code>R/evaluation.R</code></a></small>
     <div class="hidden name"><code>estimateProb.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Estimate probability</p>
+    <p>Estimate the empirical probability of whether two set of cells
+from distinct batches belong to the same population</p>
     </div>
 
-    <pre class="usage"><span class='fu'>estimateProb</span><span class='op'>(</span>
-  <span class='va'>seu</span>,
-  <span class='va'>ider</span>,
-  n_size <span class='op'>=</span> <span class='fl'>40</span>,
-  seeds <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>12345</span>, <span class='fl'>89465</span>, <span class='fl'>10385</span>, <span class='fl'>10385</span>, <span class='fl'>17396</span><span class='op'>)</span>,
-  n.perm <span class='op'>=</span> <span class='fl'>5</span>,
-  verbose <span class='op'>=</span> <span class='cn'>FALSE</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>estimateProb</span><span class='op'>(</span><span class='va'>seu</span>, <span class='va'>ider</span>, n_size <span class='op'>=</span> <span class='fl'>40</span>, n.perm <span class='op'>=</span> <span class='fl'>5</span>, verbose <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>seu</th>
-      <td><p>seu</p></td>
+      <td><p>A Seurat object</p></td>
     </tr>
     <tr>
       <th>ider</th>
-      <td><p>ider</p></td>
+      <td><p>The output list of function `getIDEr`.</p></td>
     </tr>
     <tr>
       <th>n_size</th>
-      <td><p>40</p></td>
-    </tr>
-    <tr>
-      <th>seeds</th>
-      <td><p>seeds</p></td>
+      <td><p>Number of cells per group used to compute the similarity. Default: 40</p></td>
     </tr>
     <tr>
       <th>n.perm</th>
-      <td><p>n.perm</p></td>
+      <td><p>Numeric. Time of permutations.</p></td>
     </tr>
     <tr>
       <th>verbose</th>
-      <td><p>verbose</p></td>
+      <td><p>Boolean. Print out progress or not. (Default: FALSEW)</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A Seurat object with IDER-based similarity and empirical
+probability of rejection</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p>Usage of this function should be after <code><a href='hdbscan.seurat.html'>hdbscan.seurat</a></code>
+and <code><a href='getIDEr.html'>getIDEr</a></code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

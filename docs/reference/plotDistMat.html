@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Plot Similarity Matrix — plotDistMat • CIDER</title>
+<title>Plot Similarity Matrix with pheatmap — plotDistMat • CIDER</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,8 +46,8 @@
 
 
 
-<meta property="og:title" content="Plot Similarity Matrix — plotDistMat" />
-<meta property="og:description" content="description" />
+<meta property="og:title" content="Plot Similarity Matrix with pheatmap — plotDistMat" />
+<meta property="og:description" content="Plot Similarity Matrix with pheatmap" />
 <meta property="og:image" content="http://zhiyhu.github.io/CIDER/reference/figures/card.png" />
 
 
@@ -150,13 +150,13 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Plot Similarity Matrix</h1>
+    <h1>Plot Similarity Matrix with pheatmap</h1>
     <small class="dont-index">Source: <a href='https://github.com/zhiyhu/CIDER/blob/master/R/plotDistMat.R'><code>R/plotDistMat.R</code></a></small>
     <div class="hidden name"><code>plotDistMat.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>description</p>
+    <p>Plot Similarity Matrix with pheatmap</p>
     </div>
 
     <pre class="usage"><span class='fu'>plotDistMat</span><span class='op'>(</span><span class='va'>dist.list</span>, use <span class='op'>=</span> <span class='st'>"coef"</span><span class='op'>)</span></pre>
@@ -166,14 +166,17 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>dist.list</th>
-      <td><p>List of list of similarity matrix. Output of function `getDistMat()`. Required.</p></td>
+      <td><p>Output of function `getDistMat()`. Required.</p></td>
     </tr>
     <tr>
       <th>use</th>
-      <td><p>Choose from "coef" and "p". (Default: coef)</p></td>
+      <td><p>Default: "coef". No other option currently that can be used.</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A pheatmap showing the similarity matrix</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='getDistMat.html'>getDistMat</a></code></p></div>

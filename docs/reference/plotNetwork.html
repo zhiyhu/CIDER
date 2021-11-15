@@ -177,7 +177,8 @@ the edge width denotes the similarity between two initial clusters.</p>
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>seu</th>
-      <td><p>Seurat S4 object after the step of `getIDER`, containing `initial_cluster` and `Batch` in its meta.data. Required.</p></td>
+      <td><p>Seurat S4 object after the step of `getIDER`, containing 
+`initial_cluster` and `Batch` in its meta.data. Required.</p></td>
     </tr>
     <tr>
       <th>ider</th>
@@ -185,15 +186,20 @@ the edge width denotes the similarity between two initial clusters.</p>
     </tr>
     <tr>
       <th>colour.by</th>
-      <td><p>Character. It should be one of the colnames of Seurat object meta.data. It is used to colour the vertex of the network graph. (Default: NULL)</p></td>
+      <td><p>Character. It should be one of the colnames of Seurat 
+object meta.data.It is used to colour the vertex of the network graph. 
+(Default: NULL)</p></td>
     </tr>
     <tr>
       <th>weight.factor</th>
-      <td><p>Numerical. Adjust the thickness of the edges. (Default: 6.5)</p></td>
+      <td><p>Numerical. Adjust the thickness of the edges. 
+(Default: 6.5)</p></td>
     </tr>
     <tr>
       <th>col.vector</th>
-      <td><p>A vector of Hex colour codes. If no value is given (default), a vector of 74 colours will be used.</p></td>
+      <td><p>A vector of Hex colour codes. If no value is given 
+(default), a vector 
+of 74 colours will be used.</p></td>
     </tr>
     <tr>
       <th>vertex.size</th>
@@ -209,10 +215,10 @@ the edge width denotes the similarity between two initial clusters.</p>
     <div class='dont-index'><p><code><a href='getIDEr.html'>getIDEr</a></code> <code><a href='https://rdrr.io/pkg/igraph/man/graph_from_data_frame.html'>graph_from_data_frame</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-<span class='fu'>plotNetwork</span><span class='op'>(</span><span class='va'>seu</span>, <span class='va'>ider</span>, weight.factor <span class='op'>=</span> <span class='fl'>5</span><span class='op'>)</span>
-<span class='op'>}</span>
-</div></pre>
+    <pre class="examples"><span class='r-in'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span></span>
+<span class='r-in'><span class='fu'>plotNetwork</span><span class='op'>(</span><span class='va'>seu</span>, <span class='va'>ider</span>, weight.factor <span class='op'>=</span> <span class='fl'>5</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>}</span></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

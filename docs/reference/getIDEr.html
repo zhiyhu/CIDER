@@ -47,7 +47,9 @@
 
 
 <meta property="og:title" content="Compute IDER-based similarity — getIDEr" />
-<meta property="og:description" content="Calculate the similarity matrix based on the metrics of Inter-group Differential ExpRession (IDER)" />
+<meta property="og:description" content="Calculate the similarity matrix based on the metrics of
+Inter-group Differential ExpRession (IDER) with the selected batch effects
+regressed out." />
 <meta property="og:image" content="http://zhiyhu.github.io/CIDER/reference/figures/card.png" />
 
 
@@ -156,7 +158,9 @@
     </div>
 
     <div class="ref-description">
-    <p>Calculate the similarity matrix based on the metrics of Inter-group Differential ExpRession (IDER)</p>
+    <p>Calculate the similarity matrix based on the metrics of
+Inter-group Differential ExpRession (IDER) with the selected batch effects
+regressed out.</p>
     </div>
 
     <pre class="usage"><span class='fu'>getIDEr</span><span class='op'>(</span>
@@ -176,15 +180,18 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>seu</th>
-      <td><p>Seurat S4 object with the column of `initial_cluster` in its meta.data. Required.</p></td>
+      <td><p>Seurat S4 object with the column of `initial_cluster` in
+its meta.data. Required.</p></td>
     </tr>
     <tr>
       <th>group.by.var</th>
-      <td><p>initial clusters (batch-specific groups) variable. Needs to be one of the `colnames(seu@meta.data)`. Default: "initial_cluster".</p></td>
+      <td><p>initial clusters (batch-specific groups) variable.
+Needs to be one of the `colnames(seu@meta.data)`. Default: "initial_cluster".</p></td>
     </tr>
     <tr>
       <th>batch.by.var</th>
-      <td><p>Batch variable. Needs to be one of the `colnames(seu@meta.data)`. Default: "Batch".</p></td>
+      <td><p>Batch variable. Needs to be one of the
+`colnames(seu@meta.data)`. Default: "Batch".</p></td>
     </tr>
     <tr>
       <th>verbose</th>
@@ -192,32 +199,37 @@
     </tr>
     <tr>
       <th>use.parallel</th>
-      <td><p>Boolean. Use parallel computation, which requires doParallel; no progress bar will be printed out. Run time will be 1/n.cores compared to the situation when no parallelisation is used. (Default: FALSE)</p></td>
+      <td><p>Boolean. Use parallel computation, which requires
+doParallel; no progress bar will be printed out. Run time will be 1/n.cores
+ compared to the situation when no parallelisation is used. (Default: FALSE)</p></td>
     </tr>
     <tr>
       <th>n.cores</th>
-      <td><p>Numeric. Number of cores used for parallel computing (default: 1).</p></td>
+      <td><p>Numeric. Number of cores used for parallel computing
+(default: 1).</p></td>
     </tr>
     <tr>
       <th>downsampling.size</th>
-      <td><p>Numeric. The number of cells representing each group. (Default: 40)</p></td>
+      <td><p>Numeric. The number of cells representing each
+group. (Default: 40)</p></td>
     </tr>
     <tr>
       <th>downsampling.include</th>
-      <td><p>Boolean. Using `include = TRUE` to include the group smaller than required size. (Default: FALSE)</p></td>
+      <td><p>Boolean. Using `include = TRUE` to include
+the group smaller than required size. (Default: FALSE)</p></td>
     </tr>
     <tr>
       <th>downsampling.replace</th>
-      <td><p>Boolean. Using `replace = TRUE` if the group is smaller than required size and some cells will be repeatedly used. (Default: FALSE)</p></td>
+      <td><p>Boolean. Using `replace = TRUE` if the group
+is smaller than required size and some cells will be repeatedly used.
+(Default: FALSE)</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A list of four values: three similarity matrices and one list of indeces.</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>Details</p>
+    <p>A list of four objects: a similarity matrix, a numeric vector
+recording cells used and the data frame of combinations included.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='plotNetwork.html'>plotNetwork</a></code> <code><a href='finalClustering.html'>finalClustering</a></code></p></div>

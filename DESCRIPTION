@@ -1,21 +1,26 @@
 Package: CIDER
 Type: Package
-Title: Meta-clustering and Similarity Metric calculation based on Inter-group Differential ExpRession
-biocViews: BatchEffect, GeneExpression, RNASeq, SingleCell, Transcriptomics, DifferentialExpression, Clustering, Software
+Title: An Interpretable Meta-clustering Framework for Single-cell 
+    RNA-Seq Data Integration and Evaluation 
 Version: 0.99.0
+Maintainer: Zhiyuan Hu <zhiyuan.cheryl.hu@gmail.com>
 Authors@R: c(
     person("Zhiyuan", "Hu", role = c("aut", "cre"),
       email = "zhiyuan.cheryl.hu@gmail.com",
       comment = c(ORCID = "0000-0002-1688-6032")
     ),
-    person("Christopher", "Yau", email = "christopher.yau@manchester.ac.uk", role = "aut",
+    person("Christopher", "Yau", 
+      role = "aut",
       comment = c(ORCID = "0000-0001-7615-8523")
     )
   )
-Description: Here we present CIDER, a meta-clustering workflow based on inter-group similarity measures. CIDER can also be used to assess the biological correctness of integration in real datasets, while it does not require the existence of prior cellular annotations. The core of CIDER is the IDER metric, which can be used to compute the similarity between two groups of cells across datasets. IDER first identifies the differentially expressed signature (DES) for each group of cells against all other cells with the unwanted variables regressed out. Next, a similarity measure is computed by using the consistency of DESs between two groups across datasets.
-URL: https://github.com/zhiyhu/CIDER
+Description: A workflow of (a) meta-clustering based on 
+    inter-group similarity measures and (b) a ground-truth-free test metric to 
+    assess the biological correctness of integration in real datasets. See Hu Z,
+    Ahmed A, Yau C (2021) <doi:10.1101/2021.03.29.437525> for
+    more details.
+URL: https://github.com/zhiyhu/CIDER, https://zhiyhu.github.io/CIDER/
 BugReports: https://github.com/zhiyhu/CIDER/issues
-License: MIT + file LICENSE
 Imports: 
     limma (>= 3.42.0),
     edgeR (>= 3.28.0),
@@ -32,8 +37,10 @@ Imports:
     graphics,
     ggplot2,
     viridis
-RoxygenNote: 7.1.1
+License: MIT + file LICENSE
 Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.2
 Suggests: 
     knitr,
     rmarkdown,
@@ -43,4 +50,3 @@ Suggests:
 VignetteBuilder: knitr
 Depends: 
     R (>= 3.5.0)
-    

@@ -14,26 +14,27 @@ downsampling(
 )
 }
 \arguments{
-\item{metadata}{Data frame. It includes at least 2 columns, label and batch. 
+\item{metadata}{Data frame. It includes at least 2 columns, label and batch.
 Each row corresponds to one cell. Required.}
 
 \item{n.size}{Numeric. The number of cells used in each group. (Default: 35)}
 
 \item{seed}{Numeric. Seed used to sample. (Default: 12345)}
 
-\item{include}{Boolean. Using `include = TRUE` to include the group smaller 
+\item{include}{Boolean. Using `include = TRUE` to include the group smaller
 than required size. (Default: FALSE)}
 
-\item{replace}{Boolean. Using `replace = TRUE` if the group is smaller than 
+\item{replace}{Boolean. Using `replace = TRUE` if the group is smaller than
 required size and some cells will be repeatedly used. (Default: FALSE)}
 
-\item{lower.cutoff}{Numeric. The minimum size of groups to keep. 
+\item{lower.cutoff}{Numeric. The minimum size of groups to keep.
 (Default: 3)}
 }
 \value{
-A numeric list of which cells will be kept for downstream 
+A numeric list of which cells will be kept for downstream
 computation.
 }
 \description{
-Downsampling cells from each group
+Downsampling cells from each group for IDER-based similarity
+calculation.
 }

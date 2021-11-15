@@ -101,7 +101,7 @@
 
       
 
-      </header><div class="row">
+      </header><script src="dnCIDER_files/header-attrs-2.11/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Detailed walk-through of de novo CIDER (dnCIDER) on pancreas data</h1>
@@ -123,27 +123,22 @@
 <h1 class="hasAnchor">
 <a href="#set-up" class="anchor"></a>Set up</h1>
 <p>In addition to <strong>CIDER</strong>, we will load the following packages:</p>
-<div class="sourceCode"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/zhiyhu/CIDER">CIDER</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://www.satijalab.org/seurat">Seurat</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://satijalab.org/seurat">Seurat</a></span><span class="op">)</span>
+<span class="co">#&gt; Attaching SeuratObject</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">parallel</span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://wilkelab.org/cowplot">cowplot</a></span><span class="op">)</span>
-<span class="co">#&gt; </span>
-<span class="co">#&gt; ********************************************************</span>
-<span class="co">#&gt; Note: As of version 1.0.0, cowplot does not change the</span>
-<span class="co">#&gt;   default ggplot2 theme anymore. To recover the previous</span>
-<span class="co">#&gt;   behavior, execute:</span>
-<span class="co">#&gt;   theme_set(theme_cowplot())</span>
-<span class="co">#&gt; ********************************************************</span></code></pre></div>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://wilkelab.org/cowplot/">cowplot</a></span><span class="op">)</span></code></pre></div>
 </div>
 <div id="load-example-data" class="section level1">
 <h1 class="hasAnchor">
 <a href="#load-example-data" class="anchor"></a>Load example data</h1>
+<p>The example data can be downloaded from <a href="https://figshare.com/s/d5474749ca8c711cc205" class="uri">https://figshare.com/s/d5474749ca8c711cc205</a>.</p>
 <p>Pancreatic cell data<span class="math inline">\(^1\)</span> contain cells from human (8241 cells) and mouse (1886 cells).</p>
-<div class="sourceCode"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"pancreas_counts"</span><span class="op">)</span> <span class="co"># count matrix</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"pancreas_meta"</span><span class="op">)</span> <span class="co"># meta data/cell information</span>
-<span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="http://www.satijalab.org/seurat/reference/CreateSeuratObject.html">CreateSeuratObject</a></span><span class="op">(</span>counts <span class="op">=</span> <span class="va">pancreas_counts</span>, meta.data <span class="op">=</span> <span class="va">pancreas_meta</span><span class="op">)</span>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/load.html">load</a></span><span class="op">(</span><span class="st">"../data/pancreas_counts.RData"</span><span class="op">)</span> <span class="co"># count matrix</span>
+<span class="fu"><a href="https://rdrr.io/r/base/load.html">load</a></span><span class="op">(</span><span class="st">"../data/pancreas_meta.RData"</span><span class="op">)</span> <span class="co"># meta data/cell information</span>
+<span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/CreateSeuratObject.html">CreateSeuratObject</a></span><span class="op">(</span>counts <span class="op">=</span> <span class="va">pancreas_counts</span>, meta.data <span class="op">=</span> <span class="va">pancreas_meta</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="va">seu</span><span class="op">$</span><span class="va">Batch</span><span class="op">)</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; human mouse </span>
@@ -152,18 +147,20 @@
 <div id="perform-initial-clustering" class="section level1">
 <h1 class="hasAnchor">
 <a href="#perform-initial-clustering" class="anchor"></a>Perform initial clustering</h1>
-<div class="sourceCode"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">seu_list</span> <span class="op">&lt;-</span> <span class="fu">Seurat</span><span class="fu">::</span><span class="fu"><a href="http://www.satijalab.org/seurat/reference/SplitObject.html">SplitObject</a></span><span class="op">(</span><span class="va">seu</span>, split.by <span class="op">=</span> <span class="st">"Batch"</span><span class="op">)</span>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">seu_list</span> <span class="op">&lt;-</span> <span class="fu">Seurat</span><span class="fu">::</span><span class="fu"><a href="https://satijalab.org/seurat/reference/SplitObject.html">SplitObject</a></span><span class="op">(</span><span class="va">seu</span>, split.by <span class="op">=</span> <span class="st">"Batch"</span><span class="op">)</span>
 <span class="va">seu_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/parallel/mclapply.html">mclapply</a></span><span class="op">(</span><span class="va">seu_list</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">{</span>
-  <span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="http://www.satijalab.org/seurat/reference/NormalizeData.html">NormalizeData</a></span><span class="op">(</span><span class="va">x</span>, normalization.method <span class="op">=</span> <span class="st">"LogNormalize"</span>, scale.factor <span class="op">=</span> <span class="fl">10000</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-  <span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="http://www.satijalab.org/seurat/reference/FindVariableFeatures.html">FindVariableFeatures</a></span><span class="op">(</span><span class="va">x</span>, selection.method <span class="op">=</span> <span class="st">"vst"</span>, nfeatures <span class="op">=</span> <span class="fl">2000</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-  <span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="http://www.satijalab.org/seurat/reference/ScaleData.html">ScaleData</a></span><span class="op">(</span><span class="va">x</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span>, vars.to.regress <span class="op">=</span> <span class="st">"Sample"</span><span class="op">)</span>
-  <span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="http://www.satijalab.org/seurat/reference/RunPCA.html">RunPCA</a></span><span class="op">(</span><span class="va">x</span>, features <span class="op">=</span> <span class="fu"><a href="http://www.satijalab.org/seurat/reference/VariableFeatures.html">VariableFeatures</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">x</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>  
-  <span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="http://www.satijalab.org/seurat/reference/FindNeighbors.html">FindNeighbors</a></span><span class="op">(</span><span class="va">x</span>, dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">15</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-  <span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="http://www.satijalab.org/seurat/reference/FindClusters.html">FindClusters</a></span><span class="op">(</span><span class="va">x</span>, resolution <span class="op">=</span> <span class="fl">0.6</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+  <span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/NormalizeData.html">NormalizeData</a></span><span class="op">(</span><span class="va">x</span>, normalization.method <span class="op">=</span> <span class="st">"LogNormalize"</span>, 
+                     scale.factor <span class="op">=</span> <span class="fl">10000</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+  <span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindVariableFeatures.html">FindVariableFeatures</a></span><span class="op">(</span><span class="va">x</span>, selection.method <span class="op">=</span> <span class="st">"vst"</span>, 
+                            nfeatures <span class="op">=</span> <span class="fl">2000</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+  <span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/ScaleData.html">ScaleData</a></span><span class="op">(</span><span class="va">x</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span>, vars.to.regress <span class="op">=</span> <span class="st">"Sample"</span><span class="op">)</span>
+  <span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/RunPCA.html">RunPCA</a></span><span class="op">(</span><span class="va">x</span>, features <span class="op">=</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/VariableFeatures.html">VariableFeatures</a></span><span class="op">(</span>object <span class="op">=</span> <span class="va">x</span><span class="op">)</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>  
+  <span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindNeighbors.html">FindNeighbors</a></span><span class="op">(</span><span class="va">x</span>, dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">15</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+  <span class="va">x</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindClusters.html">FindClusters</a></span><span class="op">(</span><span class="va">x</span>, resolution <span class="op">=</span> <span class="fl">0.6</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
   <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
 <span class="op">}</span><span class="op">)</span></code></pre></div>
-<div class="sourceCode"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="va">seu_list</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">Group</span>, <span class="va">seu_list</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">seurat_clusters</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
@@ -280,9 +277,9 @@
 <tr class="odd">
 <td align="left">beta</td>
 <td align="right">1</td>
-<td align="right">887</td>
+<td align="right">886</td>
 <td align="right">2</td>
-<td align="right">811</td>
+<td align="right">812</td>
 <td align="right">740</td>
 <td align="right">1</td>
 <td align="right">0</td>
@@ -329,8 +326,8 @@
 <td align="right">0</td>
 <td align="right">0</td>
 <td align="right">0</td>
-<td align="right">472</td>
-<td align="right">383</td>
+<td align="right">469</td>
+<td align="right">386</td>
 <td align="right">0</td>
 <td align="right">169</td>
 <td align="right">0</td>
@@ -480,7 +477,7 @@
 <td align="right">1</td>
 <td align="right">0</td>
 <td align="right">0</td>
-<td align="right">0</td>
+<td align="right">1</td>
 <td align="right">0</td>
 <td align="right">0</td>
 <td align="right">1</td>
@@ -494,7 +491,7 @@
 <td align="right">0</td>
 <td align="right">0</td>
 <td align="right">0</td>
-<td align="right">154</td>
+<td align="right">153</td>
 <td align="right">0</td>
 </tr>
 <tr class="odd">
@@ -543,21 +540,21 @@
 </tr>
 </tbody>
 </table>
-<div class="sourceCode"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">seu_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/parallel/mclapply.html">mclapply</a></span><span class="op">(</span><span class="va">seu_list</span>, <span class="va">RunTSNE</span>, dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">15</span><span class="op">)</span>
 <span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/scatterPlot.html">scatterPlot</a></span><span class="op">(</span><span class="va">seu_list</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="st">"tsne"</span>, colour.by <span class="op">=</span> <span class="st">"seurat_clusters"</span><span class="op">)</span>
 <span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/scatterPlot.html">scatterPlot</a></span><span class="op">(</span><span class="va">seu_list</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span>, <span class="st">"tsne"</span>, colour.by <span class="op">=</span> <span class="st">"seurat_clusters"</span><span class="op">)</span>
 <span class="fu">cowplot</span><span class="fu">::</span><span class="fu"><a href="https://wilkelab.org/cowplot/reference/plot_grid.html">plot_grid</a></span><span class="op">(</span><span class="va">p1</span>,<span class="va">p2</span><span class="op">)</span></code></pre></div>
 <p><img src="dnCIDER_files/figure-html/unnamed-chunk-5-1.png" width="700"></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">dist_coef &lt;-<span class="st"> </span><span class="kw">getDistMat</span>(seu_list, <span class="dt">downsampling.size =</span> <span class="dv">50</span>)
-<span class="co">#&gt; </span>
-  <span class="op">|</span><span class="st">                                                                            </span>
-<span class="st">  </span><span class="er">|</span><span class="st">                                                                      </span><span class="er">|</span><span class="st">   </span><span class="dv">0</span>%
-  <span class="op">|</span><span class="st">                                                                            </span>
-<span class="st">  </span><span class="er">|===================================</span><span class="st">                                   </span><span class="er">|</span><span class="st">  </span><span class="dv">50</span>%
-  <span class="op">|</span><span class="st">                                                                            </span>
-<span class="st">  </span><span class="er">|======================================================================|</span><span class="st"> </span><span class="dv">100</span>%</code></pre></div>
-<div class="sourceCode"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>dist_coef <span class="ot">&lt;-</span> <span class="fu">getDistMat</span>(seu_list, <span class="at">downsampling.size =</span> <span class="dv">50</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="sc">|</span>                                                                            </span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="er">|</span>                                                                      <span class="er">|</span>   <span class="dv">0</span>%</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="sc">|</span>                                                                            </span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="er">|===================================</span>                                   <span class="er">|</span>  <span class="dv">50</span>%</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="sc">|</span>                                                                            </span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="er">|======================================================================|</span> <span class="dv">100</span>%</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/par.html">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">seu_list</span><span class="op">)</span>,<span class="fl">1</span><span class="op">)</span><span class="op">)</span>
 <span class="kw">for</span><span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">sapply</a></span><span class="op">(</span><span class="va">dist_coef</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html">is.null</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">{</span>
   <span class="va">tmp</span> <span class="op">&lt;-</span> <span class="va">dist_coef</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">dist_coef</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>
@@ -565,7 +562,7 @@
   <span class="fu">pheatmap</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pheatmap/man/pheatmap.html">pheatmap</a></span><span class="op">(</span><span class="va">tmp</span>, display_numbers <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
 <span class="op">}</span></code></pre></div>
 <p><img src="dnCIDER_files/figure-html/unnamed-chunk-7-1.png" width="700"><img src="dnCIDER_files/figure-html/unnamed-chunk-7-2.png" width="700"></p>
-<div class="sourceCode"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw">for</span><span class="op">(</span><span class="va">seu_itor</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">)</span><span class="op">{</span>
   <span class="va">tmp</span> <span class="op">&lt;-</span> <span class="va">dist_coef</span><span class="op">[[</span><span class="va">seu_itor</span><span class="op">]</span><span class="op">]</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">dist_coef</span><span class="op">[[</span><span class="va">seu_itor</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>
   <span class="fu"><a href="https://rdrr.io/r/base/diag.html">diag</a></span><span class="op">(</span><span class="va">tmp</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fl">1</span>
@@ -577,21 +574,21 @@
   <span class="va">seu_list</span><span class="op">[[</span><span class="va">seu_itor</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">inicluster_tmp</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="va">seu_list</span><span class="op">[[</span><span class="va">seu_itor</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">seurat_clusters</span>, <span class="st">"_"</span>, <span class="va">seu_list</span><span class="op">[[</span><span class="va">seu_itor</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">Batch</span><span class="op">)</span>
   <span class="va">seu_list</span><span class="op">[[</span><span class="va">seu_itor</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">inicluster</span> <span class="op">&lt;-</span> <span class="va">df_hres</span><span class="op">$</span><span class="va">hres</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/match.html">match</a></span><span class="op">(</span><span class="va">seu_list</span><span class="op">[[</span><span class="va">seu_itor</span><span class="op">]</span><span class="op">]</span><span class="op">$</span><span class="va">inicluster_tmp</span>,<span class="fu"><a href="https://rdrr.io/r/base/colnames.html">rownames</a></span><span class="op">(</span><span class="va">df_hres</span><span class="op">)</span><span class="op">)</span><span class="op">]</span>
 <span class="op">}</span></code></pre></div>
-<div class="sourceCode"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># plot(as.dendrogram(hc), horiz = T)</span></code></pre></div>
-<div class="sourceCode"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/scatterPlot.html">scatterPlot</a></span><span class="op">(</span><span class="va">seu_list</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="st">"tsne"</span>, <span class="st">"inicluster"</span><span class="op">)</span>
 <span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/scatterPlot.html">scatterPlot</a></span><span class="op">(</span><span class="va">seu_list</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span>, <span class="st">"tsne"</span>, <span class="st">"inicluster"</span><span class="op">)</span>
 <span class="fu"><a href="https://wilkelab.org/cowplot/reference/plot_grid.html">plot_grid</a></span><span class="op">(</span><span class="va">p1</span>,<span class="va">p2</span><span class="op">)</span></code></pre></div>
 <p><img src="dnCIDER_files/figure-html/unnamed-chunk-10-1.png" width="864"></p>
-<div class="sourceCode"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/scatterPlot.html">scatterPlot</a></span><span class="op">(</span><span class="va">seu_list</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span>, <span class="st">"tsne"</span>, <span class="st">"Group"</span><span class="op">)</span></code></pre></div>
 <p><img src="dnCIDER_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
 </div>
 <div id="calculate-of-ider-similarity-matrix" class="section level1">
 <h1 class="hasAnchor">
 <a href="#calculate-of-ider-similarity-matrix" class="anchor"></a>Calculate of IDER similarity matrix</h1>
-<div class="sourceCode"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">seu_list</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="va">x</span><span class="op">$</span><span class="va">inicluster</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 <span class="va">res_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html">unlist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">seu_list</span>, <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="kw"><a href="https://rdrr.io/r/base/function.html">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 <span class="va">seu</span><span class="op">$</span><span class="va">initial_cluster</span> <span class="op">&lt;-</span> <span class="va">res</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/match.html">match</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html">colnames</a></span><span class="op">(</span><span class="va">seu</span><span class="op">)</span>, <span class="va">res_names</span><span class="op">)</span><span class="op">]</span>
@@ -601,39 +598,107 @@
                 batch.by.var <span class="op">=</span> <span class="st">"Batch"</span>,
                 downsampling.size <span class="op">=</span> <span class="fl">35</span>, 
                 use.parallel <span class="op">=</span> <span class="cn">FALSE</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
-<div class="sourceCode"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">net</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/plotNetwork.html">plotNetwork</a></span><span class="op">(</span><span class="va">seu</span>, <span class="va">ider</span>, colour.by <span class="op">=</span> <span class="st">"Group"</span> , vertex.size <span class="op">=</span> <span class="fl">0.6</span>, weight.factor <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></code></pre></div>
 <p><img src="dnCIDER_files/figure-html/plot-network-1.png" width="864"></p>
-<div class="sourceCode"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">hc</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/hclust.html">hclust</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/dist.html">as.dist</a></span><span class="op">(</span><span class="fl">1</span><span class="op">-</span><span class="op">(</span><span class="va">ider</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html">t</a></span><span class="op">(</span><span class="va">ider</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">/</span><span class="fl">2</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.html">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/dendrogram.html">as.dendrogram</a></span><span class="op">(</span><span class="va">hc</span><span class="op">)</span>, horiz <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/dendrogram.html">as.dendrogram</a></span><span class="op">(</span><span class="va">hc</span><span class="op">)</span>, horiz <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <p><img src="dnCIDER_files/figure-html/unnamed-chunk-12-1.png" width="700"></p>
 </div>
 <div id="perform-final-clustering" class="section level1">
 <h1 class="hasAnchor">
 <a href="#perform-final-clustering" class="anchor"></a>Perform final Clustering</h1>
-<div class="sourceCode"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/finalClustering.html">finalClustering</a></span><span class="op">(</span><span class="va">seu</span>, <span class="va">ider</span>, cutree.h <span class="op">=</span> <span class="fl">0.35</span><span class="op">)</span> <span class="co"># final clustering</span></code></pre></div>
-<div class="sourceCode"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="http://www.satijalab.org/seurat/reference/NormalizeData.html">NormalizeData</a></span><span class="op">(</span><span class="va">seu</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="http://www.satijalab.org/seurat/reference/FindVariableFeatures.html">FindVariableFeatures</a></span><span class="op">(</span><span class="va">seu</span>, selection.method <span class="op">=</span> <span class="st">"vst"</span>, 
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/NormalizeData.html">NormalizeData</a></span><span class="op">(</span><span class="va">seu</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindVariableFeatures.html">FindVariableFeatures</a></span><span class="op">(</span><span class="va">seu</span>, selection.method <span class="op">=</span> <span class="st">"vst"</span>, 
                             nfeatures <span class="op">=</span> <span class="fl">2000</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="http://www.satijalab.org/seurat/reference/ScaleData.html">ScaleData</a></span><span class="op">(</span><span class="va">seu</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="http://www.satijalab.org/seurat/reference/RunPCA.html">RunPCA</a></span><span class="op">(</span><span class="va">seu</span>, npcs <span class="op">=</span> <span class="fl">20</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="http://www.satijalab.org/seurat/reference/RunTSNE.html">RunTSNE</a></span><span class="op">(</span><span class="va">seu</span>, reduction <span class="op">=</span> <span class="st">"pca"</span>, dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span></code></pre></div>
-<div class="sourceCode"><pre class="downlit sourceCode r">
+<span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/ScaleData.html">ScaleData</a></span><span class="op">(</span><span class="va">seu</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/RunPCA.html">RunPCA</a></span><span class="op">(</span><span class="va">seu</span>, npcs <span class="op">=</span> <span class="fl">20</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/RunTSNE.html">RunTSNE</a></span><span class="op">(</span><span class="va">seu</span>, reduction <span class="op">=</span> <span class="st">"pca"</span>, dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">plot_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">plot_list</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/scatterPlot.html">scatterPlot</a></span><span class="op">(</span><span class="va">seu</span>, <span class="st">"tsne"</span>, colour.by <span class="op">=</span> <span class="st">"CIDER_cluster"</span>, title <span class="op">=</span> <span class="st">"asCIDER clustering results"</span><span class="op">)</span> 
 <span class="va">plot_list</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/scatterPlot.html">scatterPlot</a></span><span class="op">(</span><span class="va">seu</span>, <span class="st">"tsne"</span>, colour.by <span class="op">=</span> <span class="st">"Group"</span>, title <span class="op">=</span> <span class="st">"Ground truth of cell populations"</span><span class="op">)</span> 
 <span class="fu"><a href="https://wilkelab.org/cowplot/reference/plot_grid.html">plot_grid</a></span><span class="op">(</span>plotlist <span class="op">=</span> <span class="va">plot_list</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></code></pre></div>
 <p><img src="dnCIDER_files/figure-html/tsne-plot-CIDER-results-1.png" width="672"></p>
 </div>
+<div id="technical" class="section level1">
+<h1 class="hasAnchor">
+<a href="#technical" class="anchor"></a>Technical</h1>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co">#&gt; R version 4.1.2 (2021-11-01)</span>
+<span class="co">#&gt; Platform: x86_64-apple-darwin17.0 (64-bit)</span>
+<span class="co">#&gt; Running under: macOS Big Sur 10.16</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Matrix products: default</span>
+<span class="co">#&gt; BLAS:   /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRblas.0.dylib</span>
+<span class="co">#&gt; LAPACK: /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRlapack.dylib</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; locale:</span>
+<span class="co">#&gt; [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; attached base packages:</span>
+<span class="co">#&gt; [1] parallel  stats     graphics  grDevices utils     datasets  methods  </span>
+<span class="co">#&gt; [8] base     </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; other attached packages:</span>
+<span class="co">#&gt; [1] cowplot_1.1.1      SeuratObject_4.0.3 Seurat_4.0.5       CIDER_0.99.0      </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; loaded via a namespace (and not attached):</span>
+<span class="co">#&gt;   [1] Rtsne_0.15            colorspace_2.0-2      deldir_1.0-6         </span>
+<span class="co">#&gt;   [4] ellipsis_0.3.2        ggridges_0.5.3        rprojroot_2.0.2      </span>
+<span class="co">#&gt;   [7] fs_1.5.0              spatstat.data_2.1-0   farver_2.1.0         </span>
+<span class="co">#&gt;  [10] leiden_0.3.9          listenv_0.8.0         ggrepel_0.9.1        </span>
+<span class="co">#&gt;  [13] fansi_0.5.0           codetools_0.2-18      splines_4.1.2        </span>
+<span class="co">#&gt;  [16] doParallel_1.0.16     cachem_1.0.6          knitr_1.36           </span>
+<span class="co">#&gt;  [19] polyclip_1.10-0       jsonlite_1.7.2        ica_1.0-2            </span>
+<span class="co">#&gt;  [22] kernlab_0.9-29        cluster_2.1.2         png_0.1-7            </span>
+<span class="co">#&gt;  [25] pheatmap_1.0.12       uwot_0.1.10           shiny_1.7.1          </span>
+<span class="co">#&gt;  [28] sctransform_0.3.2     spatstat.sparse_2.0-0 compiler_4.1.2       </span>
+<span class="co">#&gt;  [31] httr_1.4.2            Matrix_1.3-4          fastmap_1.1.0        </span>
+<span class="co">#&gt;  [34] lazyeval_0.2.2        limma_3.50.0          later_1.3.0          </span>
+<span class="co">#&gt;  [37] htmltools_0.5.2       tools_4.1.2           igraph_1.2.8         </span>
+<span class="co">#&gt;  [40] gtable_0.3.0          glue_1.5.0            RANN_2.6.1           </span>
+<span class="co">#&gt;  [43] reshape2_1.4.4        dplyr_1.0.7           Rcpp_1.0.7           </span>
+<span class="co">#&gt;  [46] scattermore_0.7       jquerylib_0.1.4       pkgdown_1.6.1        </span>
+<span class="co">#&gt;  [49] vctrs_0.3.8           nlme_3.1-153          iterators_1.0.13     </span>
+<span class="co">#&gt;  [52] lmtest_0.9-39         xfun_0.28             stringr_1.4.0        </span>
+<span class="co">#&gt;  [55] globals_0.14.0        mime_0.12             miniUI_0.1.1.1       </span>
+<span class="co">#&gt;  [58] lifecycle_1.0.1       irlba_2.3.3           goftest_1.2-3        </span>
+<span class="co">#&gt;  [61] future_1.23.0         edgeR_3.36.0          MASS_7.3-54          </span>
+<span class="co">#&gt;  [64] zoo_1.8-9             scales_1.1.1          spatstat.core_2.3-1  </span>
+<span class="co">#&gt;  [67] ragg_1.1.3            promises_1.2.0.1      spatstat.utils_2.2-0 </span>
+<span class="co">#&gt;  [70] RColorBrewer_1.1-2    yaml_2.2.1            memoise_2.0.0        </span>
+<span class="co">#&gt;  [73] reticulate_1.22       pbapply_1.5-0         gridExtra_2.3        </span>
+<span class="co">#&gt;  [76] ggplot2_3.3.5         sass_0.4.0            rpart_4.1-15         </span>
+<span class="co">#&gt;  [79] stringi_1.7.5         highr_0.9             desc_1.4.0           </span>
+<span class="co">#&gt;  [82] foreach_1.5.1         rlang_0.4.12          pkgconfig_2.0.3      </span>
+<span class="co">#&gt;  [85] systemfonts_1.0.2     matrixStats_0.61.0    evaluate_0.14        </span>
+<span class="co">#&gt;  [88] lattice_0.20-45       ROCR_1.0-11           purrr_0.3.4          </span>
+<span class="co">#&gt;  [91] tensor_1.5            labeling_0.4.2        patchwork_1.1.1      </span>
+<span class="co">#&gt;  [94] htmlwidgets_1.5.4     tidyselect_1.1.1      parallelly_1.28.1    </span>
+<span class="co">#&gt;  [97] RcppAnnoy_0.0.19      plyr_1.8.6            magrittr_2.0.1       </span>
+<span class="co">#&gt; [100] R6_2.5.1              generics_0.1.1        mgcv_1.8-38          </span>
+<span class="co">#&gt; [103] pillar_1.6.4          fitdistrplus_1.1-6    survival_3.2-13      </span>
+<span class="co">#&gt; [106] abind_1.4-5           tibble_3.1.6          future.apply_1.8.1   </span>
+<span class="co">#&gt; [109] crayon_1.4.2          KernSmooth_2.23-20    utf8_1.2.2           </span>
+<span class="co">#&gt; [112] spatstat.geom_2.3-0   plotly_4.10.0         rmarkdown_2.11       </span>
+<span class="co">#&gt; [115] viridis_0.6.2         locfit_1.5-9.4        grid_4.1.2           </span>
+<span class="co">#&gt; [118] data.table_1.14.2     digest_0.6.28         xtable_1.8-4         </span>
+<span class="co">#&gt; [121] dbscan_1.1-8          tidyr_1.1.4           httpuv_1.6.3         </span>
+<span class="co">#&gt; [124] textshaping_0.3.6     munsell_0.5.0         viridisLite_0.4.0    </span>
+<span class="co">#&gt; [127] bslib_0.3.1</span></code></pre></div>
+</div>
 <div id="references" class="section level1">
 <h1 class="hasAnchor">
 <a href="#references" class="anchor"></a>References</h1>
 <ol style="list-style-type: decimal">
-<li>Baron, M. et al. A Single-Cell Transcriptomic Map of the Human and Mouse Pancreas Reveals Inter- and Intra-cell Population Structure. Cell Syst 3, 346–360.e4 (2016).</li>
-<li>Satija R, et al. Spatial reconstruction of single-cell gene expression data. Nature Biotechnology 33, 495-502 (2015).</li>
+<li>Baron, M. et al. A Single-Cell Transcriptomic Map of the Human and Mouse Pancreas Reveals Inter- and Intra-cell Population Structure. Cell Syst 3, 346–360.e4 (2016).</li>
+<li>Satija R, et al. Spatial reconstruction of single-cell gene expression data. Nature Biotechnology 33, 495-502 (2015).</li>
 </ol>
 </div>
   </div>

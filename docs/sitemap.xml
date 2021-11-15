@@ -4,13 +4,13 @@
     <loc>http://zhiyhu.github.io/CIDER/index.html</loc>
   </url>
   <url>
+    <loc>http://zhiyhu.github.io/CIDER/reference/Merge.html</loc>
+  </url>
+  <url>
     <loc>http://zhiyhu.github.io/CIDER/reference/calculateDistMatOneModel.html</loc>
   </url>
   <url>
     <loc>http://zhiyhu.github.io/CIDER/reference/cosineSimilarityR.html</loc>
-  </url>
-  <url>
-    <loc>http://zhiyhu.github.io/CIDER/reference/dendritic.html</loc>
   </url>
   <url>
     <loc>http://zhiyhu.github.io/CIDER/reference/downsampling.html</loc>
@@ -20,9 +20,6 @@
   </url>
   <url>
     <loc>http://zhiyhu.github.io/CIDER/reference/finalClustering.html</loc>
-  </url>
-  <url>
-    <loc>http://zhiyhu.github.io/CIDER/reference/gatherInitialClusters.html</loc>
   </url>
   <url>
     <loc>http://zhiyhu.github.io/CIDER/reference/getDistMat.html</loc>
@@ -44,12 +41,6 @@
   </url>
   <url>
     <loc>http://zhiyhu.github.io/CIDER/reference/mergeInitialClusters.html</loc>
-  </url>
-  <url>
-    <loc>http://zhiyhu.github.io/CIDER/reference/pancreas_counts.html</loc>
-  </url>
-  <url>
-    <loc>http://zhiyhu.github.io/CIDER/reference/pancreas_meta.html</loc>
   </url>
   <url>
     <loc>http://zhiyhu.github.io/CIDER/reference/plotDistMat.html</loc>
