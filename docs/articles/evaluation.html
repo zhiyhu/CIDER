@@ -101,7 +101,7 @@
 
       
 
-      </header><div class="row">
+      </header><script src="evaluation_files/header-attrs-2.11/header-attrs.js"></script><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Evaluating integration results by CIDER</h1>
@@ -118,28 +118,28 @@
 <h1 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h1>
 <p>Integration and batch correction methods have become a <strong>popular</strong> component in the bioinformatic workflows for scRNA-Seq data analysis, whilst the integration results (mostly corrected PCs or less commonly corrected read counts) are <strong>rarely</strong> validated or evaluated with an objective metric.</p>
-<p>To assess the correctness of integration (i.e. whether cells belonging to the same population are gathered and ones belonging to different populations stay separate after integration), the existing evaluation metrics require the existence of ground truth for cell population annotations.</p>
+<p>To assess the correctness of integration (i.e. whether cells belonging to the same population are gathered and ones belonging to different populations stay separate after integration), the existing evaluation metrics require the existence of ground truth for cell population annotations.</p>
 <p>CIDER provides a <strong>ground-truth-free</strong> approach to evaluate the integration results. This vignette focuses how showing the process using the example data of dendritic cells.</p>
 </div>
 <div id="set-up" class="section level1">
 <h1 class="hasAnchor">
 <a href="#set-up" class="anchor"></a>Set up</h1>
 <p>Apart from <strong>CIDER</strong>, the following packages also need to be loaded:</p>
-<div class="sourceCode"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/zhiyhu/CIDER">CIDER</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://www.satijalab.org/seurat">Seurat</a></span><span class="op">)</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://wilkelab.org/cowplot">cowplot</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://satijalab.org/seurat">Seurat</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://wilkelab.org/cowplot/">cowplot</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span></code></pre></div>
 </div>
 <div id="load-dendritic-data" class="section level1">
 <h1 class="hasAnchor">
 <a href="#load-dendritic-data" class="anchor"></a>Load dendritic data</h1>
-<p>The example data are loaded using <code><a href="https://rdrr.io/r/utils/data.html">data("dendritic")</a></code>. It contains 26593 genes and 564 cells from two batches.</p>
-<div class="sourceCode"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"dendritic"</span><span class="op">)</span>
+<p>The example data can be downloaded from <a href="https://figshare.com/s/d5474749ca8c711cc205" class="uri">https://figshare.com/s/d5474749ca8c711cc205</a>. This dataset contains 26593 genes and 564 cells from two batches.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/load.html">load</a></span><span class="op">(</span><span class="st">"../data/dendritic.rda"</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/dim.html">dim</a></span><span class="op">(</span><span class="va">dendritic</span><span class="op">)</span>
 <span class="co">#&gt; [1] 26593   564</span></code></pre></div>
-<div class="sourceCode"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/table.html">table</a></span><span class="op">(</span><span class="va">dendritic</span><span class="op">$</span><span class="va">Batch</span><span class="op">)</span>
 <span class="co">#&gt; </span>
 <span class="co">#&gt; Batch1 Batch2 </span>
@@ -148,21 +148,24 @@
 <div id="perform-integration" class="section level1">
 <h1 class="hasAnchor">
 <a href="#perform-integration" class="anchor"></a>Perform integration</h1>
-<p>First an integration method<span class="math inline">\(^1\)</span> is applied on the dendritic data. You can apply other integration methods to the your data, as long as the correct PCs are stored in your Seurat object, i.e. <code><a href="http://www.satijalab.org/seurat/reference/Reductions.html">Reductions(seu.integrated, "pca")</a></code> or <code>seu.integrated@reductions$pca</code>.</p>
-<div class="sourceCode"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">seu.list</span> <span class="op">&lt;-</span> <span class="fu"><a href="http://www.satijalab.org/seurat/reference/SplitObject.html">SplitObject</a></span><span class="op">(</span><span class="va">dendritic</span>, split.by <span class="op">=</span> <span class="st">"Batch"</span><span class="op">)</span>
+<p>First an integration method<span class="math inline">\(^1\)</span> is applied on the dendritic data. You can apply other integration methods to the your data, as long as the correct PCs are stored in your Seurat object, i.e. <code>Reductions(seu.integrated, "pca")</code> or <code>seu.integrated@reductions$pca</code>.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">seu.list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/SplitObject.html">SplitObject</a></span><span class="op">(</span><span class="va">dendritic</span>, split.by <span class="op">=</span> <span class="st">"Batch"</span><span class="op">)</span>
 <span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">seu.list</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
-  <span class="va">seu.list</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="http://www.satijalab.org/seurat/reference/NormalizeData.html">NormalizeData</a></span><span class="op">(</span><span class="va">seu.list</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-  <span class="va">seu.list</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="http://www.satijalab.org/seurat/reference/FindVariableFeatures.html">FindVariableFeatures</a></span><span class="op">(</span><span class="va">seu.list</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span>, selection.method <span class="op">=</span> <span class="st">"vst"</span>, 
+  <span class="va">seu.list</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/NormalizeData.html">NormalizeData</a></span><span class="op">(</span><span class="va">seu.list</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+  <span class="va">seu.list</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindVariableFeatures.html">FindVariableFeatures</a></span><span class="op">(</span><span class="va">seu.list</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span>, 
+                                        selection.method <span class="op">=</span> <span class="st">"vst"</span>, 
                                         nfeatures <span class="op">=</span> <span class="fl">1000</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 <span class="op">}</span>
-<span class="va">seu.anchors</span> <span class="op">&lt;-</span> <span class="fu"><a href="http://www.satijalab.org/seurat/reference/FindIntegrationAnchors.html">FindIntegrationAnchors</a></span><span class="op">(</span>object.list <span class="op">=</span> <span class="va">seu.list</span>, dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">15</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="va">seu.integrated</span> <span class="op">&lt;-</span> <span class="fu"><a href="http://www.satijalab.org/seurat/reference/IntegrateData.html">IntegrateData</a></span><span class="op">(</span>anchorset <span class="op">=</span> <span class="va">seu.anchors</span>, dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">15</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<span class="va">seu.anchors</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindIntegrationAnchors.html">FindIntegrationAnchors</a></span><span class="op">(</span>object.list <span class="op">=</span> <span class="va">seu.list</span>, 
+                                      dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">15</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<span class="va">seu.integrated</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/IntegrateData.html">IntegrateData</a></span><span class="op">(</span>anchorset <span class="op">=</span> <span class="va">seu.anchors</span>, 
+                                dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">15</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 
-<span class="fu"><a href="http://www.satijalab.org/seurat/reference/DefaultAssay.html">DefaultAssay</a></span><span class="op">(</span><span class="va">seu.integrated</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"integrated"</span>
-<span class="va">seu.integrated</span> <span class="op">&lt;-</span> <span class="fu"><a href="http://www.satijalab.org/seurat/reference/ScaleData.html">ScaleData</a></span><span class="op">(</span><span class="va">seu.integrated</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="va">seu.integrated</span> <span class="op">&lt;-</span> <span class="fu"><a href="http://www.satijalab.org/seurat/reference/RunPCA.html">RunPCA</a></span><span class="op">(</span><span class="va">seu.integrated</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="va">seu.integrated</span> <span class="op">&lt;-</span> <span class="fu"><a href="http://www.satijalab.org/seurat/reference/RunTSNE.html">RunTSNE</a></span><span class="op">(</span><span class="va">seu.integrated</span>, reduction <span class="op">=</span> <span class="st">"pca"</span>, dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span>
+<span class="fu"><a href="https://satijalab.org/seurat/reference/DefaultAssay.html">DefaultAssay</a></span><span class="op">(</span><span class="va">seu.integrated</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"integrated"</span>
+<span class="va">seu.integrated</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/ScaleData.html">ScaleData</a></span><span class="op">(</span><span class="va">seu.integrated</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<span class="va">seu.integrated</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/RunPCA.html">RunPCA</a></span><span class="op">(</span><span class="va">seu.integrated</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<span class="va">seu.integrated</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/RunTSNE.html">RunTSNE</a></span><span class="op">(</span><span class="va">seu.integrated</span>, reduction <span class="op">=</span> <span class="st">"pca"</span>, dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span>
 <span class="va">seu.integrated</span><span class="op">@</span><span class="va">reductions</span><span class="op">$</span><span class="va">pca</span>
 <span class="co">#&gt; A dimensional reduction object with key PC_ </span>
 <span class="co">#&gt;  Number of dimensions: 50 </span>
@@ -170,12 +173,12 @@
 <span class="co">#&gt;  Jackstraw run: FALSE </span>
 <span class="co">#&gt;  Computed using assay: integrated</span></code></pre></div>
 <p>Clear the intermediate outcome.</p>
-<div class="sourceCode"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/rm.html">rm</a></span><span class="op">(</span><span class="va">seu.list</span>, <span class="va">seu.anchors</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/gc.html">gc</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt;            used  (Mb) gc trigger  (Mb) limit (Mb) max used  (Mb)</span>
-<span class="co">#&gt; Ncells  2646924 141.4    5205205 278.0         NA  5176969 276.5</span>
-<span class="co">#&gt; Vcells 23723216 181.0   80258831 612.4      16384 77082449 588.1</span></code></pre></div>
+<span class="co">#&gt; Ncells  3074493 164.2    5386155 287.7         NA  5386155 287.7</span>
+<span class="co">#&gt; Vcells 24463363 186.7   74990402 572.2      32768 74510730 568.5</span></code></pre></div>
 </div>
 <div id="evaluate-by-cider" class="section level1">
 <h1 class="hasAnchor">
@@ -189,7 +192,7 @@
 <li>Compute IDER-based similarity matrix (<code>getIDEr</code>) among the batch-specific initial clusters. If multiple CPUs are availble, you can set <code>use.parallel = TRUE</code> and <code>n.cores</code> to the number of available cores to speed it up.</li>
 <li>Assign the similarity and estimate empirical p values (<code>estimateProb</code>) for the correctness of integration. High similarity values and low p values indicate that the cell are similar to the surrounding cells and likely integrated correctly.</li>
 </ol>
-<div class="sourceCode"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">seu.integrated</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/hdbscan.seurat.html">hdbscan.seurat</a></span><span class="op">(</span><span class="va">seu.integrated</span><span class="op">)</span>
 <span class="va">ider</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/getIDEr.html">getIDEr</a></span><span class="op">(</span><span class="va">seu.integrated</span>, use.parallel <span class="op">=</span> <span class="cn">FALSE</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 <span class="va">seu.integrated</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/estimateProb.html">estimateProb</a></span><span class="op">(</span><span class="va">seu.integrated</span>, <span class="va">ider</span><span class="op">)</span></code></pre></div>
@@ -198,30 +201,30 @@
 <h2 class="hasAnchor">
 <a href="#evaluation-scores" class="anchor"></a>Evaluation scores</h2>
 <p>The evaluation scores can be viewed by the <code>scatterPlot</code> as below. As shown cells with dbscan_cluster of 2 and 3 have low regional similarity and high empirical p values, suggesting that they can be incorrectly integrated.</p>
-<div class="sourceCode"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/scatterPlot.html">scatterPlot</a></span><span class="op">(</span><span class="va">seu.integrated</span>, <span class="st">"tsne"</span>, <span class="st">"dbscan_cluster"</span><span class="op">)</span>
 <span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/scatterPlot.html">scatterPlot</a></span><span class="op">(</span><span class="va">seu.integrated</span>, <span class="st">"tsne"</span>, colour.by <span class="op">=</span> <span class="st">"similarity"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"Similarity"</span><span class="op">)</span>
-<span class="va">p3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/scatterPlot.html">scatterPlot</a></span><span class="op">(</span><span class="va">seu.integrated</span>, <span class="st">"tsne"</span>, colour.by <span class="op">=</span> <span class="st">"pvalue"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"Empirical\n p values"</span><span class="op">)</span>
+<span class="va">p3</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/scatterPlot.html">scatterPlot</a></span><span class="op">(</span><span class="va">seu.integrated</span>, <span class="st">"tsne"</span>, colour.by <span class="op">=</span> <span class="st">"pvalue"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"Prob of \nrejection"</span><span class="op">)</span>
 <span class="fu"><a href="https://wilkelab.org/cowplot/reference/plot_grid.html">plot_grid</a></span><span class="op">(</span><span class="va">p1</span>,<span class="va">p2</span>,<span class="va">p3</span>, ncol <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></code></pre></div>
-<p><img src="evaluation_files/figure-html/unnamed-chunk-6-1.png" width="1152"></p>
+<p><img src="evaluation_files/figure-html/unnamed-chunk-6-1.png" width="672"></p>
 </div>
 <div id="the-ider-based-similarity-matrix" class="section level2">
 <h2 class="hasAnchor">
 <a href="#the-ider-based-similarity-matrix" class="anchor"></a>The IDER-based similarity matrix</h2>
 <p>To have more insight, we can view the IDER-based similarity matrix by functions <code>plotNetwork</code> or <code>plotHeatmap</code>. Both of them require the input of a Seurat object and the output of <code>getIDEr</code>. In this example, 1_Batch1 and 1_Batch2 as well as 4_Batch1 and 4_Batch2 have high similarity.</p>
 <p><code>plotNetwork</code> generates a graph where vertexes are initial clusters and edge widths are similarity values. The parameter <code>weight.factor</code> controls the scale of edge widths; larger <code>weight.factor</code> will give bolder edges proportionally.</p>
-<div class="sourceCode"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/plotNetwork.html">plotNetwork</a></span><span class="op">(</span><span class="va">seu.integrated</span>, <span class="va">ider</span>, weight.factor <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></code></pre></div>
 <p><img src="evaluation_files/figure-html/unnamed-chunk-7-1.png" width="480"></p>
-<pre><code>#&gt; IGRAPH f6935c2 UNW- 9 10 -- 
+<pre><code>#&gt; IGRAPH 76d0890 UNW- 10 11 -- 
 #&gt; + attr: name (v/c), frame.color (v/c), size (v/n), label.family (v/c),
 #&gt; | weight (e/n), width (e/n)
-#&gt; + edges from f6935c2 (vertex names):
-#&gt;  [1] 4_Batch1--4_Batch2 4_Batch1--0_Batch2 2_Batch1--4_Batch2 2_Batch1--2_Batch2
-#&gt;  [5] 2_Batch1--3_Batch2 3_Batch1--2_Batch2 3_Batch1--3_Batch2 1_Batch1--0_Batch2
-#&gt;  [9] 1_Batch1--1_Batch2 1_Batch1--3_Batch2</code></pre>
+#&gt; + edges from 76d0890 (vertex names):
+#&gt;  [1] 4_Batch1--4_Batch2 4_Batch1--2_Batch2 2_Batch1--4_Batch2 2_Batch1--2_Batch2
+#&gt;  [5] 2_Batch1--3_Batch2 0_Batch1--0_Batch2 0_Batch1--1_Batch2 1_Batch1--1_Batch2
+#&gt;  [9] 1_Batch1--3_Batch2 3_Batch1--2_Batch2 3_Batch1--3_Batch2</code></pre>
 <p><code>plotHeatmap</code> generates a heatmap where each cell is coloured and labeled by the similarity values.</p>
-<div class="sourceCode"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/plotHeatmap.html">plotHeatmap</a></span><span class="op">(</span><span class="va">seu.integrated</span>, <span class="va">ider</span><span class="op">)</span></code></pre></div>
 <p><img src="evaluation_files/figure-html/unnamed-chunk-8-1.png" width="480"></p>
 </div>
@@ -230,16 +233,84 @@
 <h1 class="hasAnchor">
 <a href="#refering-to-ground-truth-annotation" class="anchor"></a>Refering to ground-truth annotation</h1>
 <p>So far the evaluation have completed and CIDER has not used the ground truth at all!</p>
-<p>Let's peep at the ground truth before the closure of this vignette. As shown in the figure below, the clusters having low IDER-based similarity and high p values actually have at least two popuplations (CD1C and CD141), verifying that CIDER spots the wrongly integrated cells.</p>
-<div class="sourceCode"><pre class="downlit sourceCode r">
+<p>Let’s peep at the ground truth before the closure of this vignette. As shown in the figure below, the clusters having low IDER-based similarity and high p values actually have at least two popuplations (CD1C and CD141), verifying that CIDER spots the wrongly integrated cells.</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/scatterPlot.html">scatterPlot</a></span><span class="op">(</span><span class="va">seu.integrated</span>, <span class="st">"tsne"</span>, colour.by <span class="op">=</span> <span class="st">"Group"</span><span class="op">)</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="st">"Group\n (ground truth)"</span><span class="op">)</span></code></pre></div>
 <p><img src="evaluation_files/figure-html/unnamed-chunk-9-1.png" width="480"></p>
+</div>
+<div id="technical" class="section level1">
+<h1 class="hasAnchor">
+<a href="#technical" class="anchor"></a>Technical</h1>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html">sessionInfo</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co">#&gt; R version 4.1.2 (2021-11-01)</span>
+<span class="co">#&gt; Platform: x86_64-apple-darwin17.0 (64-bit)</span>
+<span class="co">#&gt; Running under: macOS Big Sur 10.16</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; Matrix products: default</span>
+<span class="co">#&gt; BLAS:   /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRblas.0.dylib</span>
+<span class="co">#&gt; LAPACK: /Library/Frameworks/R.framework/Versions/4.1/Resources/lib/libRlapack.dylib</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; locale:</span>
+<span class="co">#&gt; [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8</span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; attached base packages:</span>
+<span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; other attached packages:</span>
+<span class="co">#&gt; [1] ggplot2_3.3.5      cowplot_1.1.1      SeuratObject_4.0.3 Seurat_4.0.5      </span>
+<span class="co">#&gt; [5] CIDER_0.99.0      </span>
+<span class="co">#&gt; </span>
+<span class="co">#&gt; loaded via a namespace (and not attached):</span>
+<span class="co">#&gt;   [1] Rtsne_0.15            colorspace_2.0-2      deldir_1.0-6         </span>
+<span class="co">#&gt;   [4] ellipsis_0.3.2        ggridges_0.5.3        rprojroot_2.0.2      </span>
+<span class="co">#&gt;   [7] fs_1.5.0              spatstat.data_2.1-0   farver_2.1.0         </span>
+<span class="co">#&gt;  [10] leiden_0.3.9          listenv_0.8.0         ggrepel_0.9.1        </span>
+<span class="co">#&gt;  [13] fansi_0.5.0           codetools_0.2-18      splines_4.1.2        </span>
+<span class="co">#&gt;  [16] doParallel_1.0.16     cachem_1.0.6          knitr_1.36           </span>
+<span class="co">#&gt;  [19] polyclip_1.10-0       jsonlite_1.7.2        ica_1.0-2            </span>
+<span class="co">#&gt;  [22] kernlab_0.9-29        cluster_2.1.2         png_0.1-7            </span>
+<span class="co">#&gt;  [25] pheatmap_1.0.12       uwot_0.1.10           shiny_1.7.1          </span>
+<span class="co">#&gt;  [28] sctransform_0.3.2     spatstat.sparse_2.0-0 compiler_4.1.2       </span>
+<span class="co">#&gt;  [31] httr_1.4.2            Matrix_1.3-4          fastmap_1.1.0        </span>
+<span class="co">#&gt;  [34] lazyeval_0.2.2        limma_3.50.0          later_1.3.0          </span>
+<span class="co">#&gt;  [37] htmltools_0.5.2       tools_4.1.2           igraph_1.2.8         </span>
+<span class="co">#&gt;  [40] gtable_0.3.0          glue_1.5.0            RANN_2.6.1           </span>
+<span class="co">#&gt;  [43] reshape2_1.4.4        dplyr_1.0.7           Rcpp_1.0.7           </span>
+<span class="co">#&gt;  [46] scattermore_0.7       jquerylib_0.1.4       pkgdown_1.6.1        </span>
+<span class="co">#&gt;  [49] vctrs_0.3.8           nlme_3.1-153          iterators_1.0.13     </span>
+<span class="co">#&gt;  [52] lmtest_0.9-39         xfun_0.28             stringr_1.4.0        </span>
+<span class="co">#&gt;  [55] globals_0.14.0        mime_0.12             miniUI_0.1.1.1       </span>
+<span class="co">#&gt;  [58] lifecycle_1.0.1       irlba_2.3.3           goftest_1.2-3        </span>
+<span class="co">#&gt;  [61] future_1.23.0         edgeR_3.36.0          MASS_7.3-54          </span>
+<span class="co">#&gt;  [64] zoo_1.8-9             scales_1.1.1          spatstat.core_2.3-1  </span>
+<span class="co">#&gt;  [67] ragg_1.1.3            promises_1.2.0.1      spatstat.utils_2.2-0 </span>
+<span class="co">#&gt;  [70] parallel_4.1.2        RColorBrewer_1.1-2    yaml_2.2.1           </span>
+<span class="co">#&gt;  [73] memoise_2.0.0         reticulate_1.22       pbapply_1.5-0        </span>
+<span class="co">#&gt;  [76] gridExtra_2.3         sass_0.4.0            rpart_4.1-15         </span>
+<span class="co">#&gt;  [79] stringi_1.7.5         highr_0.9             desc_1.4.0           </span>
+<span class="co">#&gt;  [82] foreach_1.5.1         rlang_0.4.12          pkgconfig_2.0.3      </span>
+<span class="co">#&gt;  [85] systemfonts_1.0.2     matrixStats_0.61.0    evaluate_0.14        </span>
+<span class="co">#&gt;  [88] lattice_0.20-45       ROCR_1.0-11           purrr_0.3.4          </span>
+<span class="co">#&gt;  [91] tensor_1.5            labeling_0.4.2        patchwork_1.1.1      </span>
+<span class="co">#&gt;  [94] htmlwidgets_1.5.4     tidyselect_1.1.1      parallelly_1.28.1    </span>
+<span class="co">#&gt;  [97] RcppAnnoy_0.0.19      plyr_1.8.6            magrittr_2.0.1       </span>
+<span class="co">#&gt; [100] R6_2.5.1              generics_0.1.1        withr_2.4.2          </span>
+<span class="co">#&gt; [103] mgcv_1.8-38           pillar_1.6.4          fitdistrplus_1.1-6   </span>
+<span class="co">#&gt; [106] survival_3.2-13       abind_1.4-5           tibble_3.1.6         </span>
+<span class="co">#&gt; [109] future.apply_1.8.1    crayon_1.4.2          KernSmooth_2.23-20   </span>
+<span class="co">#&gt; [112] utf8_1.2.2            spatstat.geom_2.3-0   plotly_4.10.0        </span>
+<span class="co">#&gt; [115] rmarkdown_2.11        viridis_0.6.2         locfit_1.5-9.4       </span>
+<span class="co">#&gt; [118] grid_4.1.2            data.table_1.14.2     digest_0.6.28        </span>
+<span class="co">#&gt; [121] xtable_1.8-4          dbscan_1.1-8          tidyr_1.1.4          </span>
+<span class="co">#&gt; [124] httpuv_1.6.3          textshaping_0.3.6     munsell_0.5.0        </span>
+<span class="co">#&gt; [127] viridisLite_0.4.0     bslib_0.3.1</span></code></pre></div>
 </div>
 <div id="references" class="section level1">
 <h1 class="hasAnchor">
 <a href="#references" class="anchor"></a>References</h1>
 <ol style="list-style-type: decimal">
-<li>Stuart and Butler et al. Comprehensive Integration of Single-Cell Data. Cell (2019).</li>
+<li>Stuart and Butler et al. Comprehensive Integration of Single-Cell Data. Cell (2019).</li>
 <li>Campello, Ricardo JGB, Davoud Moulavi, and Jörg Sander. “Density-based clustering based on hierarchical density estimates.” Pacific-Asia conference on knowledge discovery and data mining. Springer, Berlin, Heidelberg, 2013.</li>
 </ol>
 </div>

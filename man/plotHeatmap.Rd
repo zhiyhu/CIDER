@@ -7,20 +7,20 @@
 plotHeatmap(seu, ider)
 }
 \arguments{
-\item{seu}{Seurat object.}
+\item{seu}{An Seurat object.}
 
-\item{ider}{output of function `getIDEr`.}
+\item{ider}{Output of function `getIDEr`.}
 }
 \value{
-a heatmap shows the similarity between shared groups in two batches
+A heatmap shows the similarity between shared groups in two batches
 }
 \description{
-description
+Plot Heatmap for the IDER-based similarity matrix
 }
 \examples{
 \dontrun{
   plotHeatmap(seu, ider)
-} 
+}
 }
 \seealso{
 \code{\link{getIDEr}}

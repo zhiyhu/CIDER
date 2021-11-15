@@ -17,19 +17,19 @@ scatterPlot(
 \arguments{
 \item{seu}{Seurat S4 object after the step of `getIDER`. Required.}
 
-\item{reduction}{Character. The dimension reduction used to plot. Common 
-options: "pca", "tsne", "umap". The availability of dimension reduction 
+\item{reduction}{Character. The dimension reduction used to plot. Common
+options: "pca", "tsne", "umap". The availability of dimension reduction
 can be checked by `Reductions(seu)`.}
 
-\item{colour.by}{Character. One of the column names of `seu@meta.data`. 
+\item{colour.by}{Character. One of the column names of `seu@meta.data`.
 Can be either discreet or continuous variables.}
 
-\item{colvec}{A vector of Hex colour codes. If no value is given (default), 
+\item{colvec}{A vector of Hex colour codes. If no value is given (default),
 a vector of 74 colours will be used.}
 
 \item{title}{Character. Title of the figure.}
 
-\item{sort.by.numbers}{Boolean. Whether to sort the groups by the number 
+\item{sort.by.numbers}{Boolean. Whether to sort the groups by the number
 of cells.(Default: True)}
 
 \item{viridis_option}{viridis_option. (Default: B)}
@@ -43,15 +43,11 @@ Scatterplot of a Seurat object based on dimension reduction.
 \examples{
 \dontrun{
 library(Seurat)
-data("pancreas_counts") # count matrix
-data("pancreas_meta") # meta data/cell information
-seu <- CreateSeuratObject(counts = pancreas_counts, 
-meta.data = pancreas_meta)
-seu <- NormalizeData(seu, verbose = FALSE)
+seu <- NormalizeData(seu, verbose = FALSE) # input Seurat object
 seu <- FindVariableFeatures(seu, selection.method = "vst", nfeatures = 2000,
  verbose = FALSE)
 seu <- ScaleData(seu, verbose = FALSE)
 seu <- RunPCA(seu, npcs = 20, verbose = FALSE)
-scatterPlot(seu, "pca",colour.by = "Batch", title = "PCA") 
+scatterPlot(seu, "pca",colour.by = "Batch", title = "PCA")
 }
 }

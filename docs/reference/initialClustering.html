@@ -165,7 +165,7 @@
   cut.height <span class='op'>=</span> <span class='fl'>0.4</span>,
   nfeatures <span class='op'>=</span> <span class='fl'>2000</span>,
   additional.vars.to.regress <span class='op'>=</span> <span class='cn'>NULL</span>,
-  dims <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>14</span>,
+  dims <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq_len</a></span><span class='op'>(</span><span class='fl'>14</span><span class='op'>)</span>,
   resolution <span class='op'>=</span> <span class='fl'>0.6</span>,
   downsampling.size <span class='op'>=</span> <span class='fl'>50</span>,
   verbose <span class='op'>=</span> <span class='cn'>FALSE</span>
@@ -180,41 +180,50 @@
     </tr>
     <tr>
       <th>batch.var</th>
-      <td><p>batch.var</p></td>
+      <td><p>Character. One of the column names of `seu@meta.data`. It
+is used to partition the Seurat object into smaller ones. Default: "Batch"</p></td>
     </tr>
     <tr>
       <th>cut.height</th>
-      <td><p>cut.height</p></td>
+      <td><p>Numeric. Height used to cut hirerchical trees. Default:
+0.4</p></td>
     </tr>
     <tr>
       <th>nfeatures</th>
-      <td><p>nfeatures = 2000</p></td>
+      <td><p>Number of high variance genes used. Default: 2000</p></td>
     </tr>
     <tr>
       <th>additional.vars.to.regress</th>
-      <td><p>additional.vars.to.regress</p></td>
+      <td><p>Additional variables to regress out. Needs
+to among column names of `seu@meta.data`. Default: `NULL`</p></td>
     </tr>
     <tr>
       <th>dims</th>
-      <td><p>dims</p></td>
+      <td><p>Number of dimension used for clustering. Passed to Seurat.
+Default: `1:14`</p></td>
     </tr>
     <tr>
       <th>resolution</th>
-      <td><p>resolution</p></td>
+      <td><p>Resolution for clustering. Passed to Seurat. Default: 0.6</p></td>
     </tr>
     <tr>
       <th>downsampling.size</th>
-      <td><p>downsampling.size</p></td>
+      <td><p>Numeric. The number of cells representing each
+group. (Default: 40)</p></td>
     </tr>
     <tr>
       <th>verbose</th>
-      <td><p>verbose</p></td>
+      <td><p>Print the progress bar or not. Default: FALSE</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Seurat S4 object with initial clustering results in `initial_cluster` of meta.data.</p>
+    <p>Seurat S4 object with initial cluster information in
+`initial_cluster` of meta.data.</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><code><a href='getIDEr.html'>getIDEr</a></code> <code><a href='finalClustering.html'>finalClustering</a></code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

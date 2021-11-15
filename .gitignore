@@ -26,3 +26,6 @@ data/.DS_Store
 vignettes/.DS_Store
 ..Rcheck/00check.log
 ..Rcheck/*
+CIDER.Rcheck/
+
+data/

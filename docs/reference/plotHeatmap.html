@@ -47,7 +47,7 @@
 
 
 <meta property="og:title" content="Plot Heatmap for the IDER-based similarity matrix — plotHeatmap" />
-<meta property="og:description" content="description" />
+<meta property="og:description" content="Plot Heatmap for the IDER-based similarity matrix" />
 <meta property="og:image" content="http://zhiyhu.github.io/CIDER/reference/figures/card.png" />
 
 
@@ -156,7 +156,7 @@
     </div>
 
     <div class="ref-description">
-    <p>description</p>
+    <p>Plot Heatmap for the IDER-based similarity matrix</p>
     </div>
 
     <pre class="usage"><span class='fu'>plotHeatmap</span><span class='op'>(</span><span class='va'>seu</span>, <span class='va'>ider</span><span class='op'>)</span></pre>
@@ -166,23 +166,26 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>seu</th>
-      <td><p>Seurat object.</p></td>
+      <td><p>An Seurat object.</p></td>
     </tr>
     <tr>
       <th>ider</th>
-      <td><p>output of function `getIDEr`.</p></td>
+      <td><p>Output of function `getIDEr`.</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>A heatmap shows the similarity between shared groups in two batches</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
     <div class='dont-index'><p><code><a href='getIDEr.html'>getIDEr</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
-  <span class='fu'>plotHeatmap</span><span class='op'>(</span><span class='va'>seu</span>, <span class='va'>ider</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='error'>Error in unique(seu$Batch): object 'seu' not found</span></div><div class='input'><span class='co'># } </span>
-</div></pre>
+    <pre class="examples"><span class='r-in'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span></span>
+<span class='r-in'>  <span class='fu'>plotHeatmap</span><span class='op'>(</span><span class='va'>seu</span>, <span class='va'>ider</span><span class='op'>)</span></span>
+<span class='r-in'><span class='op'>}</span></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

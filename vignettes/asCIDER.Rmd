@@ -1,0 +1,180 @@
+---
+title: "Getting Start with Assisted CIDER (asCIDER)"
+description: "Hu et al. An interpretable meta-clustering framework for single-cell RNA-Seq data integration and evaluation"
+output: 
+  rmarkdown::html_vignette:
+    toc: true
+vignette: >
+  %\VignetteIndexEntry{Getting Start with Assisted CIDER (asCIDER)}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Introduction
+
+This vignette performs asCIDER, a meta-clustering method, on a cross-species pancreas dataset. AsCIDER is aimed to achieve the clustering task in data confounded by unwanted variables. In this scenario, the unwanted variable is species effects.
+
+asCIDER is short for assisted CIDER, assisted by the prior batch-specific annotations or clustering results.
+
+# Set up
+
+In addition to **CIDER**, we will load the following packages:
+
+```{r setup, message=FALSE}
+library(CIDER)
+library(Seurat)
+library(pheatmap)
+library(ggplot2)
+library(cowplot)
+library(viridis)
+```
+
+# Pancreas data
+
+The example data can be downloaded from https://figshare.com/s/d5474749ca8c711cc205. 
+
+This data$^1$ contain cells from human (8241 cells) and mouse (1886 cells).
+
+```{r} 
+load("../data/pancreas_counts.RData") # count matrix
+load("../data/pancreas_meta.RData") # meta data/cell information
+seu <- CreateSeuratObject(counts = pancreas_counts, meta.data = pancreas_meta)
+table(seu$Batch)
+```
+
+# Exam if data are confounded
+
+Prior to use CIDER (or other integration methods for clustering) it is important to exam if clustering will be confounded by the cross-species factors.
+
+
+Her we first perform the conventional Seurat$^2$ clustering pipeline.
+
+```{r seurat-pipeline}
+seu <- NormalizeData(seu, verbose = FALSE)
+seu <- FindVariableFeatures(seu, selection.method = "vst", nfeatures = 2000, verbose = FALSE)
+seu <- ScaleData(seu, verbose = FALSE)
+seu <- RunPCA(seu, npcs = 20, verbose = FALSE)
+seu <- RunTSNE(seu, reduction = "pca", dims = 1:12)
+```
+
+## Confounded dimension reduction 
+
+The PCA and *t*-SNE plots both showed that the data are confounded by species. 
+
+The `scatterPlot` function is used to generate dimension reduction figures. It takes input of a Seurat object (`seu` here), the name of reduction (`pca` and `tsne` here), the variable deciding dot colours (`Batch` here) and the title of plots. See more information by `?scatterPlot`
+
+```{r scatterPlot-confounded, fig.width=7, fig.height=3}
+p1 <- scatterPlot(seu, "pca",colour.by = "Batch", title = "PCA") 
+p2 <- scatterPlot(seu, "tsne",colour.by = "Batch", title = "t-SNE") 
+plot_grid(p1, p2)
+```
+
+## Confounded clustering results
+
+```{r, fig.width=5, fig.height=3}
+seu <- FindNeighbors(seu, dims = 1:12)
+seu <- FindClusters(seu)
+
+scatterPlot(seu, "tsne",colour.by = "seurat_clusters", title = "t-SNE") 
+```
+
+```{r, fig.width=5, fig.height=3}
+res <- data.frame(table(seu$seurat_clusters, seu$Batch))
+ggplot(res, aes(fill=Var2, y=Freq, x=Var1)) + 
+    geom_bar(position="stack", stat="identity") + xlab("CIDER_cluster") + ylab("Proportions")
+```
+
+
+# asCIDER
+
+## Prepare initial clusters
+
+asCIDER uses existing within-batch clustering results. Here we concatenate the batch ID and the within-batch cluster ID to obtain cluster-specific groups (i.e. initial clusters).
+
+```{r initial_cluster}
+seu$initial_cluster <- paste(seu$Group, seu$Batch, sep = "_")
+table(seu$initial_cluster)
+```
+
+## Calculate of IDER similarity matrix
+
+The function `getIDEr` calculate the IDER-based distance matrix. 
+
+By default, it will use the column called "initial_cluster" as initial clusters, and "Batch" as batch. If you are using columns other than this two, please revise these two parameters.
+
+For this step, you can choose to use parallel computation by setting `use.parallel = TRUE` or not (default `use.parallel = FALSE`). The default number of cores used for parallel computation is `detectCores(logical = FALSE) - 1`.
+
+```{r run-getIDER-noparallel}
+ider <- getIDEr(seu, 
+                group.by.var = "initial_cluster",
+                batch.by.var = "Batch",
+                downsampling.size = 35, 
+                use.parallel = FALSE, verbose = FALSE)
+```
+
+## Visualise the similarity matrix
+
+```{r heatmap, fig.height=7, fig.width=7}
+groups <- c("alpha","beta","delta", "gamma","ductal","endothelial", "activated_stellate", "quiescent_stellate", "macrophage")
+idx1 <- paste0(groups, "_human")
+idx2 <- paste0(groups, "_mouse")
+
+pheatmap::pheatmap(
+  ider[[1]][idx1, idx2],
+  color = inferno(10),
+  border_color = NA,
+  display_numbers = TRUE,
+  cluster_rows = FALSE,
+  cluster_cols = FALSE,
+  width = 7,
+  height = 5,
+  cellwidth = 22,
+  cellheight = 22
+)
+```
+
+
+## Perform final Clustering
+
+Next we put both Seurat object and the similarity matrix list into `finalClustering`. You can either cut trees by height (set `cutree.by = 'h`) or by k (set `cutree.by = 'k`). The default is cutting by the height of 0.45.
+
+The final clustering results are stored in Colume `cider_final_cluster` of Seurat object metadata and can be extracted using `seu$cider_final_cluster`.
+
+```{r final-clustering}
+seu <- finalClustering(seu, ider, cutree.h = 0.45)
+head(seu@meta.data)
+```
+
+# Visualise clustering results
+
+```{r summary-tsne-plots, fig.width=8, fig.height=3}
+plot_list <- list()
+plot_list[[1]] <- scatterPlot(seu, "tsne", colour.by = "CIDER_cluster", title = "asCIDER clustering results") 
+plot_list[[2]] <- scatterPlot(seu, "tsne", colour.by = "Group", title = "Ground truth of cell populations") 
+plot_grid(plotlist = plot_list, ncol = 2)
+```
+
+```{r, fig.height=3, fig.width=5}
+res <- data.frame(table(seu$CIDER_cluster, seu$Batch))
+ggplot(res, aes(fill=Var2, y=Freq, x=Var1)) + 
+    geom_bar(position="stack", stat="identity") + xlab("CIDER_cluster") + ylab("Proportions")
+```
+
+# Technical
+
+```{r sessionInfo}
+sessionInfo()
+```
+
+
+# References
+
+1. Baron, M. et al. A Single-Cell Transcriptomic Map of the Human and Mouse Pancreas Reveals Inter- and Intra-cell Population Structure. Cell Syst 3, 346–360.e4 (2016).
+2. Satija R, et al. Spatial reconstruction of single-cell gene expression data. Nature Biotechnology 33, 495-502 (2015). 

@@ -2,15 +2,15 @@
 #' @description Scatterplot of a Seurat object based on dimension reduction.
 #'
 #' @param seu Seurat S4 object after the step of `getIDER`. Required.
-#' @param reduction Character. The dimension reduction used to plot. Common 
-#' options: "pca", "tsne", "umap". The availability of dimension reduction 
+#' @param reduction Character. The dimension reduction used to plot. Common
+#' options: "pca", "tsne", "umap". The availability of dimension reduction
 #' can be checked by `Reductions(seu)`.
-#' @param colour.by Character. One of the column names of `seu@meta.data`. 
+#' @param colour.by Character. One of the column names of `seu@meta.data`.
 #' Can be either discreet or continuous variables.
-#' @param colvec A vector of Hex colour codes. If no value is given (default), 
+#' @param colvec A vector of Hex colour codes. If no value is given (default),
 #' a vector of 74 colours will be used.
 #' @param title Character. Title of the figure.
-#' @param sort.by.numbers Boolean. Whether to sort the groups by the number 
+#' @param sort.by.numbers Boolean. Whether to sort the groups by the number
 #'  of cells.(Default: True)
 #' @param viridis_option viridis_option. (Default: B)
 #' @return a scatter plot
@@ -18,27 +18,23 @@
 #' @importFrom Seurat Reductions
 #' @importFrom viridis scale_fill_viridis
 #' @export
-#' 
-#' @examples 
+#'
+#' @examples
 #' \dontrun{
 #' library(Seurat)
-#' data("pancreas_counts") # count matrix
-#' data("pancreas_meta") # meta data/cell information
-#' seu <- CreateSeuratObject(counts = pancreas_counts, 
-#' meta.data = pancreas_meta)
-#' seu <- NormalizeData(seu, verbose = FALSE)
+#' seu <- NormalizeData(seu, verbose = FALSE) # input Seurat object
 #' seu <- FindVariableFeatures(seu, selection.method = "vst", nfeatures = 2000,
 #'  verbose = FALSE)
 #' seu <- ScaleData(seu, verbose = FALSE)
 #' seu <- RunPCA(seu, npcs = 20, verbose = FALSE)
-#' scatterPlot(seu, "pca",colour.by = "Batch", title = "PCA") 
+#' scatterPlot(seu, "pca",colour.by = "Batch", title = "PCA")
 #' }
-scatterPlot <- function(seu, reduction, colour.by, colvec = NULL, 
-                        title = NULL, sort.by.numbers = TRUE, 
-                        viridis_option = "B") { 
+scatterPlot <- function(seu, reduction, colour.by, colvec = NULL,
+                        title = NULL, sort.by.numbers = TRUE,
+                        viridis_option = "B") {
   # function for tSNE plot
   if(is.null(colvec)){
-    colvec <- 
+    colvec <-
       c('#7FC97F','#BEAED4','#FDC086','#FFFF99','#386CB0',
         '#F0027F','#BF5B17','#666666','#1B9E77','#D95F02',
         '#7570B3','#E7298A','#66A61E','#E6AB02','#A6761D',
@@ -55,43 +51,43 @@ scatterPlot <- function(seu, reduction, colour.by, colvec = NULL,
         '#FB8072','#80B1D3','#FDB462','#B3DE69','#FCCDE5',
         '#D9D9D9','#BC80BD','#CCEBC5','#FFED6F')
   }
-  
+
   if(reduction %in% Reductions(seu)){
     df_plot <- data.frame(x = Reductions(seu, reduction)@cell.embeddings[,1],
                           y = Reductions(seu, reduction)@cell.embeddings[,2],
                           stringsAsFactors = FALSE)
   } else {
-    stop("Provided reduction name does not exist in the seurat object. 
+    stop("Provided reduction name does not exist in the seurat object.
          Available reduction names can by check by `Reductions(SeuratObject)`.")
   }
 
   if(!colour.by %in% colnames(seu@meta.data)){
-    stop("Provided colour.by name does not exist in 
+    stop("Provided colour.by name does not exist in
          the colnames of meta.data of this seurat object.")
   } else {
     idx <- match(colour.by, colnames(seu@meta.data))
-    if(mode(seu@meta.data[,idx]) == "numeric" & 
+    if(mode(seu@meta.data[,idx]) == "numeric" &
        !is.factor(seu@meta.data[,idx])){ # continues
       df_plot$group <- seu@meta.data[,idx]
     } else {
       df_plot$group <- as.character(seu@meta.data[,idx])
-      if(sort.by.numbers) ranked <- names(sort(table(df_plot$group), 
+      if(sort.by.numbers) ranked <- names(sort(table(df_plot$group),
                                                decreasing = TRUE))
       df_plot$group <- factor(df_plot$group, levels = ranked)
     }
   }
-  
-  p <- ggplot(df_plot, aes_string(x = "x", y = "y", fill = "group")) + 
-    geom_point(alpha = 0.3, size= 0.1)  +  
-    theme_classic() + theme(legend.position = "right") + 
+
+  p <- ggplot(df_plot, aes_string(x = "x", y = "y", fill = "group")) +
+    geom_point(alpha = 0.3, size= 0.1)  +
+    theme_classic() + theme(legend.position = "right") +
     geom_point(col = "grey40", size = 2, shape = 21) +
-    theme(axis.ticks.x = element_blank(), axis.ticks.y = element_blank(), 
-          axis.text = element_blank())   + 
-    xlab(paste0(reduction, "_1")) + ylab(paste0(reduction, "_2")) + 
+    theme(axis.ticks.x = element_blank(), axis.ticks.y = element_blank(),
+          axis.text = element_blank())   +
+    xlab(paste0(reduction, "_1")) + ylab(paste0(reduction, "_2")) +
     labs(fill = colour.by)
   if(!is.null(title)) p <- p + labs(title = title)
   if(mode(seu@meta.data[,idx]) == "numeric" & !is.factor(seu@meta.data[,idx])){
-    p <- p + scale_fill_viridis(option = viridis_option) 
+    p <- p + scale_fill_viridis(option = viridis_option)
   } else {
     p <- p + scale_fill_manual(values = colvec)
   }

@@ -2,21 +2,20 @@
 % Please edit documentation in R/plotDistMat.R
 \name{plotDistMat}
 \alias{plotDistMat}
-\title{Plot Similarity Matrix}
+\title{Plot Similarity Matrix with pheatmap}
 \usage{
 plotDistMat(dist.list, use = "coef")
 }
 \arguments{
-\item{dist.list}{List of list of similarity matrix. Output of 
-function `getDistMat()`. Required.}
+\item{dist.list}{Output of function `getDistMat()`. Required.}
 
-\item{use}{Choose from "coef" and "p". (Default: coef)}
+\item{use}{Default: "coef". No other option currently that can be used.}
 }
 \value{
-a pheatmap showing the similarity matrix
+A pheatmap showing the similarity matrix
 }
 \description{
-description
+Plot Similarity Matrix with pheatmap
 }
 \seealso{
 \code{\link{getDistMat}}
