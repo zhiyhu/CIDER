@@ -47,7 +47,7 @@
 
 
 <meta property="og:title" content="Initial clustering for evaluating integration — hdbscan.seurat" />
-<meta property="og:description" content="This function applies HDBSCAN, a density-based 
+<meta property="og:description" content="This function applies HDBSCAN, a density-based
 clustering method, on the corrected dimension reduction." />
 <meta property="og:image" content="http://zhiyhu.github.io/CIDER/reference/figures/card.png" />
 
@@ -114,6 +114,15 @@ clustering method, on the corrected dimension reduction." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/asCIDER.html">Getting Start with Assisted CIDER (asCIDER)</a>
+    </li>
+    <li>
+      <a href="../articles/dnCIDER.html">Detailed walk-through of de novo CIDER (dnCIDER) on pancreas data</a>
+    </li>
+    <li>
+      <a href="../articles/dnCIDER_highlevel.html">Getting Start with De Novo CIDER (dnCIDER)</a>
+    </li>
+    <li>
       <a href="../articles/evaluation.html">Evaluating integration results by CIDER</a>
     </li>
   </ul>
@@ -148,7 +157,7 @@ clustering method, on the corrected dimension reduction." />
     </div>
 
     <div class="ref-description">
-    <p>This function applies HDBSCAN, a density-based 
+    <p>This function applies HDBSCAN, a density-based
 clustering method, on the corrected dimension reduction.</p>
     </div>
 
@@ -164,28 +173,28 @@ PCA.</p></td>
     </tr>
     <tr>
       <th>reduction</th>
-      <td><p>Character. Name of the dimension reduction after 
+      <td><p>Character. Name of the dimension reduction after
 integration or batch correction. (Default: PCA)</p></td>
     </tr>
     <tr>
       <th>dims</th>
-      <td><p>Numeric vector. Dimensions used for initial clustering. 
+      <td><p>Numeric vector. Dimensions used for initial clustering.
 (Default: 1:15)</p></td>
     </tr>
     <tr>
       <th>minPts</th>
-      <td><p>Interger. Minimum size of clusters. Will be passed 
+      <td><p>Interger. Minimum size of clusters. Will be passed
 to the `hdbscan` function. (Default: 25)</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A Seurat object having two additional columns in its 
+    <p>A Seurat object having two additional columns in its
 meta.data: dbscan_cluster and initial_cluster.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p>Usage of this function should be followed by 
+    <div class='dont-index'><p>Usage of this function should be followed by
 <code><a href='getIDEr.html'>getIDEr</a></code> and <code><a href='estimateProb.html'>estimateProb</a></code>.</p></div>
 
   </div>

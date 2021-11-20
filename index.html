@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Meta-clustering and Similarity Metric calculation based on Inter-group Differential ExpRession • CIDER</title>
+<title>Meta-Clustering for Single-Cell Data Integration and Evaluation • CIDER</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="apple-touch-icon.png">
@@ -17,8 +17,12 @@
 <script src="bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
-<script src="pkgdown.js"></script><meta property="og:title" content="Meta-clustering and Similarity Metric calculation based on Inter-group Differential ExpRession">
-<meta property="og:description" content="Here we present CIDER, a meta-clustering workflow based on inter-group similarity measures. CIDER can also be used to assess the biological correctness of integration in real datasets, while it does not require the existence of prior cellular annotations. The core of CIDER is the IDER metric, which can be used to compute the similarity between two groups of cells across datasets. IDER first identifies the differentially expressed signature (DES) for each group of cells against all other cells with the unwanted variables regressed out. Next, a similarity measure is computed by using the consistency of DESs between two groups across datasets.">
+<script src="pkgdown.js"></script><meta property="og:title" content="Meta-Clustering for Single-Cell Data Integration and Evaluation">
+<meta property="og:description" content="A workflow of (a) meta-clustering based on 
+    inter-group similarity measures and (b) a ground-truth-free test metric to 
+    assess the biological correctness of integration in real datasets. See Hu Z,
+    Ahmed A, Yau C (2021) &lt;doi:10.1101/2021.03.29.437525&gt; for
+    more details.">
 <meta property="og:image" content="http://zhiyhu.github.io/CIDER/reference/figures/card.png">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -67,6 +71,15 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
+      <a href="articles/asCIDER.html">Getting Start with Assisted CIDER (asCIDER)</a>
+    </li>
+    <li>
+      <a href="articles/dnCIDER.html">Detailed walk-through of de novo CIDER (dnCIDER) on pancreas data</a>
+    </li>
+    <li>
+      <a href="articles/dnCIDER_highlevel.html">Getting Start with De Novo CIDER (dnCIDER)</a>
+    </li>
+    <li>
       <a href="articles/evaluation.html">Evaluating integration results by CIDER</a>
     </li>
   </ul>
@@ -94,73 +107,19 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="cider" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#cider" class="anchor"></a>CIDER</h1></div>
-<!-- badges: start -->
-<!-- badges: end -->
-<p>Clustering Single-cell RNA-Seq (scRNA-Seq) data from multiple samples or conditions are often challenged by confounding factors, such as batch effects and biologically relevant variability. Existing batch effect removal methods typically require strong assumptions on the composition of cell populations being near identical across samples. Here we present <strong>CIDER</strong>, a <strong>meta-clustering workflow</strong> based on inter-group similarity measures. The prototype of this method is firstly applied in <a href="https://www.sciencedirect.com/science/article/pii/S1535610820300428">Hu et al., Cancer Cell 2020</a>.</p>
-<p>CIDER can:</p>
-<ol>
-<li>address the <strong>clustering</strong> task for confounded scRNA-Seq data, or</li>
-<li>assess the biological correctness of integration as <strong>a test metric</strong>, while it does <strong>not</strong> require the existence of prior cellular annotations.</li>
-</ol>
-<p>For more informtion please see our <a href="https://doi.org/10.1101/2021.03.29.437525">preprint</a>.</p>
-<div id="installation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h2>
-<p>You can install CIDER from <a href="https://github.com/zhiyhu/CIDER/">github</a> with:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># install.packages("devtools")</span>
-<span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">'zhiyhu/CIDER'</span><span class="op">)</span></code></pre></div>
-</div>
-<div id="cider-as-an-evaluation-metric---quick-start" class="section level2">
-<h2 class="hasAnchor">
-<a href="#cider-as-an-evaluation-metric---quick-start" class="anchor"></a>CIDER as an evaluation metric - Quick start</h2>
-<p>If you have scRNA-Seq data corrected by an integration algorithm (e.g. Seurat-CCA, Harmony, Scanrama…). You can use CIDER to evaluate if the biological populations are correctly aligned.</p>
-<p>Before running CIDER evaluation functions, make sure that you have a Seurat object (e.g. <code>seu.integrated</code>) with corrected PCs in <code>seu.integrated@reductions$pca@cell.embeddings</code>. Seurat-CCA automatically put the corrected PCs there. If other methods are used, the corrected PCs can be added using <code>seu.integrated@reductions$pca@cell.embeddings &lt;- corrected.PCs</code>.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/zhiyhu/CIDER">CIDER</a></span><span class="op">)</span>
-<span class="va">seu.integrated</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/hdbscan.seurat.html">hdbscan.seurat</a></span><span class="op">(</span><span class="va">seu.integrated</span><span class="op">)</span>
-<span class="va">ider</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/getIDEr.html">getIDEr</a></span><span class="op">(</span><span class="va">seu.integrated</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="va">seu.integrated</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/estimateProb.html">estimateProb</a></span><span class="op">(</span><span class="va">seu.integrated</span>, <span class="va">ider</span><span class="op">)</span></code></pre></div>
-<p>The evaluation scores (IDER-based similarity and empirical p values) can be visualised by the <code>scatterPlot</code> function. A <a href="https://zhiyhu.github.io/CIDER/articles/evaluation.html">detailed tutorial of evaluation</a> is available.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/scatterPlot.html">scatterPlot</a></span><span class="op">(</span><span class="va">seu.integrated</span>, <span class="st">"tsne"</span>, colour.by <span class="op">=</span> <span class="st">"similarity"</span><span class="op">)</span>
-<span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/scatterPlot.html">scatterPlot</a></span><span class="op">(</span><span class="va">seu.integrated</span>, <span class="st">"tsne"</span>, colour.by <span class="op">=</span> <span class="st">"pvalue"</span><span class="op">)</span> 
-<span class="fu">plot_grid</span><span class="op">(</span><span class="va">p1</span>,<span class="va">p2</span>, ncol <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></code></pre></div>
-<p><img src="reference/figures/evaluation_scatterplot.png"></p>
-</div>
-<div id="use-cider-for-clustering-tasks" class="section level2">
-<h2 class="hasAnchor">
-<a href="#use-cider-for-clustering-tasks" class="anchor"></a>Use CIDER for clustering tasks</h2>
-<!--- ![](man/figures/clustering_diagram.png)--->
-<div id="quick-start---ascider" class="section level3">
-<h3 class="hasAnchor">
-<a href="#quick-start---ascider" class="anchor"></a>Quick start - asCIDER</h3>
-<p>Here <code>seu</code> is a Seurat object with initial clustering annotation stored in <code>initial_cluster</code> of metadata and batch information in <code>Batch</code>. The asCIDER example here contains two steps: computing IDER-based similarity matrix (<code>getIDER</code>) and performing the final clustering (<code>finalClustering</code>).</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">ider</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/getIDEr.html">getIDEr</a></span><span class="op">(</span><span class="va">seu</span>, 
-                group.by.var <span class="op">=</span> <span class="st">"initial_cluster"</span>,
-                batch.by.var <span class="op">=</span> <span class="st">"Batch"</span><span class="op">)</span>
-<span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/finalClustering.html">finalClustering</a></span><span class="op">(</span><span class="va">seu</span>, <span class="va">ider</span>, cutree.h <span class="op">=</span> <span class="fl">0.45</span><span class="op">)</span></code></pre></div>
-<p>A detailed tutorial of asCIDER is <a href="https://zhiyhu.github.io/CIDER/articles/asCIDER.html">here</a>. If your data do not have prior batch-specific clusters, the dnCDIER tutorials (<a href="https://zhiyhu.github.io/CIDER/articles/dnCIDER_highlevel.html">high-level</a> and <a href="https://zhiyhu.github.io/CIDER/articles/dnCIDER.html">detailed walk-through</a>) can be referred to.</p>
-<!--- You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this. You could also use GitHub Actions to re-render `README.Rmd` every time you push. An example workflow can be found here: <https://github.com/r-lib/actions/tree/master/examples>.--->
-</div>
-</div>
-<div id="citation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#citation" class="anchor"></a>Citation</h2>
-<p>Z. Hu, A. A. Ahmed, C. Yau. An interpretable meta-clustering framework for single-cell RNA-Seq data integration and evaluation. <em>bioRxiv</em> 2021.03.29.437525; <a href="https://doi.org/10.1101/2021.03.29.437525">doi: https://doi.org/10.1101/2021.03.29.437525</a></p>
-<p>Z. Hu, M. Artibani, A. Alsaadi, N. Wietek, M. Morotti, T. Shi, Z. Zhong, L. Santana Gonzalez, S. El-Sahhar, M. KaramiNejadRanjbar, G. Mallett, Y. Feng, K. Masuda, Y. Zheng, K. Chong, S. Damato, S. Dhar, L. Campo, R. Garruto Campanile, V. Rai, D. Maldonado-Perez, S. Jones, V. Cerundolo, T. Sauka-Spengler, C. Yau<em>, A. A. Ahmed</em>. The repertoire of serous ovarian cancer non-genetic heterogeneity revealed by single-cell sequencing of normal fallopian tube epithelial cells. Cancer Cell 37 (2), p226-242.E7 (2020). <a href="https://www.sciencedirect.com/science/article/pii/S1535610820300428">doi: https://doi.org/10.1101/2021.03.29.437525</a></p>
-</div>
-</div>
+A workflow of (a) meta-clustering based on 
+    inter-group similarity measures and (b) a ground-truth-free test metric to 
+    assess the biological correctness of integration in real datasets. See Hu Z,
+    Ahmed A, Yau C (2021) &lt;<a href="https://doi.org/10.1101/2021.03.29.437525">doi:10.1101/2021.03.29.437525</a>&gt; for
+    more details.
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
 <h2>Links</h2>
 <ul class="list-unstyled">
+<li>Download from CRAN at <br><a href="https://cloud.r-project.org/package=CIDER">https://​cloud.r-project.org/​package=CIDER</a>
+</li>
 <li>Browse source code at <br><a href="https://github.com/zhiyhu/CIDER/">https://​github.com/​zhiyhu/​CIDER/​</a>
 </li>
 <li>Report a bug at <br><a href="https://github.com/zhiyhu/CIDER/issues">https://​github.com/​zhiyhu/​CIDER/​issues</a>

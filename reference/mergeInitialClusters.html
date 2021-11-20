@@ -113,6 +113,15 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/asCIDER.html">Getting Start with Assisted CIDER (asCIDER)</a>
+    </li>
+    <li>
+      <a href="../articles/dnCIDER.html">Detailed walk-through of de novo CIDER (dnCIDER) on pancreas data</a>
+    </li>
+    <li>
+      <a href="../articles/dnCIDER_highlevel.html">Getting Start with De Novo CIDER (dnCIDER)</a>
+    </li>
+    <li>
       <a href="../articles/evaluation.html">Evaluating integration results by CIDER</a>
     </li>
   </ul>
@@ -166,41 +175,50 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>seu_list</th>
-      <td><p>seu_list</p></td>
+      <td><p>A list containing Seurat objects. Required.</p></td>
     </tr>
     <tr>
       <th>dist_list</th>
-      <td><p>dist_list</p></td>
+      <td><p>A list containing similarity matrices. The output of
+`getDistMat ()`</p></td>
     </tr>
     <tr>
       <th>use</th>
-      <td><p>use</p></td>
+      <td><p>Default: "coef". No other option available currently.</p></td>
     </tr>
     <tr>
       <th>method</th>
-      <td><p>method</p></td>
+      <td><p>method = "hc"</p></td>
     </tr>
     <tr>
       <th>hc.method</th>
-      <td><p>hc.method</p></td>
+      <td><p>Passed to the `method` parameter of `hclust()`. Default:
+"average"</p></td>
     </tr>
     <tr>
       <th>cutree.by</th>
-      <td><p>cutree.by</p></td>
+      <td><p>Cut trees by height ("h", default) or number of
+clusters ("k")</p></td>
     </tr>
     <tr>
       <th>cutree.h</th>
-      <td><p>cutree.h</p></td>
+      <td><p>Height used to cut the tree. Default: 0.6.</p></td>
     </tr>
     <tr>
       <th>cutree.k</th>
-      <td><p>cutree.k</p></td>
+      <td><p>Number of clusters used to cut the tree. Default: 3.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a list of seurat objects</p>
+    <p>a list of Seurat objects containing the updated initial clustering
+information in `seu_list[[seu_itor]]$inicluster`. The original initial
+cluster information is stored in `seu_list[[seu_itor]]$inicluster_tmp`.</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><code><a href='https://rdrr.io/r/stats/hclust.html'>hclust</a></code>  <code><a href='https://rdrr.io/r/stats/cutree.html'>cutree</a></code>
+<code><a href='gatherInitialClusters.html'>gatherInitialClusters</a></code> <code><a href='initialClustering.html'>initialClustering</a></code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

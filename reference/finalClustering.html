@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Final clustering — finalClustering • CIDER</title>
+<title>Final clustering step for meta-clustering — finalClustering • CIDER</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,8 +46,8 @@
 
 
 
-<meta property="og:title" content="Final clustering — finalClustering" />
-<meta property="og:description" content="Merge initial clusters into final clusters based on the 
+<meta property="og:title" content="Final clustering step for meta-clustering — finalClustering" />
+<meta property="og:description" content="Merge initial clusters into final clusters based on the
 matrix of IDEr." />
 <meta property="og:image" content="http://zhiyhu.github.io/CIDER/reference/figures/card.png" />
 
@@ -114,6 +114,15 @@ matrix of IDEr." />
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/asCIDER.html">Getting Start with Assisted CIDER (asCIDER)</a>
+    </li>
+    <li>
+      <a href="../articles/dnCIDER.html">Detailed walk-through of de novo CIDER (dnCIDER) on pancreas data</a>
+    </li>
+    <li>
+      <a href="../articles/dnCIDER_highlevel.html">Getting Start with De Novo CIDER (dnCIDER)</a>
+    </li>
+    <li>
       <a href="../articles/evaluation.html">Evaluating integration results by CIDER</a>
     </li>
   </ul>
@@ -142,13 +151,13 @@ matrix of IDEr." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Final clustering</h1>
+    <h1>Final clustering step for meta-clustering</h1>
     <small class="dont-index">Source: <a href='https://github.com/zhiyhu/CIDER/blob/master/R/finalClustering.R'><code>R/finalClustering.R</code></a></small>
     <div class="hidden name"><code>finalClustering.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Merge initial clusters into final clusters based on the 
+    <p>Merge initial clusters into final clusters based on the
 matrix of IDEr.</p>
     </div>
 
@@ -174,34 +183,49 @@ matrix of IDEr.</p>
     </tr>
     <tr>
       <th>cutree.by</th>
-      <td><p>Character. Cut the tree by which parameter, height ("h") or 
+      <td><p>Character. Cut the tree by which parameter, height ("h") or
 number of clusters ("k"). (Default: h)</p></td>
     </tr>
     <tr>
       <th>cutree.h</th>
-      <td><p>Numeric between 0 and 1. The height used to cut the tree. 
+      <td><p>Numeric between 0 and 1. The height used to cut the tree.
 Ignored if `cutree.by = 'k`. (Default: 0.45)</p></td>
     </tr>
     <tr>
       <th>cutree.k</th>
-      <td><p>Numeric/integer. Used to cut the tree. Ignored if 
+      <td><p>Numeric/integer. Used to cut the tree. Ignored if
 `cutree.by = 'h`. (Default: 3)</p></td>
     </tr>
     <tr>
       <th>hc.method</th>
-      <td><p>Character. Used to choose the hierarchical 
+      <td><p>Character. Used to choose the hierarchical
 clustering method.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>Seurat S4 object with final clustering results in `CIDER_clusters` 
+    <p>Seurat S4 object with final clustering results in `CIDER_clusters`
 of meta.data.</p>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='getIDEr.html'>getIDEr</a></code></p></div>
+    <div class='dont-index'><p><code><a href='getIDEr.html'>getIDEr</a></code>.</p></div>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><span class='r-in'><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://github.com/zhiyhu/CIDER'>CIDER</a></span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/data.html'>data</a></span><span class='op'>(</span><span class='st'>"pancreas"</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>ider</span> <span class='op'>&lt;-</span> <span class='fu'><a href='getIDEr.html'>getIDEr</a></span><span class='op'>(</span><span class='va'>pancreas</span>, downsampling.size <span class='op'>=</span> <span class='fl'>30</span><span class='op'>)</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Generating distance matrix...</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>   |                                                                              |                                                                      |   0%  |                                                                              |===                                                                   |   4%  |                                                                              |======                                                                |   8%  |                                                                              |========                                                              |  12%  |                                                                              |===========                                                           |  16%  |                                                                              |==============                                                        |  20%  |                                                                              |=================                                                     |  24%  |                                                                              |====================                                                  |  28%  |                                                                              |======================                                                |  32%  |                                                                              |=========================                                             |  36%  |                                                                              |============================                                          |  40%  |                                                                              |===============================                                       |  44%  |                                                                              |==================================                                    |  48%  |                                                                              |====================================                                  |  52%  |                                                                              |=======================================                               |  56%  |                                                                              |==========================================                            |  60%  |                                                                              |=============================================                         |  64%  |                                                                              |================================================                      |  68%  |                                                                              |==================================================                    |  72%  |                                                                              |=====================================================                 |  76%  |                                                                              |========================================================              |  80%  |                                                                              |===========================================================           |  84%  |                                                                              |==============================================================        |  88%  |                                                                              |================================================================      |  92%  |                                                                              |===================================================================   |  96%  |                                                                              |======================================================================| 100%</span>
+<span class='r-in'><span class='va'>seu</span> <span class='op'>&lt;-</span> <span class='fu'>finalClustering</span><span class='op'>(</span><span class='va'>pancreas</span>, <span class='va'>ider</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>seu</span><span class='op'>$</span><span class='va'>CIDER_cluster</span><span class='op'>)</span></span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> mouse1_lib2.final_cell_0006 mouse1_lib2.final_cell_0276 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                         "1"                         "1" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> mouse2_lib2.final_cell_0183 mouse2_lib3.final_cell_0217 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                         "1"                         "1" </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> mouse1_lib2.final_cell_0230 mouse2_lib3.final_cell_0053 </span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span>                         "1"                         "1" </span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

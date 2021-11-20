@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Calculate Distance Matrix — getDistMat • CIDER</title>
+<title>Calculate the Similarity Matrix — getDistMat • CIDER</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,8 +46,10 @@
 
 
 
-<meta property="og:title" content="Calculate Distance Matrix — getDistMat" />
-<meta property="og:description" content="discription" />
+<meta property="og:title" content="Calculate the Similarity Matrix — getDistMat" />
+<meta property="og:description" content="Compute the IDER-based similarity matrix for a list of Seurat
+objects. This function does not regress out batch effects and is designed to
+be used at the initial clustering step." />
 <meta property="og:image" content="http://zhiyhu.github.io/CIDER/reference/figures/card.png" />
 
 
@@ -113,6 +115,15 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/asCIDER.html">Getting Start with Assisted CIDER (asCIDER)</a>
+    </li>
+    <li>
+      <a href="../articles/dnCIDER.html">Detailed walk-through of de novo CIDER (dnCIDER) on pancreas data</a>
+    </li>
+    <li>
+      <a href="../articles/dnCIDER_highlevel.html">Getting Start with De Novo CIDER (dnCIDER)</a>
+    </li>
+    <li>
       <a href="../articles/evaluation.html">Evaluating integration results by CIDER</a>
     </li>
   </ul>
@@ -141,13 +152,15 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Calculate Distance Matrix</h1>
+    <h1>Calculate the Similarity Matrix</h1>
     <small class="dont-index">Source: <a href='https://github.com/zhiyhu/CIDER/blob/master/R/getDistMat.R'><code>R/getDistMat.R</code></a></small>
     <div class="hidden name"><code>getDistMat.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>discription</p>
+    <p>Compute the IDER-based similarity matrix for a list of Seurat
+objects. This function does not regress out batch effects and is designed to
+be used at the initial clustering step.</p>
     </div>
 
     <pre class="usage"><span class='fu'>getDistMat</span><span class='op'>(</span>
@@ -166,42 +179,48 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>seu_list</th>
-      <td><p>seu list</p></td>
+      <td><p>A list containing Seurat objects. Required.</p></td>
     </tr>
     <tr>
       <th>verbose</th>
-      <td><p>print the message and progress bar (default: TRUE)</p></td>
+      <td><p>Print the message and progress bar (default: TRUE)</p></td>
     </tr>
     <tr>
       <th>tmp.initial.clusters</th>
-      <td><p>tmp.initial.clusters</p></td>
+      <td><p>One of the colnames from `Seurat@meta.data`. Used
+as the group. Default: "seurat_clusters"</p></td>
     </tr>
     <tr>
       <th>method</th>
-      <td><p>voom or trend</p></td>
+      <td><p>Methods for DE analysis. Options: "voom" or "trend" (default)</p></td>
     </tr>
     <tr>
       <th>additional.variate</th>
-      <td><p>additional variate to include into the regression 
-model</p></td>
+      <td><p>additional variate to include into the linear
+model to regress out</p></td>
     </tr>
     <tr>
       <th>downsampling.size</th>
-      <td><p>downsampling.size</p></td>
+      <td><p>Number of cells used per group. Default: 35</p></td>
     </tr>
     <tr>
       <th>downsampling.include</th>
-      <td><p>downsampling.include</p></td>
+      <td><p>Whether to include the group of size smaller than
+`downsampling.size`. Default: TRUE</p></td>
     </tr>
     <tr>
       <th>downsampling.replace</th>
-      <td><p>downsampling.replace</p></td>
+      <td><p>Whether to use `replace` in sampling for group
+of size smaller than `downsampling.size` if they are kept. Default: TRUE</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a distance matrix</p>
+    <p>A list of similarity matrices</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><code><a href='calculateDistMatOneModel.html'>calculateDistMatOneModel</a></code></p></div>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
     <p>Zhiyuan Hu</p>

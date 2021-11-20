@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Plot Network Graph — plotNetwork • CIDER</title>
+<title>Gather initial cluster names — gatherInitialClusters • CIDER</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,10 +46,8 @@
 
 
 
-<meta property="og:title" content="Plot Network Graph — plotNetwork" />
-<meta property="og:description" content="Network visualisation for an IDER-based similarity matrix.
-The vertexes are initial clusters, and
-the edge width denotes the similarity between two initial clusters." />
+<meta property="og:title" content="Gather initial cluster names — gatherInitialClusters" />
+<meta property="og:description" content="Gather initial cluster names" />
 <meta property="og:image" content="http://zhiyhu.github.io/CIDER/reference/figures/card.png" />
 
 
@@ -152,67 +150,44 @@ the edge width denotes the similarity between two initial clusters." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Plot Network Graph</h1>
-    <small class="dont-index">Source: <a href='https://github.com/zhiyhu/CIDER/blob/master/R/plotNetwork.R'><code>R/plotNetwork.R</code></a></small>
-    <div class="hidden name"><code>plotNetwork.Rd</code></div>
+    <h1>Gather initial cluster names</h1>
+    <small class="dont-index">Source: <a href='https://github.com/zhiyhu/CIDER/blob/master/R/mergeInitialClusters.R'><code>R/mergeInitialClusters.R</code></a></small>
+    <div class="hidden name"><code>Merge.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Network visualisation for an IDER-based similarity matrix.
-The vertexes are initial clusters, and
-the edge width denotes the similarity between two initial clusters.</p>
+    <p>Gather initial cluster names</p>
     </div>
 
-    <pre class="usage"><span class='fu'>plotNetwork</span><span class='op'>(</span>
-  <span class='va'>seu</span>,
-  <span class='va'>ider</span>,
-  colour.by <span class='op'>=</span> <span class='cn'>NULL</span>,
-  weight.factor <span class='op'>=</span> <span class='fl'>6.5</span>,
-  col.vector <span class='op'>=</span> <span class='cn'>NULL</span>,
-  vertex.size <span class='op'>=</span> <span class='fl'>1</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>gatherInitialClusters</span><span class='op'>(</span><span class='va'>seu_list</span>, <span class='va'>seu</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
+      <th>seu_list</th>
+      <td><p>A list containing Seurat objects. Required.</p></td>
+    </tr>
+    <tr>
       <th>seu</th>
-      <td><p>Seurat S4 object after the step of `getIDER`, containing
-`initial_cluster` and `Batch` in its meta.data. Required.</p></td>
-    </tr>
-    <tr>
-      <th>ider</th>
-      <td><p>A list. Output of `getIDER`. Required.</p></td>
-    </tr>
-    <tr>
-      <th>colour.by</th>
-      <td><p>Character. It should be one of the colnames of Seurat
-object meta.data.It is used to colour the vertex of the network graph.
-(Default: NULL)</p></td>
-    </tr>
-    <tr>
-      <th>weight.factor</th>
-      <td><p>Numerical. Adjust the thickness of the edges.
-(Default: 6.5)</p></td>
-    </tr>
-    <tr>
-      <th>col.vector</th>
-      <td><p>A vector of Hex colour codes. If no value is given
-(default), a vector
-of 74 colours will be used.</p></td>
-    </tr>
-    <tr>
-      <th>vertex.size</th>
-      <td><p>Numerical. Adjsut the size of vertexes. (Default: 1)</p></td>
+      <td><p>A Seurat object</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>An igraph object</p>
+    <p>A Seurat object containing initial clustering  results in
+`seu$initial_cluster`.</p>
+    <h2 class="hasAnchor" id="functions"><a class="anchor" href="#functions"></a>Functions</h2>
+
+    
+<ul>
+<li><p><code>gatherInitialClusters</code>: initial clustering results from a Seurat object list to one
+Seurat object. Follows the function `mergeInitialClusters`.</p></li>
+</ul>
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='getIDEr.html'>getIDEr</a></code> <code><a href='https://rdrr.io/pkg/igraph/man/graph_from_data_frame.html'>graph_from_data_frame</a></code></p></div>
+    <div class='dont-index'><p><code><a href='mergeInitialClusters.html'>mergeInitialClusters</a></code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

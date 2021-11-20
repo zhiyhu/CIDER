@@ -47,7 +47,7 @@
 
 
 <meta property="og:title" content="Calculate distance matrix with in one model — calculateDistMatOneModel" />
-<meta property="og:description" content="description" />
+<meta property="og:description" content="This function is called by `getDistMat`." />
 <meta property="og:image" content="http://zhiyhu.github.io/CIDER/reference/figures/card.png" />
 
 
@@ -113,6 +113,15 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/asCIDER.html">Getting Start with Assisted CIDER (asCIDER)</a>
+    </li>
+    <li>
+      <a href="../articles/dnCIDER.html">Detailed walk-through of de novo CIDER (dnCIDER) on pancreas data</a>
+    </li>
+    <li>
+      <a href="../articles/dnCIDER_highlevel.html">Getting Start with De Novo CIDER (dnCIDER)</a>
+    </li>
+    <li>
       <a href="../articles/evaluation.html">Evaluating integration results by CIDER</a>
     </li>
   </ul>
@@ -147,7 +156,7 @@
     </div>
 
     <div class="ref-description">
-    <p>description</p>
+    <p>This function is called by `getDistMat`.</p>
     </div>
 
     <pre class="usage"><span class='fu'>calculateDistMatOneModel</span><span class='op'>(</span>
@@ -163,29 +172,35 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>matrix</th>
-      <td><p>matrix</p></td>
+      <td><p>The count matrix. Rows are genes/features and columns are
+samples/cells.</p></td>
     </tr>
     <tr>
       <th>metadata</th>
-      <td><p>metadata</p></td>
+      <td><p>Data frame. Its rows should correspond to
+columns of the `matrix` input.</p></td>
     </tr>
     <tr>
       <th>verbose</th>
-      <td><p>print the message and progress bar (default: TRUE)</p></td>
+      <td><p>Print the message and progress bar (default: TRUE)</p></td>
     </tr>
     <tr>
       <th>method</th>
-      <td><p>voom or trend</p></td>
+      <td><p>Methods for DE analysis. Options: "voom" or "trend" (default)</p></td>
     </tr>
     <tr>
       <th>additional.variate</th>
-      <td><p>additional.variate</p></td>
+      <td><p>additional variate to include into the linear
+model to regress out</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>a list</p>
+    <p>A similarity matrix</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p>This function is called by <code><a href='getDistMat.html'>getDistMat</a></code></p></div>
     <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
     <p>Zhiyuan Hu</p>

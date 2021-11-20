@@ -47,7 +47,8 @@
 
 
 <meta property="og:title" content="Downsampling cells — downsampling" />
-<meta property="og:description" content="Downsampling cells from each group" />
+<meta property="og:description" content="Downsampling cells from each group for IDER-based similarity
+calculation." />
 <meta property="og:image" content="http://zhiyhu.github.io/CIDER/reference/figures/card.png" />
 
 
@@ -113,6 +114,15 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
+      <a href="../articles/asCIDER.html">Getting Start with Assisted CIDER (asCIDER)</a>
+    </li>
+    <li>
+      <a href="../articles/dnCIDER.html">Detailed walk-through of de novo CIDER (dnCIDER) on pancreas data</a>
+    </li>
+    <li>
+      <a href="../articles/dnCIDER_highlevel.html">Getting Start with De Novo CIDER (dnCIDER)</a>
+    </li>
+    <li>
       <a href="../articles/evaluation.html">Evaluating integration results by CIDER</a>
     </li>
   </ul>
@@ -147,7 +157,8 @@
     </div>
 
     <div class="ref-description">
-    <p>Downsampling cells from each group</p>
+    <p>Downsampling cells from each group for IDER-based similarity
+calculation.</p>
     </div>
 
     <pre class="usage"><span class='fu'>downsampling</span><span class='op'>(</span>
@@ -164,7 +175,7 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>metadata</th>
-      <td><p>Data frame. It includes at least 2 columns, label and batch. 
+      <td><p>Data frame. It includes at least 2 columns, label and batch.
 Each row corresponds to one cell. Required.</p></td>
     </tr>
     <tr>
@@ -177,24 +188,24 @@ Each row corresponds to one cell. Required.</p></td>
     </tr>
     <tr>
       <th>include</th>
-      <td><p>Boolean. Using `include = TRUE` to include the group smaller 
+      <td><p>Boolean. Using `include = TRUE` to include the group smaller
 than required size. (Default: FALSE)</p></td>
     </tr>
     <tr>
       <th>replace</th>
-      <td><p>Boolean. Using `replace = TRUE` if the group is smaller than 
+      <td><p>Boolean. Using `replace = TRUE` if the group is smaller than
 required size and some cells will be repeatedly used. (Default: FALSE)</p></td>
     </tr>
     <tr>
       <th>lower.cutoff</th>
-      <td><p>Numeric. The minimum size of groups to keep. 
+      <td><p>Numeric. The minimum size of groups to keep.
 (Default: 3)</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A numeric list of which cells will be kept for downstream 
+    <p>A numeric list of which cells will be kept for downstream
 computation.</p>
 
   </div>
