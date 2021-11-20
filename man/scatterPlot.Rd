@@ -40,14 +40,3 @@ a scatter plot
 \description{
 Scatterplot of a Seurat object based on dimension reduction.
 }
-\examples{
-\dontrun{
-library(Seurat)
-seu <- NormalizeData(seu, verbose = FALSE) # input Seurat object
-seu <- FindVariableFeatures(seu, selection.method = "vst", nfeatures = 2000,
- verbose = FALSE)
-seu <- ScaleData(seu, verbose = FALSE)
-seu <- RunPCA(seu, npcs = 20, verbose = FALSE)
-scatterPlot(seu, "pca",colour.by = "Batch", title = "PCA")
-}
-}

@@ -21,7 +21,12 @@
 #'
 #' @export
 #' @importFrom stats hclust cutree as.dist
-#'
+#' @examples
+#' library(CIDER)
+#' data("pancreas")
+#' ider <- getIDEr(pancreas, downsampling.size = 30)
+#' seu <- finalClustering(pancreas, ider)
+#' head(seu$CIDER_cluster)
 finalClustering <- function(seu, dist,
                             cutree.by = "h", cutree.h = 0.45, cutree.k = 3,
                             hc.method = "complete") {

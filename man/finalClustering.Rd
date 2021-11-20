@@ -38,6 +38,13 @@ of meta.data.
 Merge initial clusters into final clusters based on the
 matrix of IDEr.
 }
+\examples{
+library(CIDER)
+data("pancreas")
+ider <- getIDEr(pancreas, downsampling.size = 30)
+seu <- finalClustering(pancreas, ider)
+head(seu$CIDER_cluster)
+}
 \seealso{
 \code{\link{getIDEr}}.
 }

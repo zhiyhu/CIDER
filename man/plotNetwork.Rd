@@ -14,20 +14,20 @@ plotNetwork(
 )
 }
 \arguments{
-\item{seu}{Seurat S4 object after the step of `getIDER`, containing 
+\item{seu}{Seurat S4 object after the step of `getIDER`, containing
 `initial_cluster` and `Batch` in its meta.data. Required.}
 
 \item{ider}{A list. Output of `getIDER`. Required.}
 
-\item{colour.by}{Character. It should be one of the colnames of Seurat 
-object meta.data.It is used to colour the vertex of the network graph. 
+\item{colour.by}{Character. It should be one of the colnames of Seurat
+object meta.data.It is used to colour the vertex of the network graph.
 (Default: NULL)}
 
-\item{weight.factor}{Numerical. Adjust the thickness of the edges. 
+\item{weight.factor}{Numerical. Adjust the thickness of the edges.
 (Default: 6.5)}
 
-\item{col.vector}{A vector of Hex colour codes. If no value is given 
-(default), a vector 
+\item{col.vector}{A vector of Hex colour codes. If no value is given
+(default), a vector
 of 74 colours will be used.}
 
 \item{vertex.size}{Numerical. Adjsut the size of vertexes. (Default: 1)}
@@ -36,14 +36,9 @@ of 74 colours will be used.}
 An igraph object
 }
 \description{
-Network visualisation for an IDER-based similarity matrix. 
+Network visualisation for an IDER-based similarity matrix.
 The vertexes are initial clusters, and
 the edge width denotes the similarity between two initial clusters.
-}
-\examples{
-\dontrun{
-plotNetwork(seu, ider, weight.factor = 5)
-}
 }
 \seealso{
 \code{\link{getIDEr}} \code{\link[igraph]{graph_from_data_frame}}

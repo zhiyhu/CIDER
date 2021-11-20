@@ -1,7 +1,6 @@
 Package: CIDER
 Type: Package
-Title: An Interpretable Meta-clustering Framework for Single-cell 
-    RNA-Seq Data Integration and Evaluation 
+Title: Meta-Clustering for Single-Cell Data Integration and Evaluation
 Version: 0.99.0
 Maintainer: Zhiyuan Hu <zhiyuan.cheryl.hu@gmail.com>
 Authors@R: c(

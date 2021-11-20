@@ -18,17 +18,6 @@
 #' @importFrom Seurat Reductions
 #' @importFrom viridis scale_fill_viridis
 #' @export
-#'
-#' @examples
-#' \dontrun{
-#' library(Seurat)
-#' seu <- NormalizeData(seu, verbose = FALSE) # input Seurat object
-#' seu <- FindVariableFeatures(seu, selection.method = "vst", nfeatures = 2000,
-#'  verbose = FALSE)
-#' seu <- ScaleData(seu, verbose = FALSE)
-#' seu <- RunPCA(seu, npcs = 20, verbose = FALSE)
-#' scatterPlot(seu, "pca",colour.by = "Batch", title = "PCA")
-#' }
 scatterPlot <- function(seu, reduction, colour.by, colvec = NULL,
                         title = NULL, sort.by.numbers = TRUE,
                         viridis_option = "B") {
