@@ -18,6 +18,8 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
+[![DOI](https://zenodo.org/badge/296897483.svg)](https://zenodo.org/badge/latestdoi/296897483)
+
 Clustering Single-cell RNA-Seq (scRNA-Seq) data from multiple samples or conditions are often challenged by confounding factors, such as batch effects and biologically relevant variability. Existing batch effect removal methods typically require strong assumptions on the composition of cell populations being near identical across samples. Here we present **CIDER**, a **meta-clustering workflow** based on inter-group similarity measures. The prototype of this method is firstly applied in [Hu et al., Cancer Cell 2020](https://www.sciencedirect.com/science/article/pii/S1535610820300428).
 
 **For more informtion please see our [preprint](https://doi.org/10.1101/2021.03.29.437525).** The published version and new citation information will be available soon.

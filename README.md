@@ -6,6 +6,8 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
+[![DOI](https://zenodo.org/badge/296897483.svg)](https://zenodo.org/badge/latestdoi/296897483)
+
 Clustering Single-cell RNA-Seq (scRNA-Seq) data from multiple samples or
 conditions are often challenged by confounding factors, such as batch
 effects and biologically relevant variability. Existing batch effect
