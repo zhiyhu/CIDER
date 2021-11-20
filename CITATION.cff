@@ -1,0 +1,14 @@
+cff-version: 0.99.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: Hu
+    given-names: Zhiyuan
+    orcid: https://orcid.org/0000-0000-0000-0000
+  - family-names: Ahmed
+    given-names: Ahmed
+  - family-names: Yau
+    given-names: Christopher Yau
+title: zhiyhu/CIDER: Genome Biology Release
+version: GBIO
+date-released: 2021-11-20
+            
