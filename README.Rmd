@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# CIDER
+# CIDER: Meta-Clustering for Single-Cell Data Integration and Evaluation
 
 <!-- badges: start -->
 <!-- badges: end -->
@@ -26,7 +26,8 @@ Clustering Single-cell RNA-Seq (scRNA-Seq) data from multiple samples or conditi
 CIDER can:
 
 1. address the **clustering** task for confounded scRNA-Seq data, or
-1. assess the biological correctness of integration as **a test metric**, while it does **not** require the existence of prior cellular annotations.
+1. assess the biological correctness of integration as **a test metric**, while it does **not** require the existence of prior cellular annotations, or
+1. compute the similarity among biological populations.
 
 ## Installation
 
