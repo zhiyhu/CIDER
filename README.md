@@ -125,6 +125,6 @@ bugs or seek help. Thank you!
 
 ## Citation
 
-Z. Hu, A. A. Ahmed, C. Yau. ACIDER: an interpretable meta-clustering framework for single-cell RNA-seq data integration and evaluation. *Genome Biology*
+Z. Hu, A. A. Ahmed, C. Yau. CIDER: an interpretable meta-clustering framework for single-cell RNA-seq data integration and evaluation. *Genome Biology*
 22, Article number: 337 (2021); [doi:
 https://doi.org/10.1186/s13059-021-02561-2](https://doi.org/10.1186/s13059-021-02561-2)
