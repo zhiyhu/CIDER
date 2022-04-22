@@ -19,7 +19,7 @@ similarity measures. The prototype of this method is firstly applied in
 2020](https://www.sciencedirect.com/science/article/pii/S1535610820300428).
 
 **For more informtion please see our
-[preprint](https://doi.org/10.1101/2021.03.29.437525).** The published
+[publication](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-021-02561-2) on Genome Biology (2021).** The published
 version and new citation information will be available soon.
 
 CIDER can:
@@ -125,7 +125,6 @@ bugs or seek help. Thank you!
 
 ## Citation
 
-Z. Hu, A. A. Ahmed, C. Yau. An interpretable meta-clustering framework
-for single-cell RNA-Seq data integration and evaluation. *bioRxiv*
-2021.03.29.437525; [doi:
-https://doi.org/10.1101/2021.03.29.437525](https://doi.org/10.1101/2021.03.29.437525)
+Z. Hu, A. A. Ahmed, C. Yau. ACIDER: an interpretable meta-clustering framework for single-cell RNA-seq data integration and evaluation. *Genome Biology*
+22, Article number: 337 (2021); [doi:
+https://doi.org/10.1186/s13059-021-02561-2](https://doi.org/10.1186/s13059-021-02561-2)
