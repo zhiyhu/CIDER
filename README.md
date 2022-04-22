@@ -19,8 +19,8 @@ similarity measures. The prototype of this method is firstly applied in
 2020](https://www.sciencedirect.com/science/article/pii/S1535610820300428).
 
 **For more informtion please see our
-[publication](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-021-02561-2) on Genome Biology (2021).** The published
-version and new citation information will be available soon.
+[publication](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-021-02561-2) on Genome Biology (2021).** 
+
 
 CIDER can:
 
