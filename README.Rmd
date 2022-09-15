@@ -20,6 +20,12 @@ knitr::opts_chunk$set(
 
 Clustering Single-cell RNA-Seq (scRNA-Seq) data from multiple samples or conditions are often challenged by confounding factors, such as batch effects and biologically relevant variability. Existing batch effect removal methods typically require strong assumptions on the composition of cell populations being near identical across samples. Here we present **CIDER**, a **meta-clustering workflow** based on inter-group similarity measures. The prototype of this method is firstly applied in [Hu et al., Cancer Cell 2020](https://www.sciencedirect.com/science/article/pii/S1535610820300428).
 
+<<<<<<< Updated upstream
+=======
+**For more informtion please see our [publication](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-021-02561-2) in Genome Biology (2021).** 
+
+
+>>>>>>> Stashed changes
 CIDER can:
 
 1. address the **clustering** task for confounded scRNA-Seq data, or
@@ -83,7 +89,12 @@ A detailed tutorial of asCIDER is [here](https://zhiyhu.github.io/CIDER/articles
 
 ## Citation
 
+<<<<<<< Updated upstream
 Z. Hu, A. A. Ahmed, C. Yau. An interpretable meta-clustering framework for single-cell RNA-Seq data integration and evaluation. *bioRxiv* 2021.03.29.437525; [doi: https://doi.org/10.1101/2021.03.29.437525](https://doi.org/10.1101/2021.03.29.437525)
+=======
+Z. Hu, A. A. Ahmed, C. Yau. CIDER: an interpretable meta-clustering framework for single-cell RNA-seq data integration and evaluation. *Genome Biology* **22**, Article number: 337 (2021); 
+[doi: https://doi.org/10.1186/s13059-021-02561-2](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-021-02561-2)
+>>>>>>> Stashed changes
 
 Z. Hu, M. Artibani, A. Alsaadi, N. Wietek, M. Morotti, T. Shi, Z. Zhong, L. Santana Gonzalez, S. El-Sahhar, M. KaramiNejadRanjbar, G. Mallett, Y. Feng, K. Masuda, Y. Zheng, K. Chong, S. Damato, S. Dhar, L. Campo, R. Garruto Campanile, V. Rai, D. Maldonado-Perez, S. Jones, V. Cerundolo, T. Sauka-Spengler, C. Yau*, A. A. Ahmed*. The repertoire of serous ovarian cancer non-genetic heterogeneity revealed by single-cell sequencing of normal fallopian tube epithelial cells. Cancer Cell 37 (2), p226-242.E7 (2020). [doi: https://doi.org/10.1101/2021.03.29.437525](https://www.sciencedirect.com/science/article/pii/S1535610820300428)
 
