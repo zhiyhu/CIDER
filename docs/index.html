@@ -95,7 +95,9 @@
 <img src="logo.png" class="logo" alt=""><h1 id="cider-meta-clustering-for-single-cell-data-integration-and-evaluation">CIDER: Meta-Clustering for Single-Cell Data Integration and Evaluation<a class="anchor" aria-label="anchor" href="#cider-meta-clustering-for-single-cell-data-integration-and-evaluation"></a>
 </h1>
 </div>
-<!-- badges: start --><!-- badges: end -->
+<!-- badges: start -->
+<!-- badges: end -->
+
 <p>Clustering Single-cell RNA-Seq (scRNA-Seq) data from multiple samples or conditions are often challenged by confounding factors, such as batch effects and biologically relevant variability. Existing batch effect removal methods typically require strong assumptions on the composition of cell populations being near identical across samples. Here we present <strong>CIDER</strong>, a <strong>meta-clustering workflow</strong> based on inter-group similarity measures. The prototype of this method is firstly applied in <a href="https://www.sciencedirect.com/science/article/pii/S1535610820300428" class="external-link">Hu et al., Cancer Cell 2020</a>.</p>
 <p><strong>For more informtion please see our <a href="https://genomebiology.biomedcentral.com/articles/10.1186/s13059-021-02561-2" class="external-link">publication</a> on Genome Biology (2021).</strong></p>
 <p>CIDER can:</p>
@@ -139,7 +141,8 @@
 <div class="section level2">
 <h2 id="use-cider-for-clustering-tasks">Use CIDER for clustering tasks<a class="anchor" aria-label="anchor" href="#use-cider-for-clustering-tasks"></a>
 </h2>
-<!--- ![](man/figures/clustering_diagram.png)---><div class="section level3">
+<!--- ![](man/figures/clustering_diagram.png)--->
+<div class="section level3">
 <h3 id="quick-start---ascider">Quick start - asCIDER<a class="anchor" aria-label="anchor" href="#quick-start---ascider"></a>
 </h3>
 <p>Here <code>seu</code> is a Seurat object with initial clustering annotation stored in <code>initial_cluster</code> of metadata and batch information in <code>Batch</code>. The asCIDER example here contains two steps: computing IDER-based similarity matrix (<code>getIDER</code>) and performing the final clustering (<code>finalClustering</code>).</p>

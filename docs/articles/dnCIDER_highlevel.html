@@ -99,12 +99,14 @@
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p>This vignette performs dnCIDER on a cross-species pancreas dataset.</p>
+<p>This vignette performs dnCIDER on a cross-species pancreas
+dataset.</p>
 </div>
 <div class="section level2">
 <h2 id="set-up">Set up<a class="anchor" aria-label="anchor" href="#set-up"></a>
 </h2>
-<p>In addition to <strong>CIDER</strong>, we will load the following packages:</p>
+<p>In addition to <strong>CIDER</strong>, we will load the following
+packages:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/zhiyhu/CIDER" class="external-link">CIDER</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://satijalab.org/seurat" class="external-link">Seurat</a></span><span class="op">)</span>
@@ -116,7 +118,8 @@
 <h2 id="load-pancreas-data">Load pancreas data<a class="anchor" aria-label="anchor" href="#load-pancreas-data"></a>
 </h2>
 <p>The example data can be downloaded from <a href="https://figshare.com/s/d5474749ca8c711cc205" class="external-link uri">https://figshare.com/s/d5474749ca8c711cc205</a>.</p>
-<p>Pancreatic cell data<span class="math inline">\(^1\)</span> contain cells from human (8241 cells) and mouse (1886 cells).</p>
+<p>Pancreatic cell data<span class="math inline">\(^1\)</span> contain
+cells from human (8241 cells) and mouse (1886 cells).</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span><span class="st">"../data/pancreas_counts.RData"</span><span class="op">)</span> <span class="co"># count matrix</span>
 <span class="fu"><a href="https://rdrr.io/r/base/load.html" class="external-link">load</a></span><span class="op">(</span><span class="st">"../data/pancreas_meta.RData"</span><span class="op">)</span> <span class="co"># meta data/cell information</span>
@@ -130,32 +133,38 @@
 <h2 id="perform-dncider-high-level">Perform dnCIDER (high-level)<a class="anchor" aria-label="anchor" href="#perform-dncider-high-level"></a>
 </h2>
 <p>DnCIDER contains three steps</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>seu <span class="ot">&lt;-</span> <span class="fu">initialClustering</span>(seu, <span class="at">additional.vars.to.regress =</span> <span class="st">"Sample"</span>, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">15</span>)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="sc">|</span>                                                                            </span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="er">|</span>                                                                      <span class="er">|</span>   <span class="dv">0</span>%</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="sc">|</span>                                                                            </span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="er">|===================================</span>                                   <span class="er">|</span>  <span class="dv">50</span>%</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="sc">|</span>                                                                            </span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="er">|======================================================================|</span> <span class="dv">100</span>%</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>ider <span class="ot">&lt;-</span> <span class="fu">getIDEr</span>(seu, <span class="at">downsampling.size =</span> <span class="dv">35</span>, <span class="at">use.parallel =</span> <span class="cn">FALSE</span>, <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>seu <span class="ot">&lt;-</span> <span class="fu">finalClustering</span>(seu, ider, <span class="at">cutree.h =</span> <span class="fl">0.35</span>) <span class="co"># final clustering</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>seu <span class="ot">&lt;-</span> <span class="fu">initialClustering</span>(seu, <span class="at">additional.vars.to.regress =</span> <span class="st">"Sample"</span>, <span class="at">dims =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">15</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>  <span class="sc">|</span>                                                                            </span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>  <span class="er">|</span>                                                                      <span class="er">|</span>   <span class="dv">0</span>%</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>  <span class="sc">|</span>                                                                            </span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>  <span class="er">|===================================</span>                                   <span class="er">|</span>  <span class="dv">50</span>%</span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>  <span class="sc">|</span>                                                                            </span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>  <span class="er">|======================================================================|</span> <span class="dv">100</span>%</span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a>ider <span class="ot">&lt;-</span> <span class="fu">getIDEr</span>(seu, <span class="at">downsampling.size =</span> <span class="dv">35</span>, <span class="at">use.parallel =</span> <span class="cn">FALSE</span>, <span class="at">verbose =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a>seu <span class="ot">&lt;-</span> <span class="fu">finalClustering</span>(seu, ider, <span class="at">cutree.h =</span> <span class="fl">0.35</span>) <span class="co"># final clustering</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="visualise-clustering-results">Visualise clustering results<a class="anchor" aria-label="anchor" href="#visualise-clustering-results"></a>
 </h2>
-<p>We use the Seurat pipeline to perform normalisation (<code>NormalizeData</code>), preprocessing (<code>FindVariableFeatures</code> and <code>ScaleData</code>) and dimension reduction (<code>RunPCA</code> and <code>RunTSNE</code>).</p>
+<p>We use the Seurat pipeline to perform normalisation
+(<code>NormalizeData</code>), preprocessing
+(<code>FindVariableFeatures</code> and <code>ScaleData</code>) and
+dimension reduction (<code>RunPCA</code> and <code>RunTSNE</code>).</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Seurat/man/NormalizeData.html" class="external-link">NormalizeData</a></span><span class="op">(</span><span class="va">seu</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Seurat/man/FindVariableFeatures.html" class="external-link">FindVariableFeatures</a></span><span class="op">(</span><span class="va">seu</span>, selection.method <span class="op">=</span> <span class="st">"vst"</span>, nfeatures <span class="op">=</span> <span class="fl">2000</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Seurat/man/ScaleData.html" class="external-link">ScaleData</a></span><span class="op">(</span><span class="va">seu</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Seurat/man/RunPCA.html" class="external-link">RunPCA</a></span><span class="op">(</span><span class="va">seu</span>, npcs <span class="op">=</span> <span class="fl">20</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/Seurat/man/RunTSNE.html" class="external-link">RunTSNE</a></span><span class="op">(</span><span class="va">seu</span>, reduction <span class="op">=</span> <span class="st">"pca"</span>, dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/NormalizeData.html" class="external-link">NormalizeData</a></span><span class="op">(</span><span class="va">seu</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/FindVariableFeatures.html" class="external-link">FindVariableFeatures</a></span><span class="op">(</span><span class="va">seu</span>, selection.method <span class="op">=</span> <span class="st">"vst"</span>, nfeatures <span class="op">=</span> <span class="fl">2000</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/ScaleData.html" class="external-link">ScaleData</a></span><span class="op">(</span><span class="va">seu</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/RunPCA.html" class="external-link">RunPCA</a></span><span class="op">(</span><span class="va">seu</span>, npcs <span class="op">=</span> <span class="fl">20</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://satijalab.org/seurat/reference/RunTSNE.html" class="external-link">RunTSNE</a></span><span class="op">(</span><span class="va">seu</span>, reduction <span class="op">=</span> <span class="st">"pca"</span>, dims <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span></code></pre></div>
 <p>We can see</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/scatterPlot.html">scatterPlot</a></span><span class="op">(</span><span class="va">seu</span>, <span class="st">"tsne"</span>, colour.by <span class="op">=</span> <span class="st">"CIDER_cluster"</span>, title <span class="op">=</span> <span class="st">"asCIDER clustering results"</span><span class="op">)</span> </code></pre></div>
 <p><img src="dnCIDER_highlevel_files/figure-html/tsne-plot-CIDER-results-1.png" width="384"></p>
-<p>By comparing the dnCIDER results to the cell annotation from the publication<span class="math inline">\(^1\)</span>, we observe that dnCIDER correctly identify the majority of populations across two species.</p>
+<p>By comparing the dnCIDER results to the cell annotation from the
+publication<span class="math inline">\(^1\)</span>, we observe that
+dnCIDER correctly identify the majority of populations across two
+species.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/scatterPlot.html">scatterPlot</a></span><span class="op">(</span><span class="va">seu</span>, <span class="st">"tsne"</span>, colour.by <span class="op">=</span> <span class="st">"Group"</span>, title <span class="op">=</span> <span class="st">"Ground truth of cell populations"</span><span class="op">)</span> </code></pre></div>
 <p><img src="dnCIDER_highlevel_files/figure-html/tsne-plot-ground-truth-1.png" width="384"></p>
@@ -233,8 +242,11 @@
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
 <ol style="list-style-type: decimal">
-<li>Baron, M. et al. A Single-Cell Transcriptomic Map of the Human and Mouse Pancreas Reveals Inter- and Intra-cell Population Structure. Cell Syst 3, 346–360.e4 (2016).</li>
-<li>Satija R, et al. Spatial reconstruction of single-cell gene expression data. Nature Biotechnology 33, 495-502 (2015).</li>
+<li>Baron, M. et al. A Single-Cell Transcriptomic Map of the Human and
+Mouse Pancreas Reveals Inter- and Intra-cell Population Structure. Cell
+Syst 3, 346–360.e4 (2016).</li>
+<li>Satija R, et al. Spatial reconstruction of single-cell gene
+expression data. Nature Biotechnology 33, 495-502 (2015).</li>
 </ol>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
