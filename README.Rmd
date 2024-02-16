@@ -22,7 +22,7 @@ knitr::opts_chunk$set(
 
 Clustering Single-cell RNA-Seq (scRNA-Seq) data from multiple samples or conditions are often challenged by confounding factors, such as batch effects and biologically relevant variability. Existing batch effect removal methods typically require strong assumptions on the composition of cell populations being near identical across samples. Here we present **CIDER**, a **meta-clustering workflow** based on inter-group similarity measures. The prototype of this method is firstly applied in [Hu et al., Cancer Cell 2020](https://www.sciencedirect.com/science/article/pii/S1535610820300428).
 
-**For more informtion please see our [preprint](https://doi.org/10.1101/2021.03.29.437525).** The published version and new citation information will be available soon.
+**For more informtion please see our [publication](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-021-02561-2) on Genome Biology (2021).** The published version and new citation information will be available soon.
 
 
 CIDER can:
@@ -31,13 +31,31 @@ CIDER can:
 1. assess the biological correctness of integration as **a test metric**, while it does **not** require the existence of prior cellular annotations, or
 1. compute the similarity among biological populations.
 
-## Installation
+<!-- ## Installation -->
 
-You can install CIDER from [CRAN](https://CRAN.R-project.org/package=CIDER) with:
+<!-- You can install CIDER from [CRAN](https://CRAN.R-project.org/package=CIDER) with: -->
 
-``` r
-install.packages("CIDER")
+<!-- ``` r -->
+<!-- install.packages("CIDER") -->
+<!-- ``` -->
+
+## Installation (archived versions)
+
+Archived versions of CIDER are available on [cran Archive](https://cran.r-project.org/src/contrib/Archive/CIDER/).
+
+First you can download the package to a local folder and then install it from the file
+
+```r
+## replace the "path_to_pkg" with the real path
+install.packages("path_to_pkg/CIDER_0.99.1.tar.gz", repos = NULL, type = "source")
 ```
+
+We are working on the compatibility to bring our package back to cran.
+
+## Compatibility
+
+**Seurat**: currently our package only supports the old version Seurat, but not the Seurat v5. We are working to resolve the issue.
+
 
 ## CIDER as an evaluation metric - Quick start
 
@@ -108,9 +126,8 @@ seek help. Thank you!
 
 ## Citation
 
-Z. Hu, A. A. Ahmed, C. Yau. An interpretable meta-clustering framework for 
-single-cell RNA-Seq data integration and evaluation. *bioRxiv* 
-2021.03.29.437525; 
-[doi: https://doi.org/10.1101/2021.03.29.437525](https://doi.org/10.1101/2021.03.29.437525)
+Z. Hu, A. A. Ahmed, C. Yau. CIDER: an interpretable meta-clustering framework for single-cell RNA-seq data integration and evaluation. *Genome Biology*
+22, Article number: 337 (2021); [doi:
+https://doi.org/10.1186/s13059-021-02561-2](https://doi.org/10.1186/s13059-021-02561-2)
 
 

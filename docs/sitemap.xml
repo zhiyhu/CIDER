@@ -1,7 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://zhiyhu.github.io/CIDER/404.html</loc>
+  </url>
+  <url>
+    <loc>http://zhiyhu.github.io/CIDER/LICENSE-text.html</loc>
+  </url>
+  <url>
+    <loc>http://zhiyhu.github.io/CIDER/LICENSE.html</loc>
+  </url>
+  <url>
+    <loc>http://zhiyhu.github.io/CIDER/articles/asCIDER.html</loc>
+  </url>
+  <url>
+    <loc>http://zhiyhu.github.io/CIDER/articles/dnCIDER.html</loc>
+  </url>
+  <url>
+    <loc>http://zhiyhu.github.io/CIDER/articles/dnCIDER_highlevel.html</loc>
+  </url>
+  <url>
+    <loc>http://zhiyhu.github.io/CIDER/articles/evaluation.html</loc>
+  </url>
+  <url>
+    <loc>http://zhiyhu.github.io/CIDER/articles/evaluation_obsolete.html</loc>
+  </url>
+  <url>
+    <loc>http://zhiyhu.github.io/CIDER/articles/index.html</loc>
+  </url>
+  <url>
+    <loc>http://zhiyhu.github.io/CIDER/authors.html</loc>
+  </url>
+  <url>
     <loc>http://zhiyhu.github.io/CIDER/index.html</loc>
+  </url>
+  <url>
+    <loc>http://zhiyhu.github.io/CIDER/news/index.html</loc>
+  </url>
+  <url>
+    <loc>http://zhiyhu.github.io/CIDER/reference/CIDEr-package.html</loc>
   </url>
   <url>
     <loc>http://zhiyhu.github.io/CIDER/reference/Merge.html</loc>
@@ -13,6 +49,12 @@
     <loc>http://zhiyhu.github.io/CIDER/reference/cosineSimilarityR.html</loc>
   </url>
   <url>
+    <loc>http://zhiyhu.github.io/CIDER/reference/cosine_similarity.html</loc>
+  </url>
+  <url>
+    <loc>http://zhiyhu.github.io/CIDER/reference/dendritic.html</loc>
+  </url>
+  <url>
     <loc>http://zhiyhu.github.io/CIDER/reference/downsampling.html</loc>
   </url>
   <url>
@@ -20,6 +62,9 @@
   </url>
   <url>
     <loc>http://zhiyhu.github.io/CIDER/reference/finalClustering.html</loc>
+  </url>
+  <url>
+    <loc>http://zhiyhu.github.io/CIDER/reference/gatherInitialClusters.html</loc>
   </url>
   <url>
     <loc>http://zhiyhu.github.io/CIDER/reference/getDistMat.html</loc>
@@ -34,6 +79,9 @@
     <loc>http://zhiyhu.github.io/CIDER/reference/hdbscan.seurat.html</loc>
   </url>
   <url>
+    <loc>http://zhiyhu.github.io/CIDER/reference/index.html</loc>
+  </url>
+  <url>
     <loc>http://zhiyhu.github.io/CIDER/reference/initialClustering.html</loc>
   </url>
   <url>
@@ -46,6 +94,12 @@
     <loc>http://zhiyhu.github.io/CIDER/reference/pancreas.html</loc>
   </url>
   <url>
+    <loc>http://zhiyhu.github.io/CIDER/reference/pancreas_counts.html</loc>
+  </url>
+  <url>
+    <loc>http://zhiyhu.github.io/CIDER/reference/pancreas_meta.html</loc>
+  </url>
+  <url>
     <loc>http://zhiyhu.github.io/CIDER/reference/plotDistMat.html</loc>
   </url>
   <url>
@@ -55,18 +109,9 @@
     <loc>http://zhiyhu.github.io/CIDER/reference/plotNetwork.html</loc>
   </url>
   <url>
+    <loc>http://zhiyhu.github.io/CIDER/reference/rcpp_hello_world.html</loc>
+  </url>
+  <url>
     <loc>http://zhiyhu.github.io/CIDER/reference/scatterPlot.html</loc>
-  </url>
-  <url>
-    <loc>http://zhiyhu.github.io/CIDER/articles/asCIDER.html</loc>
-  </url>
-  <url>
-    <loc>http://zhiyhu.github.io/CIDER/articles/dnCIDER.html</loc>
-  </url>
-  <url>
-    <loc>http://zhiyhu.github.io/CIDER/articles/dnCIDER_highlevel.html</loc>
-  </url>
-  <url>
-    <loc>http://zhiyhu.github.io/CIDER/articles/evaluation.html</loc>
   </url>
 </urlset>

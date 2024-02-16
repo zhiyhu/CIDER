@@ -30,14 +30,23 @@ CIDER can:
     cellular annotations, or
 3.  compute the similarity among biological populations.
 
-## Installation
+## Installation (archived versions)
 
-You can install CIDER from
-[CRAN](https://CRAN.R-project.org/package=CIDER) with:
+Archived versions of CIDER are available on [cran Archive](https://cran.r-project.org/src/contrib/Archive/CIDER/).
 
-``` r
-install.packages("CIDER")
+First you can download the package to a local folder and then install it from the file
+
+```r
+## replace the "path_to_pkg" with the real path
+install.packages("path_to_pkg/CIDER_0.99.1.tar.gz", repos = NULL, type = "source")
 ```
+
+We are working on the compatibility to bring our package back to cran.
+
+## Compatibility
+
+**Seurat**: currently our package only supports the old version Seurat objects, but not the Seurat v5. We are working to resolve the issue.
+
 
 ## CIDER as an evaluation metric - Quick start
 
