@@ -6,8 +6,8 @@ articles:
   dnCIDER: dnCIDER.html
   dnCIDER_highlevel: dnCIDER_highlevel.html
   evaluation: evaluation.html
-last_built: 2024-02-16T04:59Z
+last_built: 2024-02-16T06:06Z
 urls:
-  reference: http://zhiyhu.github.io/CIDER/reference
-  article: http://zhiyhu.github.io/CIDER/articles
+  reference: https://zhiyhu.github.io/CIDER/reference
+  article: https://zhiyhu.github.io/CIDER/articles
 

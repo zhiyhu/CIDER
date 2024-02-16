@@ -27,7 +27,7 @@
     assess the biological correctness of integration in real datasets. See Hu Z,
     Ahmed A, Yau C (2021) &lt;doi:10.1101/2021.03.29.437525&gt; for
     more details.">
-<meta property="og:image" content="http://zhiyhu.github.io/CIDER/reference/figures/card.png">
+<meta property="og:image" content="https://zhiyhu.github.io/CIDER/reference/figures/card.png">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -129,7 +129,7 @@
 <span class="va">seu.integrated</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/hdbscan.seurat.html">hdbscan.seurat</a></span><span class="op">(</span><span class="va">seu.integrated</span><span class="op">)</span>
 <span class="va">ider</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/getIDEr.html">getIDEr</a></span><span class="op">(</span><span class="va">seu.integrated</span>, verbose <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 <span class="va">seu.integrated</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/estimateProb.html">estimateProb</a></span><span class="op">(</span><span class="va">seu.integrated</span>, <span class="va">ider</span><span class="op">)</span></code></pre></div>
-<p>The evaluation scores (IDER-based similarity and empirical p values) can be visualised by the <code>scatterPlot</code> function. A <a href="https://zhiyhu.github.io/CIDER/articles/evaluation.html" class="external-link">detailed tutorial of evaluation</a> is available.</p>
+<p>The evaluation scores (IDER-based similarity and empirical p values) can be visualised by the <code>scatterPlot</code> function. A <a href="https://zhiyhu.github.io/CIDER/articles/evaluation.html">detailed tutorial of evaluation</a> is available.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/scatterPlot.html">scatterPlot</a></span><span class="op">(</span><span class="va">seu.integrated</span>, <span class="st">"tsne"</span>, colour.by <span class="op">=</span> <span class="st">"similarity"</span><span class="op">)</span>
 <span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/scatterPlot.html">scatterPlot</a></span><span class="op">(</span><span class="va">seu.integrated</span>, <span class="st">"tsne"</span>, colour.by <span class="op">=</span> <span class="st">"pvalue"</span><span class="op">)</span> 
@@ -148,7 +148,7 @@
                 group.by.var <span class="op">=</span> <span class="st">"initial_cluster"</span>,
                 batch.by.var <span class="op">=</span> <span class="st">"Batch"</span><span class="op">)</span>
 <span class="va">seu</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/finalClustering.html">finalClustering</a></span><span class="op">(</span><span class="va">seu</span>, <span class="va">ider</span>, cutree.h <span class="op">=</span> <span class="fl">0.45</span><span class="op">)</span></code></pre></div>
-<p>A detailed tutorial of asCIDER is <a href="https://zhiyhu.github.io/CIDER/articles/asCIDER.html" class="external-link">here</a>. If your data do not have prior batch-specific clusters, the dnCDIER tutorials (<a href="https://zhiyhu.github.io/CIDER/articles/dnCIDER_highlevel.html" class="external-link">high-level</a> and <a href="https://zhiyhu.github.io/CIDER/articles/dnCIDER.html" class="external-link">detailed walk-through</a>) can be referred to.</p>
+<p>A detailed tutorial of asCIDER is <a href="https://zhiyhu.github.io/CIDER/articles/asCIDER.html">here</a>. If your data do not have prior batch-specific clusters, the dnCDIER tutorials (<a href="https://zhiyhu.github.io/CIDER/articles/dnCIDER_highlevel.html">high-level</a> and <a href="https://zhiyhu.github.io/CIDER/articles/dnCIDER.html">detailed walk-through</a>) can be referred to.</p>
 </div>
 </div>
 <div class="section level2">
