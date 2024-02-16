@@ -21,7 +21,8 @@ Description: A workflow of (a) meta-clustering based on
     assess the biological correctness of integration in real datasets. See Hu Z,
     Ahmed A, Yau C (2021) <doi:10.1101/2021.03.29.437525> for
     more details.
-URL: https://github.com/zhiyhu/CIDER, https://zhiyhu.github.io/CIDER/
+URL: https://github.com/zhiyhu/CIDER,
+    https://zhiyhu.github.io/CIDER/
 BugReports: https://github.com/zhiyhu/CIDER/issues
 Imports: 
     limma (>= 3.42.0),
@@ -51,4 +52,4 @@ Suggests:
     cowplot
 VignetteBuilder: knitr
 Depends: 
-    R (>= 3.5.0)
+    R (<= 4.2.0)

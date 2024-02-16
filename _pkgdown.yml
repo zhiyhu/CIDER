@@ -1,5 +1,4 @@
-title: CIDER
-url: http://zhiyhu.github.io/CIDER
+url: https://zhiyhu.github.io/CIDER/
 template:
   bootstrap: 5
   opengraph:
@@ -11,4 +10,3 @@ template:
   params:
     bootswatch: flatly
     ganalytics: UA-207749729-1
-
