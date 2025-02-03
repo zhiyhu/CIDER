@@ -1,6 +1,18 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
+# 🚨 Repository Archived 🚨
+
+**This repository is no longer maintained and has been archived.**
+
+**For the latest updates, please visit:**
+
+🔗 [New Repository](https://github.com/zhiyuan-hu-lab/CIDER)
+
+🚀 [New tutorial](https://zhiyuan-hu-lab.github.io/CIDER/)
+
+📦 [CRAN Package](https://CRAN.R-project.org/package=CIDER)
+
 # CIDER: Meta-Clustering for Single-Cell Data Integration and Evaluation
 
 <!-- badges: start -->
